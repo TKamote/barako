@@ -181,17 +181,17 @@ const TournamentPage = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-3 sm:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               🏆 Manage your billiards tournaments
             </h1>
           </div>
           <button
             onClick={() => setShowCreateForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg flex items-center justify-center transition-colors w-full sm:w-auto"
           >
             ➕ Create Tournament
           </button>
@@ -199,8 +199,8 @@ const TournamentPage = () => {
 
         {/* Create Tournament Modal */}
         {showCreateForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
               <h2 className="text-xl font-bold mb-4">
                 {editingTournament
                   ? "Edit Tournament"
@@ -302,18 +302,18 @@ const TournamentPage = () => {
         )}
 
         {/* Tournaments Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {tournaments.map((tournament) => (
             <div
               key={tournament.id}
-              className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
+              className="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow"
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-2xl font-semibold text-gray-900">
+                  <h3 className="text-lg sm:text-2xl font-semibold text-gray-900">
                     Barako 9-Ball Championship
                   </h3>
-                  <p className="text-xl text-blue-600 font-medium">
+                  <p className="text-base sm:text-xl text-blue-600 font-medium">
                     {tournament.name.replace(
                       "Barako 9-Ball Championship - ",
                       ""
@@ -343,7 +343,7 @@ const TournamentPage = () => {
               </div>
 
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
                   <div className="text-sm text-gray-500">
                     {tournament.status === "ongoing" && (
                       <span className="flex items-center">
@@ -354,7 +354,7 @@ const TournamentPage = () => {
                   </div>
                   <button
                     onClick={() => handleEditTournament(tournament)}
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium py-2 px-3 rounded hover:bg-blue-50 transition-colors w-full sm:w-auto"
                   >
                     Edit Tournament
                   </button>
