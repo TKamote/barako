@@ -157,7 +157,7 @@ const StandbyPage = () => {
                 >
                   9
                 </span>
-                 Ball Tournament
+                Ball Tournament
               </h1>
               <h2 className="text-sm sm:text-xl font-semibold text-gray-700 mb-1">
                 Double Elimination
@@ -177,12 +177,6 @@ const StandbyPage = () => {
               <div className="text-4xl sm:text-6xl font-mono font-bold text-black mb-4">
                 {formatTime(timeLeft)}
               </div>
-
-              {timeLeft === 0 && !isRunning && (
-                <div className="text-2xl text-gray-800">
-                  Tournament Complete! 🏆
-                </div>
-              )}
             </div>
 
             {/* Time Selection */}
@@ -210,7 +204,7 @@ const StandbyPage = () => {
               {!isRunning && timeLeft === 0 && (
                 <button
                   onClick={startTimer}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
+                  className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
                 >
                   ▶️ Start Tournament
                 </button>
@@ -219,7 +213,7 @@ const StandbyPage = () => {
               {isRunning && (
                 <button
                   onClick={stopTimer}
-                  className="bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
+                  className="bg-orange-100 hover:bg-orange-200 text-orange-700 px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
                 >
                   ⏸️ Pause
                 </button>
@@ -228,7 +222,7 @@ const StandbyPage = () => {
               {!isRunning && timeLeft > 0 && (
                 <button
                   onClick={startTimer}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
                 >
                   ▶️ Resume
                 </button>
@@ -236,7 +230,7 @@ const StandbyPage = () => {
 
               <button
                 onClick={resetTimer}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
               >
                 🔄 Reset
               </button>
