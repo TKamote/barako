@@ -1,5 +1,5 @@
-[00:00:00.835] Server  LOG      ✓ Ready in 615ms
-[00:00:08.102] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:00.990] Server  LOG      ✓ Ready in 748ms
+[00:00:06.995] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -38,4 +38,4 @@ https://react.dev/link/hydration-mismatch
             ...
           ...
 
-[00:00:08.102] Browser LOG     {}
+[00:00:06.995] Browser LOG     {}
