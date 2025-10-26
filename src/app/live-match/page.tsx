@@ -42,8 +42,8 @@ const LiveMatchPage = () => {
     <div className="min-h-screen bg-transparent relative">
       {/* Header with Live Button and Balls */}
       <div className="flex justify-between items-start p-2 sm:p-4">
-        {/* Mobile: Live Button and Balls on right side vertically */}
-        <div className="flex flex-col sm:hidden items-end space-y-2">
+        {/* Mobile: Live Button and Balls on left side vertically */}
+        <div className="flex flex-col sm:hidden items-start space-y-2">
           {/* Live Toggle Button - Mobile */}
           <button
             onClick={() => setIsLive(!isLive)}
@@ -63,7 +63,7 @@ const LiveMatchPage = () => {
             )}
           </button>
 
-          {/* Mobile: Billiards Balls - Vertical */}
+          {/* Mobile: Billiards Balls - Vertical (1-5) */}
           <div className="bg-gray-800 rounded-full px-2 py-1">
             <div className="flex flex-col space-y-1">
               {ballColors.slice(0, 5).map((color, index) => (
@@ -99,13 +99,13 @@ const LiveMatchPage = () => {
             )}
           </button>
 
-          {/* Billiards Balls - Vertical Desktop */}
+          {/* Billiards Balls - Vertical Desktop (1-5) */}
           <div
             className="bg-gray-800 rounded-full px-2 py-2"
             style={{ marginRight: "20px", marginTop: "50px" }}
           >
             <div className="flex flex-col space-y-2">
-              {ballColors.map((color, index) => (
+              {ballColors.slice(0, 5).map((color, index) => (
                 <BilliardsBall
                   key={index + 1}
                   number={index + 1}
@@ -221,8 +221,8 @@ const LiveMatchPage = () => {
         <Image
           src="/favicon.png"
           alt="Barako Logo"
-          width={60}
-          height={60}
+          width={120}
+          height={120}
           style={{
             filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
           }}

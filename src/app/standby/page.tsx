@@ -148,16 +148,24 @@ const StandbyPage = () => {
         {/* Tournament Title and Timer */}
         <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-lg p-4 sm:p-8 mb-8">
           <div className="text-center">
-            <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
-              Barako
-              <span
-                className="inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-full text-white font-bold text-lg sm:text-2xl"
-                style={{ backgroundColor: "#facc15" }}
-              >
-                9
-              </span>
-              -Ball Double Elimination @ SZ
-            </h1>
+            <div className="text-center mb-4">
+              <h1 className="text-lg sm:text-4xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2">
+                Barako
+                <span
+                  className="inline-flex items-center justify-center w-6 h-6 sm:w-12 sm:h-12 rounded-full text-white font-bold text-sm sm:text-2xl"
+                  style={{ backgroundColor: "#facc15" }}
+                >
+                  9
+                </span>
+                -Ball Tournament
+              </h1>
+              <h2 className="text-sm sm:text-xl font-semibold text-gray-700 mb-1">
+                Double Elimination
+              </h2>
+              <h3 className="text-xs sm:text-lg font-medium text-gray-600">
+                Snooker Zone
+              </h3>
+            </div>
             <div className="w-16 sm:w-24 h-1 bg-blue-600 mx-auto rounded mb-6 sm:mb-8"></div>
 
             <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">

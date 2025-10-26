@@ -44,8 +44,8 @@ const Navigation = () => {
               <Image
                 src="/favicon.png"
                 alt="Barako Logo"
-                width={20}
-                height={20}
+                width={30}
+                height={30}
                 className="mr-2"
               />
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">
