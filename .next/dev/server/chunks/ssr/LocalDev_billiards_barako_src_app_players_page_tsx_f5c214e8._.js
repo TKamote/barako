@@ -12,81 +12,351 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$bar
 ;
 ;
 const PlayersPage = ()=>{
-    const playerNames = [
-        "Adrian",
-        "AJ",
-        "Aldrin",
-        "Aldwin",
-        "Alfie",
-        "AllanC",
-        "Anthony",
-        "Arys",
-        "Boj",
-        "Brandon",
-        "Clarke",
-        "Dave",
-        "Dennis",
-        "Dunn",
-        "Ebet",
-        "Ed",
-        "Erwin",
-        "Gem",
-        "Hans",
-        "Hervin",
-        "Huber",
-        "Ivan",
-        "Jarland",
-        "Joemz",
-        "Joelski",
-        "Johner",
-        "Jonas",
-        "Joey",
-        "JP",
-        "Khristian",
-        "Louie",
-        "Louie S.",
-        "Marlon",
-        "Nikko",
-        "Owen",
-        "Padi",
-        "Patrick",
-        "Renz",
-        "Reymund",
-        "Richard",
-        "Robbie",
-        "Sherwin",
-        "Shierwin",
-        "Siva",
-        "Ted",
-        "Terrel",
-        "Varan",
+    const defaultPlayerNames = [
+        "Joel",
+        "David",
+        "CZ",
+        "Chong Han",
+        "Rex",
+        "Gabriel",
+        "Mon",
         "VJ",
-        "Warren",
-        "Topher",
-        "Dennel",
-        "Jerome",
-        "Emerson",
-        "Tom",
-        "Jun",
-        "Chito",
-        "Player 58",
-        "Player 59",
-        "Player 60",
-        "Player 61",
-        "Player 62",
-        "Player 63",
-        "Player 64",
-        "Player 65",
-        "Player 66",
-        "Player 67",
-        "Player 68",
-        "Player 69",
-        "Player 70",
-        "Player 71",
-        "Player 72",
-        "Player 73",
-        "Player 74",
-        "Player 75"
+        "Aaron",
+        "Adam",
+        "Adrian",
+        "Alan",
+        "Alex",
+        "Andrew",
+        "Anthony",
+        "Ben",
+        "Brandon",
+        "Brian",
+        "Carl",
+        "Charles",
+        "Chris",
+        "Daniel",
+        "David",
+        "Edward",
+        "Eric",
+        "Frank",
+        "George",
+        "Henry",
+        "Ian",
+        "Jack",
+        "James",
+        "Jason",
+        "Jeff",
+        "John",
+        "Jonathan",
+        "Jordan",
+        "Joshua",
+        "Kevin",
+        "Kyle",
+        "Liam",
+        "Luke",
+        "Mark",
+        "Matthew",
+        "Michael",
+        "Nathan",
+        "Nicholas",
+        "Oliver",
+        "Paul",
+        "Peter",
+        "Philip",
+        "Richard",
+        "Robert",
+        "Ryan",
+        "Samuel",
+        "Scott",
+        "Sean",
+        "Steven",
+        "Thomas",
+        "Timothy",
+        "Tyler",
+        "Victor",
+        "Vincent",
+        "William",
+        "Zachary",
+        "Aaron",
+        "Adam",
+        "Adrian",
+        "Alan",
+        "Alex",
+        "Andrew",
+        "Anthony",
+        "Ben",
+        "Brandon",
+        "Brian",
+        "Carl",
+        "Charles",
+        "Chris",
+        "Daniel",
+        "David",
+        "Edward",
+        "Eric",
+        "Frank",
+        "George",
+        "Henry",
+        "Ian",
+        "Jack",
+        "James",
+        "Jason",
+        "Jeff",
+        "John",
+        "Jonathan",
+        "Jordan",
+        "Joshua",
+        "Kevin",
+        "Kyle",
+        "Liam",
+        "Luke",
+        "Mark",
+        "Matthew",
+        "Michael",
+        "Nathan",
+        "Nicholas",
+        "Oliver",
+        "Paul",
+        "Peter",
+        "Philip",
+        "Richard",
+        "Robert",
+        "Ryan",
+        "Samuel",
+        "Scott",
+        "Sean",
+        "Steven",
+        "Thomas",
+        "Timothy",
+        "Tyler",
+        "Victor",
+        "Vincent",
+        "William",
+        "Zachary",
+        "Aaron",
+        "Adam",
+        "Adrian",
+        "Alan",
+        "Alex",
+        "Andrew",
+        "Anthony",
+        "Ben",
+        "Brandon",
+        "Brian",
+        "Carl",
+        "Charles",
+        "Chris",
+        "Daniel",
+        "David",
+        "Edward",
+        "Eric",
+        "Frank",
+        "George",
+        "Henry",
+        "Ian",
+        "Jack",
+        "James",
+        "Jason",
+        "Jeff",
+        "John",
+        "Jonathan",
+        "Jordan",
+        "Joshua",
+        "Kevin",
+        "Kyle",
+        "Liam",
+        "Luke",
+        "Mark",
+        "Matthew",
+        "Michael",
+        "Nathan",
+        "Nicholas",
+        "Oliver",
+        "Paul",
+        "Peter",
+        "Philip",
+        "Richard",
+        "Robert",
+        "Ryan",
+        "Samuel",
+        "Scott",
+        "Sean",
+        "Steven",
+        "Thomas",
+        "Timothy",
+        "Tyler",
+        "Victor",
+        "Vincent",
+        "William",
+        "Zachary",
+        "Aaron",
+        "Adam",
+        "Adrian",
+        "Alan",
+        "Alex",
+        "Andrew",
+        "Anthony",
+        "Ben",
+        "Brandon",
+        "Brian",
+        "Carl",
+        "Charles",
+        "Chris",
+        "Daniel",
+        "David",
+        "Edward",
+        "Eric",
+        "Frank",
+        "George",
+        "Henry",
+        "Ian",
+        "Jack",
+        "James",
+        "Jason",
+        "Jeff",
+        "John",
+        "Jonathan",
+        "Jordan",
+        "Joshua",
+        "Kevin",
+        "Kyle",
+        "Liam",
+        "Luke",
+        "Mark",
+        "Matthew",
+        "Michael",
+        "Nathan",
+        "Nicholas",
+        "Oliver",
+        "Paul",
+        "Peter",
+        "Philip",
+        "Richard",
+        "Robert",
+        "Ryan",
+        "Samuel",
+        "Scott",
+        "Sean",
+        "Steven",
+        "Thomas",
+        "Timothy",
+        "Tyler",
+        "Victor",
+        "Vincent",
+        "William",
+        "Zachary",
+        "Aaron",
+        "Adam",
+        "Adrian",
+        "Alan",
+        "Alex",
+        "Andrew",
+        "Anthony",
+        "Ben",
+        "Brandon",
+        "Brian",
+        "Carl",
+        "Charles",
+        "Chris",
+        "Daniel",
+        "David",
+        "Edward",
+        "Eric",
+        "Frank",
+        "George",
+        "Henry",
+        "Ian",
+        "Jack",
+        "James",
+        "Jason",
+        "Jeff",
+        "John",
+        "Jonathan",
+        "Jordan",
+        "Joshua",
+        "Kevin",
+        "Kyle",
+        "Liam",
+        "Luke",
+        "Mark",
+        "Matthew",
+        "Michael",
+        "Nathan",
+        "Nicholas",
+        "Oliver",
+        "Paul",
+        "Peter",
+        "Philip",
+        "Richard",
+        "Robert",
+        "Ryan",
+        "Samuel",
+        "Scott",
+        "Sean",
+        "Steven",
+        "Thomas",
+        "Timothy",
+        "Tyler",
+        "Victor",
+        "Vincent",
+        "William",
+        "Zachary",
+        "Aaron",
+        "Adam",
+        "Adrian",
+        "Alan",
+        "Alex",
+        "Andrew",
+        "Anthony",
+        "Ben",
+        "Brandon",
+        "Brian",
+        "Carl",
+        "Charles",
+        "Chris",
+        "Daniel",
+        "David",
+        "Edward",
+        "Eric",
+        "Frank",
+        "George",
+        "Henry",
+        "Ian",
+        "Jack",
+        "James",
+        "Jason",
+        "Jeff",
+        "John",
+        "Jonathan",
+        "Jordan",
+        "Joshua",
+        "Kevin",
+        "Kyle",
+        "Liam",
+        "Luke",
+        "Mark",
+        "Matthew",
+        "Michael",
+        "Nathan",
+        "Nicholas",
+        "Oliver",
+        "Paul",
+        "Peter",
+        "Philip",
+        "Richard",
+        "Robert",
+        "Ryan",
+        "Samuel",
+        "Scott",
+        "Sean",
+        "Steven",
+        "Thomas",
+        "Timothy",
+        "Tyler",
+        "Victor",
+        "Vincent",
+        "William",
+        "Zachary"
     ];
     // Generate player data outside of render to avoid Math.random() issues
     const generatePlayerData = (name, index)=>({
@@ -105,22 +375,50 @@ const PlayersPage = ()=>{
             wins: index % 10,
             status: "active"
         });
-    const [players, setPlayers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(playerNames.map(generatePlayerData));
+    const [players, setPlayers] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(defaultPlayerNames.map(generatePlayerData));
+    // Load persisted data on component mount
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        const loadPersistedData = ()=>{
+            const savedPlayers = localStorage.getItem("players-data");
+            if (savedPlayers) {
+                try {
+                    const parsedPlayers = JSON.parse(savedPlayers);
+                    setPlayers(parsedPlayers);
+                } catch (error) {
+                    console.error("Error loading players data:", error);
+                }
+            }
+        };
+        loadPersistedData();
+    }, []);
+    // Save data whenever players change
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        localStorage.setItem("players-data", JSON.stringify(players));
+    }, [
+        players
+    ]);
     const [showCreateForm, setShowCreateForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [editingPlayer, setEditingPlayer] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [newPlayer, setNewPlayer] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({
         name: "",
-        email: "",
-        phone: "",
+        rank: 0,
+        points: 0,
         skillLevel: "beginner"
     });
     const handleCreatePlayer = ()=>{
+        // Check for duplicate name
+        const duplicateName = players.find((player)=>player.name.toLowerCase() === newPlayer.name.toLowerCase());
+        if (duplicateName) {
+            alert(`Player with name "${newPlayer.name}" already exists!`);
+            return;
+        }
         const player = {
             id: Date.now().toString(),
             name: newPlayer.name,
-            email: newPlayer.email,
-            phone: newPlayer.phone,
+            email: "",
+            phone: "",
             skillLevel: newPlayer.skillLevel,
-            rating: 0,
+            rating: newPlayer.rank,
             tournamentsPlayed: 0,
             wins: 0,
             status: "active"
@@ -131,8 +429,54 @@ const PlayersPage = ()=>{
         ]);
         setNewPlayer({
             name: "",
-            email: "",
-            phone: "",
+            rank: 0,
+            points: 0,
+            skillLevel: "beginner"
+        });
+        setShowCreateForm(false);
+    };
+    const handleEditPlayer = (player)=>{
+        console.log("Editing player:", player);
+        setEditingPlayer(player);
+        setNewPlayer({
+            name: player.name,
+            rank: player.rating,
+            points: 100 + parseInt(player.id) * 10,
+            skillLevel: player.skillLevel
+        });
+        setShowCreateForm(true);
+    };
+    const handleUpdatePlayer = ()=>{
+        if (editingPlayer) {
+            // Check for duplicate name (excluding the current player being edited)
+            const duplicateName = players.find((player)=>player.name.toLowerCase() === newPlayer.name.toLowerCase() && player.id !== editingPlayer.id);
+            if (duplicateName) {
+                alert(`Player with name "${newPlayer.name}" already exists!`);
+                return;
+            }
+            const updatedPlayers = players.map((player)=>player.id === editingPlayer.id ? {
+                    ...player,
+                    name: newPlayer.name,
+                    rating: newPlayer.rank,
+                    skillLevel: newPlayer.skillLevel
+                } : player);
+            setPlayers(updatedPlayers);
+            setEditingPlayer(null);
+            setNewPlayer({
+                name: "",
+                rank: 0,
+                points: 0,
+                skillLevel: "beginner"
+            });
+            setShowCreateForm(false);
+        }
+    };
+    const handleCancelEdit = ()=>{
+        setEditingPlayer(null);
+        setNewPlayer({
+            name: "",
+            rank: 0,
+            points: 0,
             skillLevel: "beginner"
         });
         setShowCreateForm(false);
@@ -150,12 +494,12 @@ const PlayersPage = ()=>{
                         children: "➕ Add Player"
                     }, void 0, false, {
                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                        lineNumber: 150,
+                        lineNumber: 502,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                    lineNumber: 149,
+                    lineNumber: 501,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 showCreateForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -165,10 +509,21 @@ const PlayersPage = ()=>{
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                 className: "text-xl font-bold mb-4",
-                                children: "Add New Player"
+                                children: editingPlayer ? "Edit Player" : "Add New Player"
                             }, void 0, false, {
                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                lineNumber: 162,
+                                lineNumber: 514,
+                                columnNumber: 15
+                            }, ("TURBOPACK compile-time value", void 0)),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-xs text-gray-500 mb-2",
+                                children: [
+                                    "Debug: ",
+                                    JSON.stringify(newPlayer)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                lineNumber: 517,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -181,22 +536,22 @@ const PlayersPage = ()=>{
                                                 children: "Player Photo"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 165,
+                                                lineNumber: 522,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "file",
                                                 accept: "image/*",
-                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 168,
+                                                lineNumber: 525,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 164,
+                                        lineNumber: 521,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -206,96 +561,200 @@ const PlayersPage = ()=>{
                                                 children: "Player Name"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 175,
+                                                lineNumber: 532,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "text",
                                                 value: newPlayer.name,
-                                                onChange: (e)=>setNewPlayer({
+                                                onChange: (e)=>{
+                                                    console.log("Name changing to:", e.target.value);
+                                                    setNewPlayer({
                                                         ...newPlayer,
                                                         name: e.target.value
-                                                    }),
-                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                    });
+                                                },
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black",
                                                 placeholder: "Enter player name"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 178,
+                                                lineNumber: 535,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 174,
+                                        lineNumber: 531,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block text-sm font-medium text-gray-700 mb-1",
-                                                children: "Ranking Points"
+                                                children: "Rank"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 189,
+                                                lineNumber: 547,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "number",
-                                                placeholder: "Enter points",
-                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                value: newPlayer.rank,
+                                                onChange: (e)=>{
+                                                    setNewPlayer({
+                                                        ...newPlayer,
+                                                        rank: parseInt(e.target.value) || 0
+                                                    });
+                                                },
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black",
+                                                placeholder: "Enter rank"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 192,
+                                                lineNumber: 550,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 188,
+                                        lineNumber: 546,
+                                        columnNumber: 17
+                                    }, ("TURBOPACK compile-time value", void 0)),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                className: "block text-sm font-medium text-gray-700 mb-1",
+                                                children: "Points"
+                                            }, void 0, false, {
+                                                fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                lineNumber: 564,
+                                                columnNumber: 19
+                                            }, ("TURBOPACK compile-time value", void 0)),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "number",
+                                                value: newPlayer.points,
+                                                onChange: (e)=>{
+                                                    setNewPlayer({
+                                                        ...newPlayer,
+                                                        points: parseInt(e.target.value) || 0
+                                                    });
+                                                },
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black",
+                                                placeholder: "Enter points"
+                                            }, void 0, false, {
+                                                fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                lineNumber: 567,
+                                                columnNumber: 19
+                                            }, ("TURBOPACK compile-time value", void 0))
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                        lineNumber: 563,
+                                        columnNumber: 17
+                                    }, ("TURBOPACK compile-time value", void 0)),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                className: "block text-sm font-medium text-gray-700 mb-1",
+                                                children: "Skill Level"
+                                            }, void 0, false, {
+                                                fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                lineNumber: 581,
+                                                columnNumber: 19
+                                            }, ("TURBOPACK compile-time value", void 0)),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                value: newPlayer.skillLevel,
+                                                onChange: (e)=>setNewPlayer({
+                                                        ...newPlayer,
+                                                        skillLevel: e.target.value
+                                                    }),
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "beginner",
+                                                        children: "Beginner"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                        lineNumber: 594,
+                                                        columnNumber: 21
+                                                    }, ("TURBOPACK compile-time value", void 0)),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "intermediate",
+                                                        children: "Intermediate"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                        lineNumber: 595,
+                                                        columnNumber: 21
+                                                    }, ("TURBOPACK compile-time value", void 0)),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "advanced",
+                                                        children: "Advanced"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                        lineNumber: 596,
+                                                        columnNumber: 21
+                                                    }, ("TURBOPACK compile-time value", void 0)),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                        value: "expert",
+                                                        children: "Expert"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                        lineNumber: 597,
+                                                        columnNumber: 21
+                                                    }, ("TURBOPACK compile-time value", void 0))
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                                lineNumber: 584,
+                                                columnNumber: 19
+                                            }, ("TURBOPACK compile-time value", void 0))
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
+                                        lineNumber: 580,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                lineNumber: 163,
+                                lineNumber: 520,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex justify-end space-x-3 mt-6",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: ()=>setShowCreateForm(false),
+                                        onClick: handleCancelEdit,
                                         className: "px-4 py-2 text-gray-600 hover:text-gray-800",
                                         children: "Cancel"
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 200,
+                                        lineNumber: 602,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: handleCreatePlayer,
+                                        onClick: editingPlayer ? handleUpdatePlayer : handleCreatePlayer,
                                         className: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg",
-                                        children: "Add Player"
+                                        children: editingPlayer ? "Update Player" : "Add Player"
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 206,
+                                        lineNumber: 608,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                lineNumber: 199,
+                                lineNumber: 601,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                        lineNumber: 161,
+                        lineNumber: 513,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                    lineNumber: 160,
+                    lineNumber: 512,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -311,12 +770,12 @@ const PlayersPage = ()=>{
                                         children: "Players 1-25"
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 222,
+                                        lineNumber: 626,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                    lineNumber: 221,
+                                    lineNumber: 625,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -333,7 +792,7 @@ const PlayersPage = ()=>{
                                                             children: "Rank"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 230,
+                                                            lineNumber: 634,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -341,7 +800,7 @@ const PlayersPage = ()=>{
                                                             children: "Photo"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 233,
+                                                            lineNumber: 637,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -349,7 +808,7 @@ const PlayersPage = ()=>{
                                                             children: "Players Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 236,
+                                                            lineNumber: 640,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -357,24 +816,25 @@ const PlayersPage = ()=>{
                                                             children: "Points"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 239,
+                                                            lineNumber: 643,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                    lineNumber: 229,
+                                                    lineNumber: 633,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 228,
+                                                lineNumber: 632,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
                                                 className: "bg-white divide-y divide-gray-200",
                                                 children: players.slice(0, 25).map((player, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                        className: "hover:bg-gray-50",
+                                                        className: `hover:bg-gray-50 cursor-pointer ${i < 8 ? "bg-yellow-100" : ""}`,
+                                                        onClick: ()=>handleEditPlayer(player),
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                                 className: "px-2 py-2 text-center text-lg font-medium text-gray-900 w-16",
@@ -384,7 +844,7 @@ const PlayersPage = ()=>{
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 247,
+                                                                lineNumber: 657,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -394,12 +854,12 @@ const PlayersPage = ()=>{
                                                                     children: "👤"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                    lineNumber: 251,
+                                                                    lineNumber: 661,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 250,
+                                                                lineNumber: 660,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -407,7 +867,7 @@ const PlayersPage = ()=>{
                                                                 children: player.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 255,
+                                                                lineNumber: 665,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -415,35 +875,35 @@ const PlayersPage = ()=>{
                                                                 children: 100 + (i + 1) * 10
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 258,
+                                                                lineNumber: 668,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, player.id, true, {
                                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                        lineNumber: 246,
+                                                        lineNumber: 650,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 244,
+                                                lineNumber: 648,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 227,
+                                        lineNumber: 631,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                    lineNumber: 226,
+                                    lineNumber: 630,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                            lineNumber: 220,
+                            lineNumber: 624,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -456,12 +916,12 @@ const PlayersPage = ()=>{
                                         children: "Players 26-50"
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 271,
+                                        lineNumber: 681,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                    lineNumber: 270,
+                                    lineNumber: 680,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -478,7 +938,7 @@ const PlayersPage = ()=>{
                                                             children: "Rank"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 279,
+                                                            lineNumber: 689,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -486,7 +946,7 @@ const PlayersPage = ()=>{
                                                             children: "Photo"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 282,
+                                                            lineNumber: 692,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -494,7 +954,7 @@ const PlayersPage = ()=>{
                                                             children: "Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 285,
+                                                            lineNumber: 695,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -502,24 +962,25 @@ const PlayersPage = ()=>{
                                                             children: "Points"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 288,
+                                                            lineNumber: 698,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                    lineNumber: 278,
+                                                    lineNumber: 688,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 277,
+                                                lineNumber: 687,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
                                                 className: "bg-white divide-y divide-gray-200",
                                                 children: players.slice(25, 50).map((player, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                        className: "hover:bg-gray-50",
+                                                        className: "hover:bg-gray-50 cursor-pointer",
+                                                        onClick: ()=>handleEditPlayer(player),
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                                 className: "px-2 py-2 text-center text-lg font-medium text-gray-900 w-16",
@@ -529,7 +990,7 @@ const PlayersPage = ()=>{
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 296,
+                                                                lineNumber: 710,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -539,12 +1000,12 @@ const PlayersPage = ()=>{
                                                                     children: "👤"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                    lineNumber: 300,
+                                                                    lineNumber: 714,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 299,
+                                                                lineNumber: 713,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -552,7 +1013,7 @@ const PlayersPage = ()=>{
                                                                 children: player.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 304,
+                                                                lineNumber: 718,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -560,35 +1021,35 @@ const PlayersPage = ()=>{
                                                                 children: 100 + (i + 26) * 10
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 307,
+                                                                lineNumber: 721,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, player.id, true, {
                                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                        lineNumber: 295,
+                                                        lineNumber: 705,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 293,
+                                                lineNumber: 703,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 276,
+                                        lineNumber: 686,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                    lineNumber: 275,
+                                    lineNumber: 685,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                            lineNumber: 269,
+                            lineNumber: 679,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -601,12 +1062,12 @@ const PlayersPage = ()=>{
                                         children: "Players 51-75"
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 320,
+                                        lineNumber: 734,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                    lineNumber: 319,
+                                    lineNumber: 733,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -623,7 +1084,7 @@ const PlayersPage = ()=>{
                                                             children: "Rank"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 328,
+                                                            lineNumber: 742,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -631,7 +1092,7 @@ const PlayersPage = ()=>{
                                                             children: "Photo"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 331,
+                                                            lineNumber: 745,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -639,7 +1100,7 @@ const PlayersPage = ()=>{
                                                             children: "Players Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 334,
+                                                            lineNumber: 748,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -647,24 +1108,25 @@ const PlayersPage = ()=>{
                                                             children: "Points"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                            lineNumber: 337,
+                                                            lineNumber: 751,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                    lineNumber: 327,
+                                                    lineNumber: 741,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 326,
+                                                lineNumber: 740,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
                                                 className: "bg-white divide-y divide-gray-200",
                                                 children: players.slice(50, 75).map((player, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
-                                                        className: "hover:bg-gray-50",
+                                                        className: "hover:bg-gray-50 cursor-pointer",
+                                                        onClick: ()=>handleEditPlayer(player),
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                                 className: "px-2 py-2 text-center text-lg font-medium text-gray-900 w-16",
@@ -674,7 +1136,7 @@ const PlayersPage = ()=>{
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 345,
+                                                                lineNumber: 763,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -684,12 +1146,12 @@ const PlayersPage = ()=>{
                                                                     children: "👤"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                    lineNumber: 349,
+                                                                    lineNumber: 767,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 348,
+                                                                lineNumber: 766,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -697,7 +1159,7 @@ const PlayersPage = ()=>{
                                                                 children: player.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 353,
+                                                                lineNumber: 771,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -705,52 +1167,52 @@ const PlayersPage = ()=>{
                                                                 children: 100 + (i + 51) * 10
                                                             }, void 0, false, {
                                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                                lineNumber: 356,
+                                                                lineNumber: 774,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, player.id, true, {
                                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                        lineNumber: 344,
+                                                        lineNumber: 758,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                                lineNumber: 342,
+                                                lineNumber: 756,
                                                 columnNumber: 17
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                        lineNumber: 325,
+                                        lineNumber: 739,
                                         columnNumber: 15
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                                    lineNumber: 324,
+                                    lineNumber: 738,
                                     columnNumber: 13
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                            lineNumber: 318,
+                            lineNumber: 732,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-                    lineNumber: 218,
+                    lineNumber: 622,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-            lineNumber: 148,
+            lineNumber: 500,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
-        lineNumber: 147,
+        lineNumber: 499,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

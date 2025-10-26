@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Player {
   id: string;
@@ -15,81 +15,351 @@ interface Player {
 }
 
 const PlayersPage = () => {
-  const playerNames = [
-    "Adrian",
-    "AJ",
-    "Aldrin",
-    "Aldwin",
-    "Alfie",
-    "AllanC",
-    "Anthony",
-    "Arys",
-    "Boj",
-    "Brandon",
-    "Clarke",
-    "Dave",
-    "Dennis",
-    "Dunn",
-    "Ebet",
-    "Ed",
-    "Erwin",
-    "Gem",
-    "Hans",
-    "Hervin",
-    "Huber",
-    "Ivan",
-    "Jarland",
-    "Joemz",
-    "Joelski",
-    "Johner",
-    "Jonas",
-    "Joey",
-    "JP",
-    "Khristian",
-    "Louie",
-    "Louie S.",
-    "Marlon",
-    "Nikko",
-    "Owen",
-    "Padi",
-    "Patrick",
-    "Renz",
-    "Reymund",
-    "Richard",
-    "Robbie",
-    "Sherwin",
-    "Shierwin",
-    "Siva",
-    "Ted",
-    "Terrel",
-    "Varan",
+  const defaultPlayerNames = [
+    "Joel",
+    "David",
+    "CZ",
+    "Chong Han",
+    "Rex",
+    "Gabriel",
+    "Mon",
     "VJ",
-    "Warren",
-    "Topher",
-    "Dennel",
-    "Jerome",
-    "Emerson",
-    "Tom",
-    "Jun",
-    "Chito",
-    "Player 58",
-    "Player 59",
-    "Player 60",
-    "Player 61",
-    "Player 62",
-    "Player 63",
-    "Player 64",
-    "Player 65",
-    "Player 66",
-    "Player 67",
-    "Player 68",
-    "Player 69",
-    "Player 70",
-    "Player 71",
-    "Player 72",
-    "Player 73",
-    "Player 74",
-    "Player 75",
+    "Aaron",
+    "Adam",
+    "Adrian",
+    "Alan",
+    "Alex",
+    "Andrew",
+    "Anthony",
+    "Ben",
+    "Brandon",
+    "Brian",
+    "Carl",
+    "Charles",
+    "Chris",
+    "Daniel",
+    "David",
+    "Edward",
+    "Eric",
+    "Frank",
+    "George",
+    "Henry",
+    "Ian",
+    "Jack",
+    "James",
+    "Jason",
+    "Jeff",
+    "John",
+    "Jonathan",
+    "Jordan",
+    "Joshua",
+    "Kevin",
+    "Kyle",
+    "Liam",
+    "Luke",
+    "Mark",
+    "Matthew",
+    "Michael",
+    "Nathan",
+    "Nicholas",
+    "Oliver",
+    "Paul",
+    "Peter",
+    "Philip",
+    "Richard",
+    "Robert",
+    "Ryan",
+    "Samuel",
+    "Scott",
+    "Sean",
+    "Steven",
+    "Thomas",
+    "Timothy",
+    "Tyler",
+    "Victor",
+    "Vincent",
+    "William",
+    "Zachary",
+    "Aaron",
+    "Adam",
+    "Adrian",
+    "Alan",
+    "Alex",
+    "Andrew",
+    "Anthony",
+    "Ben",
+    "Brandon",
+    "Brian",
+    "Carl",
+    "Charles",
+    "Chris",
+    "Daniel",
+    "David",
+    "Edward",
+    "Eric",
+    "Frank",
+    "George",
+    "Henry",
+    "Ian",
+    "Jack",
+    "James",
+    "Jason",
+    "Jeff",
+    "John",
+    "Jonathan",
+    "Jordan",
+    "Joshua",
+    "Kevin",
+    "Kyle",
+    "Liam",
+    "Luke",
+    "Mark",
+    "Matthew",
+    "Michael",
+    "Nathan",
+    "Nicholas",
+    "Oliver",
+    "Paul",
+    "Peter",
+    "Philip",
+    "Richard",
+    "Robert",
+    "Ryan",
+    "Samuel",
+    "Scott",
+    "Sean",
+    "Steven",
+    "Thomas",
+    "Timothy",
+    "Tyler",
+    "Victor",
+    "Vincent",
+    "William",
+    "Zachary",
+    "Aaron",
+    "Adam",
+    "Adrian",
+    "Alan",
+    "Alex",
+    "Andrew",
+    "Anthony",
+    "Ben",
+    "Brandon",
+    "Brian",
+    "Carl",
+    "Charles",
+    "Chris",
+    "Daniel",
+    "David",
+    "Edward",
+    "Eric",
+    "Frank",
+    "George",
+    "Henry",
+    "Ian",
+    "Jack",
+    "James",
+    "Jason",
+    "Jeff",
+    "John",
+    "Jonathan",
+    "Jordan",
+    "Joshua",
+    "Kevin",
+    "Kyle",
+    "Liam",
+    "Luke",
+    "Mark",
+    "Matthew",
+    "Michael",
+    "Nathan",
+    "Nicholas",
+    "Oliver",
+    "Paul",
+    "Peter",
+    "Philip",
+    "Richard",
+    "Robert",
+    "Ryan",
+    "Samuel",
+    "Scott",
+    "Sean",
+    "Steven",
+    "Thomas",
+    "Timothy",
+    "Tyler",
+    "Victor",
+    "Vincent",
+    "William",
+    "Zachary",
+    "Aaron",
+    "Adam",
+    "Adrian",
+    "Alan",
+    "Alex",
+    "Andrew",
+    "Anthony",
+    "Ben",
+    "Brandon",
+    "Brian",
+    "Carl",
+    "Charles",
+    "Chris",
+    "Daniel",
+    "David",
+    "Edward",
+    "Eric",
+    "Frank",
+    "George",
+    "Henry",
+    "Ian",
+    "Jack",
+    "James",
+    "Jason",
+    "Jeff",
+    "John",
+    "Jonathan",
+    "Jordan",
+    "Joshua",
+    "Kevin",
+    "Kyle",
+    "Liam",
+    "Luke",
+    "Mark",
+    "Matthew",
+    "Michael",
+    "Nathan",
+    "Nicholas",
+    "Oliver",
+    "Paul",
+    "Peter",
+    "Philip",
+    "Richard",
+    "Robert",
+    "Ryan",
+    "Samuel",
+    "Scott",
+    "Sean",
+    "Steven",
+    "Thomas",
+    "Timothy",
+    "Tyler",
+    "Victor",
+    "Vincent",
+    "William",
+    "Zachary",
+    "Aaron",
+    "Adam",
+    "Adrian",
+    "Alan",
+    "Alex",
+    "Andrew",
+    "Anthony",
+    "Ben",
+    "Brandon",
+    "Brian",
+    "Carl",
+    "Charles",
+    "Chris",
+    "Daniel",
+    "David",
+    "Edward",
+    "Eric",
+    "Frank",
+    "George",
+    "Henry",
+    "Ian",
+    "Jack",
+    "James",
+    "Jason",
+    "Jeff",
+    "John",
+    "Jonathan",
+    "Jordan",
+    "Joshua",
+    "Kevin",
+    "Kyle",
+    "Liam",
+    "Luke",
+    "Mark",
+    "Matthew",
+    "Michael",
+    "Nathan",
+    "Nicholas",
+    "Oliver",
+    "Paul",
+    "Peter",
+    "Philip",
+    "Richard",
+    "Robert",
+    "Ryan",
+    "Samuel",
+    "Scott",
+    "Sean",
+    "Steven",
+    "Thomas",
+    "Timothy",
+    "Tyler",
+    "Victor",
+    "Vincent",
+    "William",
+    "Zachary",
+    "Aaron",
+    "Adam",
+    "Adrian",
+    "Alan",
+    "Alex",
+    "Andrew",
+    "Anthony",
+    "Ben",
+    "Brandon",
+    "Brian",
+    "Carl",
+    "Charles",
+    "Chris",
+    "Daniel",
+    "David",
+    "Edward",
+    "Eric",
+    "Frank",
+    "George",
+    "Henry",
+    "Ian",
+    "Jack",
+    "James",
+    "Jason",
+    "Jeff",
+    "John",
+    "Jonathan",
+    "Jordan",
+    "Joshua",
+    "Kevin",
+    "Kyle",
+    "Liam",
+    "Luke",
+    "Mark",
+    "Matthew",
+    "Michael",
+    "Nathan",
+    "Nicholas",
+    "Oliver",
+    "Paul",
+    "Peter",
+    "Philip",
+    "Richard",
+    "Robert",
+    "Ryan",
+    "Samuel",
+    "Scott",
+    "Sean",
+    "Steven",
+    "Thomas",
+    "Timothy",
+    "Tyler",
+    "Victor",
+    "Vincent",
+    "William",
+    "Zachary",
   ];
 
   // Generate player data outside of render to avoid Math.random() issues
@@ -110,14 +380,37 @@ const PlayersPage = () => {
   });
 
   const [players, setPlayers] = useState<Player[]>(
-    playerNames.map(generatePlayerData)
+    defaultPlayerNames.map(generatePlayerData)
   );
 
+  // Load persisted data on component mount
+  useEffect(() => {
+    const loadPersistedData = () => {
+      const savedPlayers = localStorage.getItem("players-data");
+      if (savedPlayers) {
+        try {
+          const parsedPlayers = JSON.parse(savedPlayers);
+          setPlayers(parsedPlayers);
+        } catch (error) {
+          console.error("Error loading players data:", error);
+        }
+      }
+    };
+
+    loadPersistedData();
+  }, []);
+
+  // Save data whenever players change
+  useEffect(() => {
+    localStorage.setItem("players-data", JSON.stringify(players));
+  }, [players]);
+
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
   const [newPlayer, setNewPlayer] = useState({
     name: "",
-    email: "",
-    phone: "",
+    rank: 0,
+    points: 0,
     skillLevel: "beginner" as
       | "beginner"
       | "intermediate"
@@ -126,20 +419,79 @@ const PlayersPage = () => {
   });
 
   const handleCreatePlayer = () => {
+    // Check for duplicate name
+    const duplicateName = players.find(
+      (player) => player.name.toLowerCase() === newPlayer.name.toLowerCase()
+    );
+
+    if (duplicateName) {
+      alert(`Player with name "${newPlayer.name}" already exists!`);
+      return;
+    }
+
     const player: Player = {
       id: Date.now().toString(),
       name: newPlayer.name,
-      email: newPlayer.email,
-      phone: newPlayer.phone,
+      email: "", // Default empty email
+      phone: "", // Default empty phone
       skillLevel: newPlayer.skillLevel,
-      rating: 0,
+      rating: newPlayer.rank,
       tournamentsPlayed: 0,
       wins: 0,
       status: "active",
     };
 
     setPlayers([...players, player]);
-    setNewPlayer({ name: "", email: "", phone: "", skillLevel: "beginner" });
+    setNewPlayer({ name: "", rank: 0, points: 0, skillLevel: "beginner" });
+    setShowCreateForm(false);
+  };
+
+  const handleEditPlayer = (player: Player) => {
+    console.log("Editing player:", player);
+    setEditingPlayer(player);
+    setNewPlayer({
+      name: player.name,
+      rank: player.rating,
+      points: 100 + parseInt(player.id) * 10, // Calculate points based on ID
+      skillLevel: player.skillLevel,
+    });
+    setShowCreateForm(true);
+  };
+
+  const handleUpdatePlayer = () => {
+    if (editingPlayer) {
+      // Check for duplicate name (excluding the current player being edited)
+      const duplicateName = players.find(
+        (player) =>
+          player.name.toLowerCase() === newPlayer.name.toLowerCase() &&
+          player.id !== editingPlayer.id
+      );
+
+      if (duplicateName) {
+        alert(`Player with name "${newPlayer.name}" already exists!`);
+        return;
+      }
+
+      const updatedPlayers = players.map((player) =>
+        player.id === editingPlayer.id
+          ? {
+              ...player,
+              name: newPlayer.name,
+              rating: newPlayer.rank,
+              skillLevel: newPlayer.skillLevel,
+            }
+          : player
+      );
+      setPlayers(updatedPlayers);
+      setEditingPlayer(null);
+      setNewPlayer({ name: "", rank: 0, points: 0, skillLevel: "beginner" });
+      setShowCreateForm(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPlayer(null);
+    setNewPlayer({ name: "", rank: 0, points: 0, skillLevel: "beginner" });
     setShowCreateForm(false);
   };
 
@@ -159,7 +511,12 @@ const PlayersPage = () => {
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">Add New Player</h2>
+              <h2 className="text-xl font-bold mb-4">
+                {editingPlayer ? "Edit Player" : "Add New Player"}
+              </h2>
+              <div className="text-xs text-gray-500 mb-2">
+                Debug: {JSON.stringify(newPlayer)}
+              </div>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -168,7 +525,7 @@ const PlayersPage = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   />
                 </div>
                 <div>
@@ -178,36 +535,83 @@ const PlayersPage = () => {
                   <input
                     type="text"
                     value={newPlayer.name}
-                    onChange={(e) =>
-                      setNewPlayer({ ...newPlayer, name: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onChange={(e) => {
+                      console.log("Name changing to:", e.target.value);
+                      setNewPlayer({ ...newPlayer, name: e.target.value });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     placeholder="Enter player name"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Ranking Points
+                    Rank
                   </label>
                   <input
                     type="number"
-                    placeholder="Enter points"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={newPlayer.rank}
+                    onChange={(e) => {
+                      setNewPlayer({
+                        ...newPlayer,
+                        rank: parseInt(e.target.value) || 0,
+                      });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                    placeholder="Enter rank"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Points
+                  </label>
+                  <input
+                    type="number"
+                    value={newPlayer.points}
+                    onChange={(e) => {
+                      setNewPlayer({
+                        ...newPlayer,
+                        points: parseInt(e.target.value) || 0,
+                      });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                    placeholder="Enter points"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Skill Level
+                  </label>
+                  <select
+                    value={newPlayer.skillLevel}
+                    onChange={(e) =>
+                      setNewPlayer({
+                        ...newPlayer,
+                        skillLevel: e.target.value as any,
+                      })
+                    }
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                  >
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="expert">Expert</option>
+                  </select>
                 </div>
               </div>
               <div className="flex justify-end space-x-3 mt-6">
                 <button
-                  onClick={() => setShowCreateForm(false)}
+                  onClick={handleCancelEdit}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleCreatePlayer}
+                  onClick={
+                    editingPlayer ? handleUpdatePlayer : handleCreatePlayer
+                  }
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                 >
-                  Add Player
+                  {editingPlayer ? "Update Player" : "Add Player"}
                 </button>
               </div>
             </div>
@@ -243,7 +647,13 @@ const PlayersPage = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {players.slice(0, 25).map((player, i) => (
-                    <tr key={player.id} className="hover:bg-gray-50">
+                    <tr
+                      key={player.id}
+                      className={`hover:bg-gray-50 cursor-pointer ${
+                        i < 8 ? "bg-yellow-100" : ""
+                      }`}
+                      onClick={() => handleEditPlayer(player)}
+                    >
                       <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 1}
                       </td>
@@ -292,7 +702,11 @@ const PlayersPage = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {players.slice(25, 50).map((player, i) => (
-                    <tr key={player.id} className="hover:bg-gray-50">
+                    <tr
+                      key={player.id}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => handleEditPlayer(player)}
+                    >
                       <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 26}
                       </td>
@@ -341,7 +755,11 @@ const PlayersPage = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {players.slice(50, 75).map((player, i) => (
-                    <tr key={player.id} className="hover:bg-gray-50">
+                    <tr
+                      key={player.id}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => handleEditPlayer(player)}
+                    >
                       <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 51}
                       </td>

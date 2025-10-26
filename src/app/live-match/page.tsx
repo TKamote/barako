@@ -3,160 +3,147 @@
 import { useState } from "react";
 import { useLive } from "@/contexts/LiveContext";
 
+const BilliardsBall = ({
+  number,
+  color,
+}: {
+  number: number;
+  color: string;
+}) => (
+  <div
+    className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl border border-white"
+    style={{ backgroundColor: color, borderWidth: "0.5px" }}
+  >
+    {number}
+  </div>
+);
+
 const LiveMatchPage = () => {
   const [player1Name] = useState("Dave");
   const [player2Name] = useState("Joel");
-  const [player1Score] = useState(0);
-  const [player2Score] = useState(0);
+  const [player1Score] = useState(7);
+  const [player2Score] = useState(5);
   const { isLive, setIsLive } = useLive();
 
+  const ballColors = [
+    "#ef4444", // Red
+    "#eab308", // Yellow
+    "#3b82f6", // Blue
+    "#a855f7", // Purple
+    "#f97316", // Orange
+    "#22c55e", // Green
+    "#ec4899", // Pink
+    "#1f2937", // Black
+    "#facc15", // Light Yellow
+    "#1d4ed8", // Dark Blue
+  ];
+
   return (
-    <div className="p-6 h-screen flex flex-col bg-transparent">
-      <div className="max-w-7xl mx-auto flex-1 flex flex-col">
-        {/* Live Button - Top Right Corner */}
-        <div className="absolute" style={{ top: "80px", right: "50px" }}>
+    <div className="min-h-screen bg-transparent relative">
+      {/* Header with Live Button and Balls */}
+      <div className="flex justify-end items-start p-4">
+        {/* Right side - Live Button and Balls */}
+        <div className="flex flex-col items-end space-y-4">
+          {/* Live Toggle Button */}
           <button
             onClick={() => setIsLive(!isLive)}
-            className={`text-white px-4 py-2 rounded-full font-bold text-lg transition-all duration-300 ${
+            className={`px-6 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
               isLive
-                ? "bg-linear-to-r from-red-600 to-red-800 animate-pulse"
-                : "bg-gray-500 hover:bg-gray-600"
+                ? "bg-red-600 hover:bg-red-700 text-white animate-pulse-live inline-flex items-center"
+                : "bg-green-600 hover:bg-green-700 text-white"
             }`}
           >
-            {isLive ? "LIVE" : "GO LIVE"}
+            {isLive ? (
+              <>
+                <span className="mr-2">🔴</span>
+                LIVE
+              </>
+            ) : (
+              "GO LIVE"
+            )}
           </button>
-        </div>
 
-        {/* Players Scoring Container - Bottom */}
-        <div className="bg-white rounded-lg shadow-lg px-1 py-1 mt-auto w-fit mx-auto">
-          <div className="flex items-center justify-between">
-            {/* Player 1 Profile Photo */}
-            <div className="w-14 h-14 bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-6xl">
-              👨
-            </div>
-
-            {/* Center Content */}
-            <div className="flex items-center justify-center space-x-2 flex-1">
-              {/* Player 1 Name */}
-              <div className="bg-red-500 px-28 py-3">
-                <div className="text-2xl font-bold text-white">
-                  {player1Name}
-                </div>
-              </div>
-
-              {/* Scores and VS */}
-              <div
-                className="flex items-center justify-center space-x-5 bg-linear-to-r from-red-600 to-blue-600"
-                style={{ width: "calc(2rem + 8rem + 2rem)", height: "3.5rem" }}
-              >
-                <div className="text-5xl font-bold text-white">
-                  {player1Score}
-                </div>
-                <div className="text-1.5xl font-bold text-white">VS</div>
-                <div className="text-5xl font-bold text-white">
-                  {player2Score}
-                </div>
-              </div>
-
-              {/* Player 2 Name */}
-              <div className="bg-blue-600 px-28 py-3">
-                <div className="text-2xl font-bold text-white">
-                  {player2Name}
-                </div>
-              </div>
-            </div>
-
-            {/* Player 2 Profile Photo */}
-            <div className="w-14 h-14 bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center text-6xl">
-              👩
+          {/* Billiards Balls - Vertical */}
+          <div
+            className="bg-gray-800 rounded-full px-2 py-Tournaments"
+            style={{ marginRight: "20px", marginTop: "50px" }}
+          >
+            <div className="flex flex-col space-y-2">
+              {ballColors.map((color, index) => (
+                <BilliardsBall
+                  key={index + 1}
+                  number={index + 1}
+                  color={color}
+                />
+              ))}
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Billiards Ball Icons */}
-        <div className="mt-4 flex flex-col items-center">
-          <div className="flex space-x-4 bg-amber-50 rounded-full px-6 py-1">
-            {/* Ball 1 - Red */}
-            <div
-              className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              1
-            </div>
+      {/* Score Display - Fixed at Bottom */}
+      <div className="fixed bottom-4 left-0 right-0 z-40">
+        <div className="flex justify-center">
+          <div className="bg-gradient-to-r from-purple-900 via-purple-800 to-purple-900 rounded-xl py-4 px-12 shadow-2xl max-w-4xl w-full mx-8 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
+            <div className="relative z-10">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-4">
+                  <div className="text-6xl">👨</div>
+                  <div className="text-4xl font-bold text-white">Dave</div>
+                </div>
 
-            {/* Ball 2 - Yellow */}
-            <div
-              className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              2
-            </div>
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center space-x-8">
+                    <div className="text-4xl font-bold text-white">7</div>
+                    <div className="text-4xl font-bold text-white">-</div>
+                    <div className="text-4xl font-bold text-white">5</div>
+                  </div>
+                  <div className="text-lg font-semibold text-white mt-1">
+                    Race to 9
+                  </div>
+                </div>
 
-            {/* Ball 3 - Blue */}
-            <div
-              className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              3
-            </div>
-
-            {/* Ball 4 - Purple */}
-            <div
-              className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              4
-            </div>
-
-            {/* Ball 5 - Orange */}
-            <div
-              className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              5
-            </div>
-
-            {/* Ball 6 - Green */}
-            <div
-              className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              6
-            </div>
-
-            {/* Ball 7 - Pink */}
-            <div
-              className="w-12 h-12 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              7
-            </div>
-
-            {/* Ball 8 - Black */}
-            <div
-              className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              8
-            </div>
-
-            {/* Ball 9 - Light Yellow */}
-            <div
-              className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              9
-            </div>
-
-            {/* Ball 10 - Dark Blue */}
-            <div
-              className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold"
-              style={{ fontSize: "22px" }}
-            >
-              10
+                <div className="flex items-center space-x-4">
+                  <div className="text-4xl font-bold text-white">Joel</div>
+                  <div className="text-6xl">👩</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* OBS Integration Instructions - Bottom */}
+      <div className="fixed bottom-1 left-4 right-4 z-30">
+        <div className="bg-black/80 text-white text-xs p-2 rounded text-center">
+          <strong>OBS Integration:</strong> Use Browser Source with URL:{" "}
+          <code className="bg-gray-700 px-1 rounded">
+            {typeof window !== "undefined"
+              ? window.location.href
+              : "localhost:3000/live-match"}
+          </code>{" "}
+          | Size: 1920x1080 | FPS: 60
+        </div>
+      </div>
+
+      {/* Barako Logo - Bottom Left */}
+      <div
+        className="fixed z-50"
+        style={{
+          bottom: "5px",
+          left: "50px",
+        }}
+      >
+        <img
+          src="/favicon.png"
+          alt="Barako Logo"
+          width={100}
+          height={100}
+          style={{
+            filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+          }}
+        />
       </div>
     </div>
   );

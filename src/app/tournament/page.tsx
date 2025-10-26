@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Tournament {
   id: string;
@@ -13,28 +13,93 @@ interface Tournament {
 }
 
 const TournamentPage = () => {
-  const [tournaments, setTournaments] = useState<Tournament[]>([
+  // Default tournament data
+  const defaultTournaments: Tournament[] = [
     {
       id: "1",
-      name: "Weekly Championship",
-      date: "2024-01-15",
-      status: "ongoing",
-      participants: 16,
+      name: "Barako 9-Ball Championship - November 2025",
+      date: "2025-11-15",
+      status: "upcoming",
+      participants: 0,
       maxParticipants: 32,
-      prize: "$500",
+      prize: "$800",
     },
     {
       id: "2",
-      name: "Monthly Masters",
-      date: "2024-01-20",
+      name: "Barako 9-Ball Championship - December 2025",
+      date: "2025-12-20",
       status: "upcoming",
-      participants: 8,
-      maxParticipants: 16,
-      prize: "$1000",
+      participants: 0,
+      maxParticipants: 32,
+      prize: "$800",
     },
-  ]);
+    {
+      id: "3",
+      name: "Barako 9-Ball Championship - January 2026",
+      date: "2026-01-17",
+      status: "upcoming",
+      participants: 0,
+      maxParticipants: 32,
+      prize: "$800",
+    },
+    {
+      id: "4",
+      name: "Barako 9-Ball Championship - February 2026",
+      date: "2026-02-21",
+      status: "upcoming",
+      participants: 0,
+      maxParticipants: 32,
+      prize: "$800",
+    },
+    {
+      id: "5",
+      name: "Barako 9-Ball Championship - March 2026",
+      date: "2026-03-21",
+      status: "upcoming",
+      participants: 0,
+      maxParticipants: 32,
+      prize: "$800",
+    },
+    {
+      id: "6",
+      name: "Barako 9-Ball Championship - April 2026",
+      date: "2026-04-18",
+      status: "upcoming",
+      participants: 0,
+      maxParticipants: 32,
+      prize: "$800",
+    },
+  ];
+
+  const [tournaments, setTournaments] =
+    useState<Tournament[]>(defaultTournaments);
+
+  // Load persisted data on component mount
+  useEffect(() => {
+    const loadPersistedData = () => {
+      const savedTournaments = localStorage.getItem("tournaments-data");
+      if (savedTournaments) {
+        try {
+          const parsedTournaments = JSON.parse(savedTournaments);
+          setTournaments(parsedTournaments);
+        } catch (error) {
+          console.error("Error loading tournaments data:", error);
+        }
+      }
+    };
+
+    loadPersistedData();
+  }, []);
+
+  // Save data whenever tournaments change
+  useEffect(() => {
+    localStorage.setItem("tournaments-data", JSON.stringify(tournaments));
+  }, [tournaments]);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingTournament, setEditingTournament] = useState<Tournament | null>(
+    null
+  );
   const [newTournament, setNewTournament] = useState({
     name: "",
     date: "",
@@ -43,6 +108,8 @@ const TournamentPage = () => {
   });
 
   const handleCreateTournament = () => {
+    console.log("Creating tournament with data:", newTournament);
+
     const tournament: Tournament = {
       id: Date.now().toString(),
       name: newTournament.name,
@@ -53,7 +120,49 @@ const TournamentPage = () => {
       prize: newTournament.prize,
     };
 
+    console.log("New tournament object:", tournament);
     setTournaments([...tournaments, tournament]);
+    setNewTournament({ name: "", date: "", maxParticipants: 16, prize: "" });
+    setShowCreateForm(false);
+  };
+
+  const handleEditTournament = (tournament: Tournament) => {
+    console.log("Editing tournament:", tournament);
+    setEditingTournament(tournament);
+    setNewTournament({
+      name: tournament.name,
+      date: tournament.date,
+      maxParticipants: tournament.maxParticipants,
+      prize: tournament.prize,
+    });
+    setShowCreateForm(true);
+  };
+
+  const handleUpdateTournament = () => {
+    if (editingTournament) {
+      console.log("Updating tournament:", editingTournament.id);
+
+      const updatedTournaments = tournaments.map((tournament) =>
+        tournament.id === editingTournament.id
+          ? {
+              ...tournament,
+              name: newTournament.name,
+              date: newTournament.date,
+              maxParticipants: newTournament.maxParticipants,
+              prize: newTournament.prize,
+            }
+          : tournament
+      );
+
+      setTournaments(updatedTournaments);
+      setEditingTournament(null);
+      setNewTournament({ name: "", date: "", maxParticipants: 16, prize: "" });
+      setShowCreateForm(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTournament(null);
     setNewTournament({ name: "", date: "", maxParticipants: 16, prize: "" });
     setShowCreateForm(false);
   };
@@ -76,10 +185,9 @@ const TournamentPage = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">🏆 Tournaments</h1>
-            <p className="text-gray-600 mt-2">
-              Manage your billiards tournaments
-            </p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              🏆 Manage your billiards tournaments
+            </h1>
           </div>
           <button
             onClick={() => setShowCreateForm(true)}
@@ -93,7 +201,11 @@ const TournamentPage = () => {
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">Create New Tournament</h2>
+              <h2 className="text-xl font-bold mb-4">
+                {editingTournament
+                  ? "Edit Tournament"
+                  : "Create New Tournament"}
+              </h2>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -102,13 +214,14 @@ const TournamentPage = () => {
                   <input
                     type="text"
                     value={newTournament.name}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      console.log("Name changing to:", e.target.value);
                       setNewTournament({
                         ...newTournament,
                         name: e.target.value,
-                      })
-                    }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      });
+                    }}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     placeholder="Enter tournament name"
                   />
                 </div>
@@ -125,7 +238,7 @@ const TournamentPage = () => {
                         date: e.target.value,
                       })
                     }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   />
                 </div>
                 <div>
@@ -141,7 +254,7 @@ const TournamentPage = () => {
                         maxParticipants: parseInt(e.target.value),
                       })
                     }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     min="2"
                     max="64"
                   />
@@ -159,23 +272,29 @@ const TournamentPage = () => {
                         prize: e.target.value,
                       })
                     }
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     placeholder="e.g., $500"
                   />
                 </div>
               </div>
               <div className="flex justify-end space-x-3 mt-6">
                 <button
-                  onClick={() => setShowCreateForm(false)}
+                  onClick={handleCancelEdit}
                   className="px-4 py-2 text-gray-600 hover:text-gray-800"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleCreateTournament}
+                  onClick={
+                    editingTournament
+                      ? handleUpdateTournament
+                      : handleCreateTournament
+                  }
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                 >
-                  Create
+                  {editingTournament
+                    ? "Update Tournament"
+                    : "Create Tournament"}
                 </button>
               </div>
             </div>
@@ -190,16 +309,17 @@ const TournamentPage = () => {
               className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"
             >
               <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  {tournament.name}
-                </h3>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                    tournament.status
-                  )}`}
-                >
-                  {tournament.status}
-                </span>
+                <div>
+                  <h3 className="text-2xl font-semibold text-gray-900">
+                    Barako 9-Ball Championship
+                  </h3>
+                  <p className="text-xl text-blue-600 font-medium">
+                    {tournament.name.replace(
+                      "Barako 9-Ball Championship - ",
+                      ""
+                    )}
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-3">
@@ -232,8 +352,11 @@ const TournamentPage = () => {
                       </span>
                     )}
                   </div>
-                  <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                    View Details
+                  <button
+                    onClick={() => handleEditTournament(tournament)}
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  >
+                    Edit Tournament
                   </button>
                 </div>
               </div>

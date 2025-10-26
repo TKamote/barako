@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useLive } from "@/contexts/LiveContext";
 
 const StandbyPage = () => {
   const [selectedStartTime, setSelectedStartTime] = useState("15:00"); // 3:00 PM
   const [timeLeft, setTimeLeft] = useState(0); // seconds
   const [isRunning, setIsRunning] = useState(false);
+  const { setIsLive } = useLive();
 
-  // Generate start time options (12:00 PM to 8:00 PM in 30-minute intervals)
+  // Generate start time options (24-hour cycle in 30-minute intervals)
   const timeOptions = [];
-  for (let hour = 12; hour <= 20; hour++) {
+  for (let hour = 0; hour < 24; hour++) {
     for (let minutes = 0; minutes < 60; minutes += 30) {
       const timeString = `${hour.toString().padStart(2, "0")}:${minutes
         .toString()
@@ -105,6 +107,7 @@ const StandbyPage = () => {
 
     setTimeLeft(timeUntilStart);
     setIsRunning(true);
+    setIsLive(true); // Hide navigation bar for OBS streaming
 
     // Save to localStorage
     localStorage.setItem("standby-start-time", selectedStartTime);
@@ -142,24 +145,28 @@ const StandbyPage = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
-        {/* Tournament Title */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            PBS 10-Ball @ Klassic Club
-          </h1>
-          <div className="w-24 h-1 bg-blue-600 mx-auto rounded"></div>
-        </div>
-
-        {/* Countdown Timer */}
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+        {/* Tournament Title and Timer */}
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-lg p-8 mb-8">
           <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
+              Barako
+              <span
+                className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white font-bold text-2xl"
+                style={{ backgroundColor: "#facc15" }}
+              >
+                9
+              </span>
+              -Ball Double Elimination @ SZ
+            </h1>
+            <div className="w-24 h-1 bg-blue-600 mx-auto rounded mb-8"></div>
+
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-              Tournament Countdown
+              Tournament Starts In
             </h2>
 
             {/* Timer Display */}
             <div className="mb-8">
-              <div className="text-6xl font-mono font-bold text-blue-600 mb-4">
+              <div className="text-6xl font-mono font-bold text-black mb-4">
                 {formatTime(timeLeft)}
               </div>
 

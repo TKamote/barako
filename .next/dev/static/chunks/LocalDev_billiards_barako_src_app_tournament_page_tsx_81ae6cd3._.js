@@ -14,27 +14,93 @@ var _s = __turbopack_context__.k.signature();
 ;
 const TournamentPage = ()=>{
     _s();
-    const [tournaments, setTournaments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
+    // Default tournament data
+    const defaultTournaments = [
         {
             id: "1",
-            name: "Weekly Championship",
-            date: "2024-01-15",
-            status: "ongoing",
-            participants: 16,
+            name: "Barako 9-Ball Championship - November 2025",
+            date: "2025-11-15",
+            status: "upcoming",
+            participants: 0,
             maxParticipants: 32,
-            prize: "$500"
+            prize: "$800"
         },
         {
             id: "2",
-            name: "Monthly Masters",
-            date: "2024-01-20",
+            name: "Barako 9-Ball Championship - December 2025",
+            date: "2025-12-20",
             status: "upcoming",
-            participants: 8,
-            maxParticipants: 16,
-            prize: "$1000"
+            participants: 0,
+            maxParticipants: 32,
+            prize: "$800"
+        },
+        {
+            id: "3",
+            name: "Barako 9-Ball Championship - January 2026",
+            date: "2026-01-17",
+            status: "upcoming",
+            participants: 0,
+            maxParticipants: 32,
+            prize: "$800"
+        },
+        {
+            id: "4",
+            name: "Barako 9-Ball Championship - February 2026",
+            date: "2026-02-21",
+            status: "upcoming",
+            participants: 0,
+            maxParticipants: 32,
+            prize: "$800"
+        },
+        {
+            id: "5",
+            name: "Barako 9-Ball Championship - March 2026",
+            date: "2026-03-21",
+            status: "upcoming",
+            participants: 0,
+            maxParticipants: 32,
+            prize: "$800"
+        },
+        {
+            id: "6",
+            name: "Barako 9-Ball Championship - April 2026",
+            date: "2026-04-18",
+            status: "upcoming",
+            participants: 0,
+            maxParticipants: 32,
+            prize: "$800"
         }
+    ];
+    const [tournaments, setTournaments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(defaultTournaments);
+    // Load persisted data on component mount
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "TournamentPage.useEffect": ()=>{
+            const loadPersistedData = {
+                "TournamentPage.useEffect.loadPersistedData": ()=>{
+                    const savedTournaments = localStorage.getItem("tournaments-data");
+                    if (savedTournaments) {
+                        try {
+                            const parsedTournaments = JSON.parse(savedTournaments);
+                            setTournaments(parsedTournaments);
+                        } catch (error) {
+                            console.error("Error loading tournaments data:", error);
+                        }
+                    }
+                }
+            }["TournamentPage.useEffect.loadPersistedData"];
+            loadPersistedData();
+        }
+    }["TournamentPage.useEffect"], []);
+    // Save data whenever tournaments change
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "TournamentPage.useEffect": ()=>{
+            localStorage.setItem("tournaments-data", JSON.stringify(tournaments));
+        }
+    }["TournamentPage.useEffect"], [
+        tournaments
     ]);
     const [showCreateForm, setShowCreateForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [editingTournament, setEditingTournament] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [newTournament, setNewTournament] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         name: "",
         date: "",
@@ -42,6 +108,7 @@ const TournamentPage = ()=>{
         prize: ""
     });
     const handleCreateTournament = ()=>{
+        console.log("Creating tournament with data:", newTournament);
         const tournament = {
             id: Date.now().toString(),
             name: newTournament.name,
@@ -51,10 +118,53 @@ const TournamentPage = ()=>{
             maxParticipants: newTournament.maxParticipants,
             prize: newTournament.prize
         };
+        console.log("New tournament object:", tournament);
         setTournaments([
             ...tournaments,
             tournament
         ]);
+        setNewTournament({
+            name: "",
+            date: "",
+            maxParticipants: 16,
+            prize: ""
+        });
+        setShowCreateForm(false);
+    };
+    const handleEditTournament = (tournament)=>{
+        console.log("Editing tournament:", tournament);
+        setEditingTournament(tournament);
+        setNewTournament({
+            name: tournament.name,
+            date: tournament.date,
+            maxParticipants: tournament.maxParticipants,
+            prize: tournament.prize
+        });
+        setShowCreateForm(true);
+    };
+    const handleUpdateTournament = ()=>{
+        if (editingTournament) {
+            console.log("Updating tournament:", editingTournament.id);
+            const updatedTournaments = tournaments.map((tournament)=>tournament.id === editingTournament.id ? {
+                    ...tournament,
+                    name: newTournament.name,
+                    date: newTournament.date,
+                    maxParticipants: newTournament.maxParticipants,
+                    prize: newTournament.prize
+                } : tournament);
+            setTournaments(updatedTournaments);
+            setEditingTournament(null);
+            setNewTournament({
+                name: "",
+                date: "",
+                maxParticipants: 16,
+                prize: ""
+            });
+            setShowCreateForm(false);
+        }
+    };
+    const handleCancelEdit = ()=>{
+        setEditingTournament(null);
         setNewTournament({
             name: "",
             date: "",
@@ -84,27 +194,17 @@ const TournamentPage = ()=>{
                     className: "flex justify-between items-center mb-8",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                    className: "text-3xl font-bold text-gray-900",
-                                    children: "🏆 Tournaments"
-                                }, void 0, false, {
-                                    fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                    lineNumber: 79,
-                                    columnNumber: 13
-                                }, ("TURBOPACK compile-time value", void 0)),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    className: "text-gray-600 mt-2",
-                                    children: "Manage your billiards tournaments"
-                                }, void 0, false, {
-                                    fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                    lineNumber: 80,
-                                    columnNumber: 13
-                                }, ("TURBOPACK compile-time value", void 0))
-                            ]
-                        }, void 0, true, {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "text-3xl font-bold text-gray-900",
+                                children: "🏆 Manage your billiards tournaments"
+                            }, void 0, false, {
+                                fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
+                                lineNumber: 188,
+                                columnNumber: 13
+                            }, ("TURBOPACK compile-time value", void 0))
+                        }, void 0, false, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                            lineNumber: 78,
+                            lineNumber: 187,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -113,13 +213,13 @@ const TournamentPage = ()=>{
                             children: "➕ Create Tournament"
                         }, void 0, false, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                            lineNumber: 84,
+                            lineNumber: 192,
                             columnNumber: 11
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                    lineNumber: 77,
+                    lineNumber: 186,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 showCreateForm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -129,10 +229,10 @@ const TournamentPage = ()=>{
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
                                 className: "text-xl font-bold mb-4",
-                                children: "Create New Tournament"
+                                children: editingTournament ? "Edit Tournament" : "Create New Tournament"
                             }, void 0, false, {
                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                lineNumber: 96,
+                                lineNumber: 204,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -145,27 +245,30 @@ const TournamentPage = ()=>{
                                                 children: "Tournament Name"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 99,
+                                                lineNumber: 211,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                 type: "text",
                                                 value: newTournament.name,
-                                                onChange: (e)=>setNewTournament({
+                                                onChange: (e)=>{
+                                                    console.log("Name changing to:", e.target.value);
+                                                    setNewTournament({
                                                         ...newTournament,
                                                         name: e.target.value
-                                                    }),
-                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                    });
+                                                },
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black",
                                                 placeholder: "Enter tournament name"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 102,
+                                                lineNumber: 214,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                        lineNumber: 98,
+                                        lineNumber: 210,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -175,7 +278,7 @@ const TournamentPage = ()=>{
                                                 children: "Date"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 116,
+                                                lineNumber: 229,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -185,16 +288,16 @@ const TournamentPage = ()=>{
                                                         ...newTournament,
                                                         date: e.target.value
                                                     }),
-                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 119,
+                                                lineNumber: 232,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                        lineNumber: 115,
+                                        lineNumber: 228,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -204,7 +307,7 @@ const TournamentPage = ()=>{
                                                 children: "Max Participants"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 132,
+                                                lineNumber: 245,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -214,18 +317,18 @@ const TournamentPage = ()=>{
                                                         ...newTournament,
                                                         maxParticipants: parseInt(e.target.value)
                                                     }),
-                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black",
                                                 min: "2",
                                                 max: "64"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 135,
+                                                lineNumber: 248,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                        lineNumber: 131,
+                                        lineNumber: 244,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -235,7 +338,7 @@ const TournamentPage = ()=>{
                                                 children: "Prize"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 150,
+                                                lineNumber: 263,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -245,61 +348,61 @@ const TournamentPage = ()=>{
                                                         ...newTournament,
                                                         prize: e.target.value
                                                     }),
-                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                                                className: "w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black",
                                                 placeholder: "e.g., $500"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 153,
+                                                lineNumber: 266,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                        lineNumber: 149,
+                                        lineNumber: 262,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                lineNumber: 97,
+                                lineNumber: 209,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex justify-end space-x-3 mt-6",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: ()=>setShowCreateForm(false),
+                                        onClick: handleCancelEdit,
                                         className: "px-4 py-2 text-gray-600 hover:text-gray-800",
                                         children: "Cancel"
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                        lineNumber: 168,
+                                        lineNumber: 281,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: handleCreateTournament,
+                                        onClick: editingTournament ? handleUpdateTournament : handleCreateTournament,
                                         className: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg",
-                                        children: "Create"
+                                        children: editingTournament ? "Update Tournament" : "Create Tournament"
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                        lineNumber: 174,
+                                        lineNumber: 287,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                lineNumber: 167,
+                                lineNumber: 280,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                        lineNumber: 95,
+                        lineNumber: 203,
                         columnNumber: 13
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                    lineNumber: 94,
+                    lineNumber: 202,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -309,27 +412,33 @@ const TournamentPage = ()=>{
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "flex justify-between items-start mb-4",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                            className: "text-xl font-semibold text-gray-900",
-                                            children: tournament.name
-                                        }, void 0, false, {
-                                            fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                            lineNumber: 193,
-                                            columnNumber: 17
-                                        }, ("TURBOPACK compile-time value", void 0)),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: `px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(tournament.status)}`,
-                                            children: tournament.status
-                                        }, void 0, false, {
-                                            fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                            lineNumber: 196,
-                                            columnNumber: 17
-                                        }, ("TURBOPACK compile-time value", void 0))
-                                    ]
-                                }, void 0, true, {
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                className: "text-2xl font-semibold text-gray-900",
+                                                children: "Barako 9-Ball Championship"
+                                            }, void 0, false, {
+                                                fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
+                                                lineNumber: 313,
+                                                columnNumber: 19
+                                            }, ("TURBOPACK compile-time value", void 0)),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-xl text-blue-600 font-medium",
+                                                children: tournament.name.replace("Barako 9-Ball Championship - ", "")
+                                            }, void 0, false, {
+                                                fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
+                                                lineNumber: 316,
+                                                columnNumber: 19
+                                            }, ("TURBOPACK compile-time value", void 0))
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
+                                        lineNumber: 312,
+                                        columnNumber: 17
+                                    }, ("TURBOPACK compile-time value", void 0))
+                                }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                    lineNumber: 192,
+                                    lineNumber: 311,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -343,20 +452,20 @@ const TournamentPage = ()=>{
                                                     children: "📅"
                                                 }, void 0, false, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                    lineNumber: 207,
+                                                    lineNumber: 327,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: new Date(tournament.date).toLocaleDateString()
                                                 }, void 0, false, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                    lineNumber: 208,
+                                                    lineNumber: 328,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                            lineNumber: 206,
+                                            lineNumber: 326,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -367,7 +476,7 @@ const TournamentPage = ()=>{
                                                     children: "👥"
                                                 }, void 0, false, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                    lineNumber: 212,
+                                                    lineNumber: 332,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -380,13 +489,13 @@ const TournamentPage = ()=>{
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                    lineNumber: 213,
+                                                    lineNumber: 333,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                            lineNumber: 211,
+                                            lineNumber: 331,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -397,7 +506,7 @@ const TournamentPage = ()=>{
                                                     children: "🏆"
                                                 }, void 0, false, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                    lineNumber: 220,
+                                                    lineNumber: 340,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -407,19 +516,19 @@ const TournamentPage = ()=>{
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                    lineNumber: 221,
+                                                    lineNumber: 341,
                                                     columnNumber: 19
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                            lineNumber: 219,
+                                            lineNumber: 339,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                    lineNumber: 205,
+                                    lineNumber: 325,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -437,49 +546,50 @@ const TournamentPage = ()=>{
                                                             children: "⏱️"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                            lineNumber: 230,
+                                                            lineNumber: 350,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         "In Progress"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                    lineNumber: 229,
+                                                    lineNumber: 349,
                                                     columnNumber: 23
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 227,
+                                                lineNumber: 347,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: ()=>handleEditTournament(tournament),
                                                 className: "text-blue-600 hover:text-blue-800 text-sm font-medium",
-                                                children: "View Details"
+                                                children: "Edit Tournament"
                                             }, void 0, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                                lineNumber: 235,
+                                                lineNumber: 355,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                        lineNumber: 226,
+                                        lineNumber: 346,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                                    lineNumber: 225,
+                                    lineNumber: 345,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, tournament.id, true, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                            lineNumber: 188,
+                            lineNumber: 307,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)))
                 }, void 0, false, {
                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                    lineNumber: 186,
+                    lineNumber: 305,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0)),
                 tournaments.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -490,7 +600,7 @@ const TournamentPage = ()=>{
                             children: "🏆"
                         }, void 0, false, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                            lineNumber: 246,
+                            lineNumber: 369,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -498,7 +608,7 @@ const TournamentPage = ()=>{
                             children: "No tournaments yet"
                         }, void 0, false, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                            lineNumber: 247,
+                            lineNumber: 370,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -506,28 +616,28 @@ const TournamentPage = ()=>{
                             children: "Create your first tournament to get started"
                         }, void 0, false, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                            lineNumber: 250,
+                            lineNumber: 373,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-                    lineNumber: 245,
+                    lineNumber: 368,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             ]
         }, void 0, true, {
             fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-            lineNumber: 76,
+            lineNumber: 185,
             columnNumber: 7
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false, {
         fileName: "[project]/LocalDev/billiards/barako/src/app/tournament/page.tsx",
-        lineNumber: 75,
+        lineNumber: 184,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(TournamentPage, "8XsP4UYQC3aSQnZ2HqeBjzYqzzQ=");
+_s(TournamentPage, "4Qpa3WlGXw2Oh9Upl4O8x8Xyql8=");
 _c = TournamentPage;
 const __TURBOPACK__default__export__ = TournamentPage;
 var _c;

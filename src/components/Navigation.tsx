@@ -39,7 +39,7 @@ const Navigation = () => {
           <div className="flex">
             <div className="shrink-0 flex items-center">
               <h1 className="text-xl font-bold text-gray-900">
-                Pinoy SG Billiards
+                Barako Tournaments
               </h1>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
