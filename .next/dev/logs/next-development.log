@@ -41,3 +41,5 @@ https://react.dev/link/hydration-mismatch
 
 [00:00:17.803] Browser LOG     {}
 [01:38:46.498] Server  LOG      ✓ Compiled in 110ms
+[02:08:50.666] Server  LOG      ✓ Compiled in 1720ms
+[02:09:09.576] Server  LOG      ✓ Compiled in 153ms

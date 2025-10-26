@@ -320,6 +320,14 @@ const TournamentPage = () => {
                     )}
                   </p>
                 </div>
+                <span
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                    tournament.status
+                  )}`}
+                >
+                  {tournament.status.charAt(0).toUpperCase() +
+                    tournament.status.slice(1)}
+                </span>
               </div>
 
               <div className="space-y-3">

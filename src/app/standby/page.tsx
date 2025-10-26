@@ -146,27 +146,27 @@ const StandbyPage = () => {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
         {/* Tournament Title and Timer */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-lg p-8 mb-8">
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-lg p-4 sm:p-8 mb-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
+            <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
               Barako
               <span
-                className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white font-bold text-2xl"
+                className="inline-flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-full text-white font-bold text-lg sm:text-2xl"
                 style={{ backgroundColor: "#facc15" }}
               >
                 9
               </span>
               -Ball Double Elimination @ SZ
             </h1>
-            <div className="w-24 h-1 bg-blue-600 mx-auto rounded mb-8"></div>
+            <div className="w-16 sm:w-24 h-1 bg-blue-600 mx-auto rounded mb-6 sm:mb-8"></div>
 
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            <h2 className="text-lg sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">
               Tournament Starts In
             </h2>
 
             {/* Timer Display */}
             <div className="mb-8">
-              <div className="text-6xl font-mono font-bold text-black mb-4">
+              <div className="text-4xl sm:text-6xl font-mono font-bold text-black mb-4">
                 {formatTime(timeLeft)}
               </div>
 
@@ -202,7 +202,7 @@ const StandbyPage = () => {
               {!isRunning && timeLeft === 0 && (
                 <button
                   onClick={startTimer}
-                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
                 >
                   ▶️ Start Tournament
                 </button>
@@ -211,7 +211,7 @@ const StandbyPage = () => {
               {isRunning && (
                 <button
                   onClick={stopTimer}
-                  className="bg-orange-100 hover:bg-orange-200 text-orange-700 px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
                 >
                   ⏸️ Pause
                 </button>
@@ -220,7 +220,7 @@ const StandbyPage = () => {
               {!isRunning && timeLeft > 0 && (
                 <button
                   onClick={startTimer}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
                 >
                   ▶️ Resume
                 </button>
@@ -228,7 +228,7 @@ const StandbyPage = () => {
 
               <button
                 onClick={resetTimer}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors"
               >
                 🔄 Reset
               </button>

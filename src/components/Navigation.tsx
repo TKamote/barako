@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useLive } from "@/contexts/LiveContext";
 import { useState } from "react";
@@ -18,7 +19,7 @@ const Navigation = () => {
   const navItems = [
     {
       name: "Tournament",
-      href: "/tournament",
+      href: "/standby",
     },
     {
       name: "Players",
@@ -40,6 +41,13 @@ const Navigation = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="shrink-0 flex items-center">
+              <Image
+                src="/favicon.png"
+                alt="Barako Logo"
+                width={20}
+                height={20}
+                className="mr-2"
+              />
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">
                 Barako Tournaments
               </h1>
