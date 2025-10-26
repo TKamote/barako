@@ -157,7 +157,7 @@ const StandbyPage = () => {
                 >
                   9
                 </span>
-                -Ball Tournament
+                 Ball Tournament
               </h1>
               <h2 className="text-sm sm:text-xl font-semibold text-gray-700 mb-1">
                 Double Elimination

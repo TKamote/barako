@@ -34,8 +34,7 @@ const LiveMatchPage = () => {
     "#22c55e", // Green
     "#ec4899", // Pink
     "#1f2937", // Black
-    "#facc15", // Light Yellow
-    "#1d4ed8", // Dark Blue
+    "#facc15", // Light Yellow (9-ball)
   ];
 
   return (
@@ -63,10 +62,10 @@ const LiveMatchPage = () => {
             )}
           </button>
 
-          {/* Mobile: Billiards Balls - Vertical (1-5) */}
+          {/* Mobile: Billiards Balls - Vertical (All 9) */}
           <div className="bg-gray-800 rounded-full px-2 py-1">
             <div className="flex flex-col space-y-1">
-              {ballColors.slice(0, 5).map((color, index) => (
+              {ballColors.map((color, index) => (
                 <BilliardsBall
                   key={index + 1}
                   number={index + 1}
@@ -99,13 +98,13 @@ const LiveMatchPage = () => {
             )}
           </button>
 
-          {/* Billiards Balls - Vertical Desktop (1-5) */}
+          {/* Billiards Balls - Vertical Desktop (All 10) */}
           <div
             className="bg-gray-800 rounded-full px-2 py-2"
             style={{ marginRight: "20px", marginTop: "50px" }}
           >
             <div className="flex flex-col space-y-2">
-              {ballColors.slice(0, 5).map((color, index) => (
+              {ballColors.map((color, index) => (
                 <BilliardsBall
                   key={index + 1}
                   number={index + 1}

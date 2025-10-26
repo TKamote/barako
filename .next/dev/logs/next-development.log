@@ -1,6 +1,6 @@
-[00:00:02.851] Server  LOG      ✓ Ready in 1969ms
-[00:00:11.215] Server  LOG      ○ Compiling / ...
-[00:00:17.793] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:01.408] Server  LOG      ✓ Ready in 1070ms
+[00:00:08.778] Server  LOG      ○ Compiling / ...
+[00:00:13.467] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -21,7 +21,7 @@ https://react.dev/link/hydration-mismatch
               <SegmentTrieNode>
               <ClientPageRoot Component={function TournamentPage} serverProvidedParams={{...}}>
                 <TournamentPage params={Promise} searchParams={Promise}>
-                  <div className="p-6 bg-gra...">
+                  <div className="p-3 sm:p-6...">
                     <div className="max-w-7xl ...">
                       <div>
                       <div className="grid grid-...">
@@ -39,7 +39,9 @@ https://react.dev/link/hydration-mismatch
             ...
           ...
 
-[00:00:17.803] Browser LOG     {}
-[01:38:46.498] Server  LOG      ✓ Compiled in 110ms
-[02:08:50.666] Server  LOG      ✓ Compiled in 1720ms
-[02:09:09.576] Server  LOG      ✓ Compiled in 153ms
+[00:00:13.468] Browser LOG     {}
+[00:00:14.631] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:02:01.748] Server  LOG      ✓ Compiled in 228ms
+[00:02:28.557] Server  LOG      ✓ Compiled in 107ms
+[00:03:02.622] Server  LOG      ✓ Compiled in 208ms
+[00:03:07.506] Server  LOG      ✓ Compiled in 123ms

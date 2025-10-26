@@ -686,16 +686,16 @@ const PlayersPage = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Rank
                     </th>
-                    <th className="px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Photo
                     </th>
-                    <th className="px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
-                      Name
+                    <th className="px-3 py-2 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                      Players Name
                     </th>
-                    <th className="px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
                       Points
                     </th>
                   </tr>

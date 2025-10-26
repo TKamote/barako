@@ -942,7 +942,7 @@ const PlayersPage = ()=>{
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                            className: "px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider",
+                                                            className: "px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16",
                                                             children: "Rank"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
@@ -950,7 +950,7 @@ const PlayersPage = ()=>{
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                            className: "px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider",
+                                                            className: "px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16",
                                                             children: "Photo"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
@@ -958,15 +958,15 @@ const PlayersPage = ()=>{
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                            className: "px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider",
-                                                            children: "Name"
+                                                            className: "px-3 py-2 text-left text-base font-medium text-gray-500 uppercase tracking-wider",
+                                                            children: "Players Name"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
                                                             lineNumber: 695,
                                                             columnNumber: 21
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                            className: "px-4 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider",
+                                                            className: "px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20",
                                                             children: "Points"
                                                         }, void 0, false, {
                                                             fileName: "[project]/LocalDev/billiards/barako/src/app/players/page.tsx",
