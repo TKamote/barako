@@ -1,8 +1,8 @@
-# Pinoy SG Billiards Tournament Management System
+# Barako 9-Ball Tournament Management System
 
 ## Project Overview
 
-A Next.js-based tournament management system for billiards competitions with live streaming capabilities, player management, and real-time match tracking.
+A mobile-optimized Next.js-based tournament management system for 9-ball billiards competitions with live streaming capabilities, player management, and real-time match tracking. Fully responsive design optimized for mobile-first usage.
 
 ## Tech Stack
 
@@ -32,18 +32,23 @@ src/
 
 ## Key Features
 
-### 1. Navigation System
+### 1. Mobile-First Navigation System
 
-- **Pages**: Tournament, Players, Standby, Live Match
+- **Pages**: Tournament (→ Standby), Players, Standby, Live Match
+- **Mobile Menu**: Hamburger menu for mobile devices
+- **Desktop Menu**: Traditional horizontal navigation
 - **Live Toggle**: Button to hide/show navigation for clean streaming
 - **Context**: Global state management for live mode
+- **Logo**: Small logo (30px) in header next to title
 
 ### 2. Tournament Page (`/tournament`)
 
 - **Tournament Cards**: Display tournament info with status badges
-- **Create Tournament**: Modal with form fields
+- **Create Tournament**: Modal with form fields (mobile-optimized)
 - **Status Colors**: Ongoing (green), Upcoming (blue), Completed (gray)
 - **Features**: Name, date, participants, prize money
+- **Mobile Layout**: Responsive grid (1 column mobile, 2 tablet, 3 desktop)
+- **Mobile Buttons**: Full-width buttons with reduced padding
 
 ### 3. Players Page (`/players`)
 
@@ -52,25 +57,39 @@ src/
 - **Player Data**: Name, email, phone, skill level, rating, stats
 - **Add Player**: Modal with photo upload, name, ranking points
 - **Color Coding**: Blue, green, purple avatars per column
+- **Mobile Optimized**: Consistent column widths and responsive table headers
+- **Touch-Friendly**: Proper touch targets for mobile interaction
 
 ### 4. Standby Page (`/standby`)
 
-- **Tournament Title**: "PBS 10-Ball @ Klassic Club"
+- **Tournament Title**: "Barako 9-Ball Tournament" (3-line mobile layout)
+  - Line 1: "Barako 9-Ball Tournament"
+  - Line 2: "Double Elimination"
+  - Line 3: "Snooker Zone"
 - **Countdown Timer**: Persistent across navigation
 - **Time Selection**: Dropdown (12 PM - 8 PM, 30-min intervals)
 - **Controls**: Start, Pause, Resume, Reset buttons
 - **Persistence**: localStorage for timer state
+- **Mobile Optimized**: Smaller fonts, reduced button padding, responsive layout
 
 ### 5. Live Match Page (`/live-match`)
 
-- **Live Toggle**: "GO LIVE" / "LIVE" button (top right)
+- **Live Toggle**: "GO LIVE" / "LIVE" button
 - **Player Display**: Dave vs Joel with scores
 - **Background**: Transparent for clean streaming
+- **Mobile Layout**:
+  - Live button and 9 balls on **left side vertically**
+  - Large centered logo (120px)
+  - Mobile-optimized score display
+- **Desktop Layout**:
+  - Live button and 9 balls on **right side vertically**
+  - Logo in bottom-left corner
 - **UI Elements**:
-  - Red/blue gradient score container
+  - Purple gradient score container
   - Player avatars (👨👩)
-  - Billiards balls 1-10 (22px font, colored circles)
+  - **9-Ball Tournament**: Balls 1-9 with proper colors
   - LIVE indicator (pulsating red gradient)
+  - OBS integration instructions
 
 ## Player Roster (75 Total)
 
@@ -112,13 +131,16 @@ interface LiveContextType {
 - **Billiards Balls**: 1-10 with proper colors
 - **Gradient Score Container**: Red to blue
 
-## Styling Guidelines
+## Mobile-First Design Guidelines
 
 - **Tailwind CSS**: Canonical class names (shrink-0, bg-linear-to-r)
-- **Responsive Design**: Mobile-friendly layouts
+- **Responsive Design**: Mobile-first approach with breakpoints
+- **Breakpoints**: `sm:` (640px+) for tablet/desktop
+- **Touch Targets**: Minimum 44px for all interactive elements
 - **Color Scheme**: Blue/red theme for competition
 - **Transparent Backgrounds**: For streaming compatibility
-- **Font Sizes**: 22px for billiards balls, various sizes for UI
+- **Font Sizes**: Responsive sizing (smaller on mobile, larger on desktop)
+- **Viewport Meta**: Proper mobile rendering with `width=device-width, initial-scale=1.0`
 
 ## Deployment Setup
 
@@ -155,17 +177,32 @@ npm run start        # Start production server
 1. Create Next.js project with TypeScript and Tailwind
 2. Set up the 4 main pages (Tournament, Players, Standby, Live Match)
 3. Create LiveContext for global state management
-4. Implement navigation with conditional rendering
+4. Implement mobile-first navigation with hamburger menu
 5. Add 75 players with real names and placeholder data
 6. Create countdown timer with localStorage persistence
 7. Build live match page with transparent background
-8. Set up Vercel deployment with GitHub integration
-9. Test OBS Studio integration for streaming
+8. Implement 9-ball tournament layout (9 balls, not 10)
+9. Add mobile optimizations (responsive fonts, touch targets, layouts)
+10. Set up Vercel deployment with GitHub integration
+11. Configure custom domain with CNAME DNS record
+12. Test OBS Studio integration for streaming
 
-## Notes
+## Mobile Optimization Features
+
+- **Hamburger Menu**: Mobile navigation with slide-down menu
+- **Responsive Typography**: Smaller fonts on mobile, larger on desktop
+- **Touch-Friendly Buttons**: Minimum 44px touch targets
+- **Mobile Layouts**: Different layouts for mobile vs desktop
+- **Viewport Configuration**: Proper mobile rendering
+- **9-Ball Tournament**: Optimized for 9-ball (not 10-ball) competitions
+- **Custom Domain Support**: CNAME DNS configuration for subdomains
+
+## Technical Notes
 
 - All random data generation uses deterministic methods (no Math.random in render)
 - ESLint compliant with proper TypeScript types
-- Mobile responsive design
+- Mobile-first responsive design
 - Professional streaming-ready interface
 - Easy to extend with more players or features
+- Next.js Image optimization for logos and avatars
+- Tailwind CSS with canonical class names

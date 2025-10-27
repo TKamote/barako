@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import LoginModal from "@/components/LoginModal";
 
 interface Tournament {
   id: string;
@@ -13,6 +15,8 @@ interface Tournament {
 }
 
 const TournamentPage = () => {
+  const { user, signOut, isManager } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
   // Default tournament data
   const defaultTournaments: Tournament[] = [
     {
@@ -189,12 +193,34 @@ const TournamentPage = () => {
               🏆 Manage your billiards tournaments
             </h1>
           </div>
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg flex items-center justify-center transition-colors w-full sm:w-auto"
-          >
-            ➕ Create Tournament
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            {isManager ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600">
+                  Welcome, {user?.email}
+                </span>
+                <button
+                  onClick={() => signOut()}
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+              >
+                Manager Login
+              </button>
+            )}
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg flex items-center justify-center transition-colors w-full sm:w-auto"
+            >
+              ➕ Create Tournament
+            </button>
+          </div>
         </div>
 
         {/* Create Tournament Modal */}
@@ -383,6 +409,12 @@ const TournamentPage = () => {
             </p>
           </div>
         )}
+
+        {/* Login Modal */}
+        <LoginModal 
+          isOpen={showLoginModal} 
+          onClose={() => setShowLoginModal(false)} 
+        />
       </div>
     </div>
   );
