@@ -15,7 +15,7 @@ interface Tournament {
 }
 
 const TournamentPage = () => {
-  const { user, signOut, isManager } = useAuth();
+  const { user, signOut, isManager, username } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   // Default tournament data
   const defaultTournaments: Tournament[] = [
@@ -197,7 +197,7 @@ const TournamentPage = () => {
             {isManager ? (
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-600">
-                  Welcome, {user?.email}
+                  Welcome, {username}
                 </span>
                 <button
                   onClick={() => signOut()}
@@ -411,9 +411,9 @@ const TournamentPage = () => {
         )}
 
         {/* Login Modal */}
-        <LoginModal 
-          isOpen={showLoginModal} 
-          onClose={() => setShowLoginModal(false)} 
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
         />
       </div>
     </div>

@@ -15,6 +15,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   isManager: boolean;
+  username: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,10 +31,18 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      if (user) {
+        // Extract username from email (part before @)
+        const emailUsername = user.email?.split("@")[0] || "Manager";
+        setUsername(emailUsername);
+      } else {
+        setUsername(null);
+      }
       setLoading(false);
     });
 
@@ -68,6 +77,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signIn,
     signOut,
     isManager,
+    username,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
