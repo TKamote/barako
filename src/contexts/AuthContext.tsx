@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   User,
   signInWithEmailAndPassword,
-  signOut,
+  signOut as firebaseSignOut,
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = async () => {
     try {
-      await signOut(auth);
+      await firebaseSignOut(auth);
     } catch (error) {
       console.error("Sign out error:", error);
       throw error;
