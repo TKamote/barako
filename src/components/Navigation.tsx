@@ -19,7 +19,7 @@ const Navigation = () => {
   const navItems = [
     {
       name: "Tournament",
-      href: "/standby",
+      href: "/tournament",
     },
     {
       name: "Players",
