@@ -49,7 +49,7 @@ const Navigation = () => {
                 className="mr-2"
               />
               <h1 className="text-lg sm:text-xl font-bold text-gray-900">
-                Barako Tournaments
+                Barako Tour
               </h1>
             </div>
             {/* Desktop Navigation */}

@@ -146,7 +146,7 @@ const StandbyPage = () => {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto">
         {/* Tournament Title and Timer */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-lg p-4 sm:p-8 mb-8">
+        <div className="bg-linear-to-br from-blue-50 to-indigo-100 rounded-lg shadow-lg p-4 sm:p-8 mb-8">
           <div className="text-center">
             <div className="text-center mb-4">
               <h1 className="text-lg sm:text-4xl font-bold text-gray-900 mb-2 flex items-center justify-center gap-2">

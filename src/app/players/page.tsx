@@ -18,9 +18,11 @@ interface Player {
   phone: string;
   skillLevel: "beginner" | "intermediate" | "advanced" | "expert";
   rating: number;
+  points: number;
   tournamentsPlayed: number;
   wins: number;
   status: "active" | "inactive";
+  photoURL?: string;
 }
 
 const PlayersPage = () => {
@@ -36,11 +38,18 @@ const PlayersPage = () => {
         setLoading(true);
         const playersCollection = collection(db, "players");
         const playersSnapshot = await getDocs(playersCollection);
-        const playersList = playersSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Player[];
-        setPlayers(playersList);
+        const playersList = playersSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            points: data.points || 0, // Ensure points exists with default value
+          };
+        }) as Player[];
+
+        // Sort players by points in descending order (higher points = better rank)
+        const sortedPlayers = playersList.sort((a, b) => b.points - a.points);
+        setPlayers(sortedPlayers);
       } catch (error) {
         console.error("Error loading players:", error);
       } finally {
@@ -55,13 +64,14 @@ const PlayersPage = () => {
   const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
   const [newPlayer, setNewPlayer] = useState({
     name: "",
-    rank: 0,
-    points: 0,
+    rank: "",
+    points: "",
     skillLevel: "beginner" as
       | "beginner"
       | "intermediate"
       | "advanced"
       | "expert",
+    photo: null as File | null,
   });
 
   const handleCreatePlayer = async () => {
@@ -82,10 +92,12 @@ const PlayersPage = () => {
         email: "", // Default empty email
         phone: "", // Default empty phone
         skillLevel: newPlayer.skillLevel,
-        rating: newPlayer.rank,
+        rating: Number(newPlayer.rank) || 0,
+        points: Number(newPlayer.points) || 0,
         tournamentsPlayed: 0,
         wins: 0,
         status: "active",
+        photoURL: "", // Will be implemented later with Firebase Storage
       };
 
       // Add to Firestore
@@ -98,8 +110,18 @@ const PlayersPage = () => {
         status: "active" as const,
       };
 
-      setPlayers([...players, newPlayerWithId]);
-      setNewPlayer({ name: "", rank: 0, points: 0, skillLevel: "beginner" });
+      // Re-sort players after adding (by points descending)
+      const updatedPlayers = [...players, newPlayerWithId].sort(
+        (a, b) => b.points - a.points
+      );
+      setPlayers(updatedPlayers);
+      setNewPlayer({
+        name: "",
+        rank: "",
+        points: "",
+        skillLevel: "beginner",
+        photo: null,
+      });
       setShowCreateForm(false);
     } catch (error) {
       console.error("Error creating player:", error);
@@ -122,9 +144,10 @@ const PlayersPage = () => {
     setEditingPlayer(player);
     setNewPlayer({
       name: player.name,
-      rank: player.rating,
-      points: 100 + parseInt(player.id) * 10, // Calculate points based on ID
+      rank: player.rating?.toString() || "",
+      points: player.points?.toString() || "",
       skillLevel: player.skillLevel,
+      photo: null,
     });
     setShowCreateForm(true);
   };
@@ -150,7 +173,8 @@ const PlayersPage = () => {
         const playerRef = doc(db, "players", editingPlayer.id);
         await updateDoc(playerRef, {
           name: newPlayer.name,
-          rating: newPlayer.rank,
+          rating: Number(newPlayer.rank) || 0,
+          points: Number(newPlayer.points) || 0,
           skillLevel: newPlayer.skillLevel,
         });
 
@@ -160,15 +184,26 @@ const PlayersPage = () => {
             ? {
                 ...player,
                 name: newPlayer.name,
-                rating: newPlayer.rank,
+                rating: Number(newPlayer.rank) || 0,
+                points: Number(newPlayer.points) || 0,
                 skillLevel: newPlayer.skillLevel,
               }
             : player
         );
 
-        setPlayers(updatedPlayers);
+        // Re-sort players after updating (by points descending)
+        const sortedPlayers = updatedPlayers.sort(
+          (a, b) => b.points - a.points
+        );
+        setPlayers(sortedPlayers);
         setEditingPlayer(null);
-        setNewPlayer({ name: "", rank: 0, points: 0, skillLevel: "beginner" });
+        setNewPlayer({
+          name: "",
+          rank: "",
+          points: "",
+          skillLevel: "beginner",
+          photo: null,
+        });
         setShowCreateForm(false);
       } catch (error) {
         console.error("Error updating player:", error);
@@ -181,7 +216,13 @@ const PlayersPage = () => {
 
   const handleCancelEdit = () => {
     setEditingPlayer(null);
-    setNewPlayer({ name: "", rank: 0, points: 0, skillLevel: "beginner" });
+    setNewPlayer({
+      name: "",
+      rank: "",
+      points: "",
+      skillLevel: "beginner",
+      photo: null,
+    });
     setShowCreateForm(false);
   };
 
@@ -193,10 +234,57 @@ const PlayersPage = () => {
     setShowCreateForm(true);
   };
 
+  const handleDeletePlayer = async () => {
+    if (!editingPlayer) return;
+
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete "${editingPlayer.name}"? This action cannot be undone.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      setLoading(true);
+
+      // Delete from Firestore
+      const { deleteDoc } = await import("firebase/firestore");
+      const playerRef = doc(db, "players", editingPlayer.id);
+      await deleteDoc(playerRef);
+
+      // Update local state
+      const updatedPlayers = players.filter((p) => p.id !== editingPlayer.id);
+      setPlayers(updatedPlayers);
+
+      setEditingPlayer(null);
+      setNewPlayer({
+        name: "",
+        rank: "",
+        points: "",
+        skillLevel: "beginner",
+        photo: null,
+      });
+      setShowCreateForm(false);
+      alert("Player deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting player:", error);
+      alert("Failed to delete player. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-end items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Players</h1>
+            {isManager && (
+              <p className="text-sm text-gray-600 mt-1">
+                ✏️ Click on any player to edit or delete
+              </p>
+            )}
+          </div>
           <button
             onClick={handleAddPlayerClick}
             disabled={loading}
@@ -261,13 +349,23 @@ const PlayersPage = () => {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Player Photo
+                    Player Photo (Optional)
                   </label>
                   <input
                     type="file"
                     accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null;
+                      setNewPlayer({
+                        ...newPlayer,
+                        photo: file,
+                      });
+                    }}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Photo upload will be implemented with Firebase Storage
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -286,7 +384,7 @@ const PlayersPage = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Rank
+                    Rating (Optional)
                   </label>
                   <input
                     type="number"
@@ -294,16 +392,19 @@ const PlayersPage = () => {
                     onChange={(e) => {
                       setNewPlayer({
                         ...newPlayer,
-                        rank: parseInt(e.target.value) || 0,
+                        rank: e.target.value,
                       });
                     }}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    placeholder="Enter rank"
+                    placeholder="e.g., 1500 (skill rating)"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    This is a skill rating, not the rank position
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Points
+                    Points ⭐
                   </label>
                   <input
                     type="number"
@@ -311,12 +412,15 @@ const PlayersPage = () => {
                     onChange={(e) => {
                       setNewPlayer({
                         ...newPlayer,
-                        points: parseInt(e.target.value) || 0,
+                        points: e.target.value,
                       });
                     }}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    placeholder="Enter points"
+                    placeholder="Enter tournament points"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Ranking is determined by points (higher = better)
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -343,21 +447,35 @@ const PlayersPage = () => {
                   </select>
                 </div>
               </div>
-              <div className="flex justify-end space-x-3 mt-6">
-                <button
-                  onClick={handleCancelEdit}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={
-                    editingPlayer ? handleUpdatePlayer : handleCreatePlayer
-                  }
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-                >
-                  {editingPlayer ? "Update Player" : "Add Player"}
-                </button>
+              <div className="flex justify-between items-center mt-6">
+                <div>
+                  {editingPlayer && (
+                    <button
+                      onClick={handleDeletePlayer}
+                      disabled={loading}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2"
+                    >
+                      🗑️ Delete Player
+                    </button>
+                  )}
+                </div>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={handleCancelEdit}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={
+                      editingPlayer ? handleUpdatePlayer : handleCreatePlayer
+                    }
+                    disabled={loading}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+                  >
+                    {editingPlayer ? "Update Player" : "Add Player"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -394,8 +512,11 @@ const PlayersPage = () => {
                   {players.slice(0, 25).map((player, i) => (
                     <tr
                       key={player.id}
-                      className="hover:bg-gray-50 cursor-pointer"
+                      className={`transition-colors ${
+                        isManager ? "hover:bg-blue-50 cursor-pointer" : ""
+                      }`}
                       onClick={() => handleEditPlayer(player)}
+                      title={isManager ? "Click to edit" : ""}
                     >
                       <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 1}
@@ -409,7 +530,7 @@ const PlayersPage = () => {
                         {player.name}
                       </td>
                       <td className="px-2 py-2 text-center text-lg text-gray-900 w-20">
-                        {100 + (i + 1) * 10}
+                        {player.points}
                       </td>
                     </tr>
                   ))}
@@ -447,8 +568,11 @@ const PlayersPage = () => {
                   {players.slice(25, 50).map((player, i) => (
                     <tr
                       key={player.id}
-                      className="hover:bg-gray-50 cursor-pointer"
+                      className={`transition-colors ${
+                        isManager ? "hover:bg-blue-50 cursor-pointer" : ""
+                      }`}
                       onClick={() => handleEditPlayer(player)}
+                      title={isManager ? "Click to edit" : ""}
                     >
                       <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 26}
@@ -462,7 +586,7 @@ const PlayersPage = () => {
                         {player.name}
                       </td>
                       <td className="px-2 py-2 text-center text-lg text-gray-900 w-20">
-                        {100 + (i + 26) * 10}
+                        {player.points}
                       </td>
                     </tr>
                   ))}
@@ -500,8 +624,11 @@ const PlayersPage = () => {
                   {players.slice(50, 75).map((player, i) => (
                     <tr
                       key={player.id}
-                      className="hover:bg-gray-50 cursor-pointer"
+                      className={`transition-colors ${
+                        isManager ? "hover:bg-blue-50 cursor-pointer" : ""
+                      }`}
                       onClick={() => handleEditPlayer(player)}
+                      title={isManager ? "Click to edit" : ""}
                     >
                       <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 51}
@@ -515,7 +642,7 @@ const PlayersPage = () => {
                         {player.name}
                       </td>
                       <td className="px-2 py-2 text-center text-lg text-gray-900 w-20">
-                        {100 + (i + 51) * 10}
+                        {player.points}
                       </td>
                     </tr>
                   ))}

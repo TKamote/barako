@@ -15,7 +15,7 @@ interface Tournament {
 }
 
 const TournamentPage = () => {
-  const { user, signOut, isManager, username } = useAuth();
+  const { signOut, isManager, username } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
   // Default tournament data
   const defaultTournaments: Tournament[] = [
