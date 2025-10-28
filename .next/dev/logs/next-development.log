@@ -1,6 +1,48 @@
-[00:00:01.485] Server  LOG      ✓ Ready in 1102ms
-[00:00:17.503] Server  LOG      ○ Compiling / ...
-[00:00:22.173] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+[00:00:01.032] Server  LOG      ✓ Ready in 745ms
+[00:00:08.590] Server  LOG      ○ Compiling /players ...
+[00:00:10.366] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/players" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="/LocalDev/...">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <head>
+                          <body
+                            className="geist_a71539c9-module__T19VSG__variable geist_mono_8d43a2aa-module__8Li5zG__var..."
+-                           data-new-gr-c-s-check-loaded="14.1259.0"
+-                           data-gr-ext-installed=""
+                          >
+                  ...
+
+[00:00:10.400] Browser ERROR   uncaughtError: Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
 
 - A server/client branch `if (typeof window !== 'undefined')`.
 - Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
@@ -40,5 +82,32 @@ https://react.dev/link/hydration-mismatch
             ...
           ...
 
-[00:00:22.174] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:22.175] Browser LOG     {}
+[00:00:10.400] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:10.400] Browser LOG     {}
+[00:00:11.890] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:01:42.399] Browser LOG     Name changing to: D
+[00:01:42.710] Browser LOG     Name changing to: Da
+[00:01:42.712] Browser LOG     Name changing to: Dav
+[00:01:42.925] Browser LOG     Name changing to: Dave
+[00:01:59.372] Browser ERROR   Error creating player: {"code":"permission-denied","name":"FirebaseError"}
+[00:03:58.150] Server  LOG      ✓ Compiled in 97ms
+[00:04:07.008] Server  LOG      ✓ Compiled in 35ms
+[00:04:22.200] Server  LOG      ✓ Compiled in 39ms
+[00:04:41.471] Browser ERROR   Error creating player: {"code":"permission-denied","name":"FirebaseError"}
+[00:05:35.180] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:05:40.700] Browser LOG     Name changing to: D
+[00:05:40.909] Browser LOG     Name changing to: Da
+[00:05:41.019] Browser LOG     Name changing to: Dav
+[00:05:41.390] Browser LOG     Name changing to: Dave
+[00:06:04.059] Browser ERROR   Error creating player: {"code":"permission-denied","name":"FirebaseError"}
+[00:10:55.773] Browser LOG     Name changing to: D
+[00:10:56.081] Browser LOG     Name changing to: Da
+[00:10:56.081] Browser LOG     Name changing to: Dav
+[00:10:56.265] Browser LOG     Name changing to: Dave
+[00:13:50.240] Server  LOG      ✓ Compiled in 72ms
+[00:13:57.428] Server  LOG      ✓ Compiled in 62ms
+[00:14:05.272] Server  LOG      ✓ Compiled in 56ms
+[00:14:13.755] Server  LOG      ✓ Compiled in 25ms
+[00:14:30.030] Server  LOG      ✓ Compiled in 119ms
+[00:14:50.230] Server  LOG      ✓ Compiled in 83ms
+[00:15:14.997] Server  LOG      ✓ Compiled in 33ms

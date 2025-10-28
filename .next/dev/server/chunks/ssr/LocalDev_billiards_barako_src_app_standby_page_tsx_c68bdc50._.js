@@ -198,25 +198,15 @@ const StandbyPage = ()=>{
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "mb-8",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-4xl sm:text-6xl font-mono font-bold text-black mb-4",
-                                    children: formatTime(timeLeft)
-                                }, void 0, false, {
-                                    fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 177,
-                                    columnNumber: 15
-                                }, ("TURBOPACK compile-time value", void 0)),
-                                timeLeft === 0 && !isRunning && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "text-2xl text-gray-800",
-                                    children: "Tournament Complete! 🏆"
-                                }, void 0, false, {
-                                    fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 182,
-                                    columnNumber: 17
-                                }, ("TURBOPACK compile-time value", void 0))
-                            ]
-                        }, void 0, true, {
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "text-4xl sm:text-6xl font-mono font-bold text-black mb-4",
+                                children: formatTime(timeLeft)
+                            }, void 0, false, {
+                                fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
+                                lineNumber: 177,
+                                columnNumber: 15
+                            }, ("TURBOPACK compile-time value", void 0))
+                        }, void 0, false, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
                             lineNumber: 176,
                             columnNumber: 13
@@ -229,7 +219,7 @@ const StandbyPage = ()=>{
                                     children: "Select Tournament Start Time:"
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 190,
+                                    lineNumber: 184,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -243,23 +233,23 @@ const StandbyPage = ()=>{
                                                 children: option.label
                                             }, option.value, false, {
                                                 fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                                lineNumber: 200,
+                                                lineNumber: 194,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0)))
                                     }, void 0, false, {
                                         fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                        lineNumber: 194,
+                                        lineNumber: 188,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 193,
+                                    lineNumber: 187,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                            lineNumber: 189,
+                            lineNumber: 183,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -267,44 +257,44 @@ const StandbyPage = ()=>{
                             children: [
                                 !isRunning && timeLeft === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: startTimer,
-                                    className: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
+                                    className: "bg-green-600 hover:bg-green-700 text-white px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
                                     children: "▶️ Start Tournament"
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 211,
+                                    lineNumber: 205,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 isRunning && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: stopTimer,
-                                    className: "bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
+                                    className: "bg-orange-100 hover:bg-orange-200 text-orange-700 px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
                                     children: "⏸️ Pause"
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 220,
+                                    lineNumber: 214,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 !isRunning && timeLeft > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: startTimer,
-                                    className: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
+                                    className: "bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
                                     children: "▶️ Resume"
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 229,
+                                    lineNumber: 223,
                                     columnNumber: 17
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     onClick: resetTimer,
-                                    className: "bg-gray-100 hover:bg-gray-200 text-gray-600 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
+                                    className: "bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1 sm:px-6 sm:py-3 rounded-lg font-medium transition-colors",
                                     children: "🔄 Reset"
                                 }, void 0, false, {
                                     fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                                    lineNumber: 237,
+                                    lineNumber: 231,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/LocalDev/billiards/barako/src/app/standby/page.tsx",
-                            lineNumber: 209,
+                            lineNumber: 203,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]

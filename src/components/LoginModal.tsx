@@ -26,8 +26,8 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       onClose();
       setEmail("");
       setPassword("");
-    } catch (error: any) {
-      setError(error.message || "Failed to sign in");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Failed to sign in");
     } finally {
       setLoading(false);
     }
