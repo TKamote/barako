@@ -183,9 +183,11 @@ const PlayersPage = () => {
           skillLevel: newPlayer.skillLevel,
         };
 
-        // Only update photoURL if a new photo was uploaded
+        // Update photoURL - either new photo or remove existing photo
         if (photoPreview) {
           updateData.photoURL = photoPreview;
+        } else {
+          updateData.photoURL = ""; // Remove photo by setting empty string
         }
 
         await updateDoc(playerRef, updateData);
@@ -198,7 +200,7 @@ const PlayersPage = () => {
                 name: newPlayer.name,
                 points: Number(newPlayer.points) || 0,
                 skillLevel: newPlayer.skillLevel,
-                ...(photoPreview && { photoURL: photoPreview }),
+                photoURL: photoPreview || "", // Always update photoURL (empty string removes photo)
               }
             : player
         );
@@ -343,18 +345,14 @@ const PlayersPage = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Players</h1>
-            {isManager && (
-              <p className="text-sm text-gray-600 mt-1">
-                ✏️ Click on any player to edit or delete
-              </p>
-            )}
           </div>
           <button
             onClick={handleAddPlayerClick}
             disabled={loading}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors disabled:opacity-50"
           >
-            ➕ Add Player
+            <span className="text-white font-bold text-2xl mr-2">+</span>
+            Add Player
           </button>
         </div>
 
@@ -517,16 +515,16 @@ const PlayersPage = () => {
                     <button
                       onClick={handleDeletePlayer}
                       disabled={loading}
-                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2"
+                      className="bg-red-600 hover:bg-red-700 text-white px-2 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2"
                     >
-                      🗑️ Delete Player
+                      🗑️ Delete
                     </button>
                   )}
                 </div>
                 <div className="flex space-x-3">
                   <button
                     onClick={handleCancelEdit}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                    className="px-2 py-2 text-gray-600 hover:text-gray-800"
                   >
                     Cancel
                   </button>
@@ -535,9 +533,16 @@ const PlayersPage = () => {
                       editingPlayer ? handleUpdatePlayer : handleCreatePlayer
                     }
                     disabled={loading}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2"
                   >
-                    {editingPlayer ? "Update Player" : "Add Player"}
+                    {editingPlayer ? (
+                      <>
+                        <span className="text-white font-bold">✓</span>
+                        Update
+                      </>
+                    ) : (
+                      "Add Player"
+                    )}
                   </button>
                 </div>
               </div>
