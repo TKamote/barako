@@ -64,7 +64,6 @@ const PlayersPage = () => {
   const [editingPlayer, setEditingPlayer] = useState<Player | null>(null);
   const [newPlayer, setNewPlayer] = useState({
     name: "",
-    rank: "",
     points: "",
     skillLevel: "beginner" as
       | "beginner"
@@ -73,6 +72,7 @@ const PlayersPage = () => {
       | "expert",
     photo: null as File | null,
   });
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   const handleCreatePlayer = async () => {
     // Check for duplicate name
@@ -92,12 +92,12 @@ const PlayersPage = () => {
         email: "", // Default empty email
         phone: "", // Default empty phone
         skillLevel: newPlayer.skillLevel,
-        rating: Number(newPlayer.rank) || 0,
+        rating: 0, // Not used for ranking, kept for compatibility
         points: Number(newPlayer.points) || 0,
         tournamentsPlayed: 0,
         wins: 0,
         status: "active",
-        photoURL: "", // Will be implemented later with Firebase Storage
+        photoURL: photoPreview || "", // Store preview data URL temporarily
       };
 
       // Add to Firestore
@@ -117,11 +117,11 @@ const PlayersPage = () => {
       setPlayers(updatedPlayers);
       setNewPlayer({
         name: "",
-        rank: "",
         points: "",
         skillLevel: "beginner",
         photo: null,
       });
+      setPhotoPreview(null);
       setShowCreateForm(false);
     } catch (error) {
       console.error("Error creating player:", error);
@@ -144,11 +144,12 @@ const PlayersPage = () => {
     setEditingPlayer(player);
     setNewPlayer({
       name: player.name,
-      rank: player.rating?.toString() || "",
       points: player.points?.toString() || "",
       skillLevel: player.skillLevel,
       photo: null,
     });
+    // Show existing photo if available
+    setPhotoPreview(player.photoURL || null);
     setShowCreateForm(true);
   };
 
@@ -171,12 +172,23 @@ const PlayersPage = () => {
 
         // Update in Firestore
         const playerRef = doc(db, "players", editingPlayer.id);
-        await updateDoc(playerRef, {
+        const updateData: {
+          name: string;
+          points: number;
+          skillLevel: string;
+          photoURL?: string;
+        } = {
           name: newPlayer.name,
-          rating: Number(newPlayer.rank) || 0,
           points: Number(newPlayer.points) || 0,
           skillLevel: newPlayer.skillLevel,
-        });
+        };
+
+        // Only update photoURL if a new photo was uploaded
+        if (photoPreview) {
+          updateData.photoURL = photoPreview;
+        }
+
+        await updateDoc(playerRef, updateData);
 
         // Update local state
         const updatedPlayers = players.map((player) =>
@@ -184,9 +196,9 @@ const PlayersPage = () => {
             ? {
                 ...player,
                 name: newPlayer.name,
-                rating: Number(newPlayer.rank) || 0,
                 points: Number(newPlayer.points) || 0,
                 skillLevel: newPlayer.skillLevel,
+                ...(photoPreview && { photoURL: photoPreview }),
               }
             : player
         );
@@ -199,11 +211,11 @@ const PlayersPage = () => {
         setEditingPlayer(null);
         setNewPlayer({
           name: "",
-          rank: "",
           points: "",
           skillLevel: "beginner",
           photo: null,
         });
+        setPhotoPreview(null);
         setShowCreateForm(false);
       } catch (error) {
         console.error("Error updating player:", error);
@@ -218,12 +230,64 @@ const PlayersPage = () => {
     setEditingPlayer(null);
     setNewPlayer({
       name: "",
-      rank: "",
       points: "",
       skillLevel: "beginner",
       photo: null,
     });
+    setPhotoPreview(null);
     setShowCreateForm(false);
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setNewPlayer({
+      ...newPlayer,
+      photo: file,
+    });
+
+    // Create compressed preview URL
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const img = new Image();
+        img.onload = () => {
+          // Create canvas for compression
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          // Resize to max 400x400 (good for profile photos)
+          const maxSize = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxSize) {
+              height = (height * maxSize) / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width = (width * maxSize) / height;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          // Draw and compress
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Convert to compressed data URL (JPEG at 0.7 quality)
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          setPhotoPreview(compressedDataUrl);
+        };
+        img.src = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPhotoPreview(null);
+    }
   };
 
   const handleAddPlayerClick = () => {
@@ -258,11 +322,11 @@ const PlayersPage = () => {
       setEditingPlayer(null);
       setNewPlayer({
         name: "",
-        rank: "",
         points: "",
         skillLevel: "beginner",
         photo: null,
       });
+      setPhotoPreview(null);
       setShowCreateForm(false);
       alert("Player deleted successfully!");
     } catch (error) {
@@ -338,14 +402,38 @@ const PlayersPage = () => {
 
         {/* Create Player Modal */}
         {showCreateForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+              <h2 className="text-xl font-bold mb-4 text-gray-900">
                 {editingPlayer ? "Edit Player" : "Add New Player"}
               </h2>
-              <div className="text-xs text-gray-500 mb-2">
-                Debug: {JSON.stringify(newPlayer)}
-              </div>
+
+              {/* Profile Photo at Top */}
+              {photoPreview && (
+                <div className="mb-6 text-center">
+                  <div className="relative inline-block">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photoPreview}
+                      alt="Player profile"
+                      className="w-24 h-24 object-cover rounded-full border-4 border-blue-500 mx-auto"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewPlayer({ ...newPlayer, photo: null });
+                        setPhotoPreview(null);
+                      }}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-600 shadow-lg"
+                      title="Remove photo"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">Profile Photo</p>
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -354,17 +442,13 @@ const PlayersPage = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] || null;
-                      setNewPlayer({
-                        ...newPlayer,
-                        photo: file,
-                      });
-                    }}
+                    onChange={handlePhotoChange}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Photo upload will be implemented with Firebase Storage
+                    {photoPreview
+                      ? "Photo added - see preview above"
+                      : "Photo will be saved to Firebase Storage"}
                   </p>
                 </div>
                 <div>
@@ -381,26 +465,6 @@ const PlayersPage = () => {
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     placeholder="Enter player name"
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Rating (Optional)
-                  </label>
-                  <input
-                    type="number"
-                    value={newPlayer.rank}
-                    onChange={(e) => {
-                      setNewPlayer({
-                        ...newPlayer,
-                        rank: e.target.value,
-                      });
-                    }}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    placeholder="e.g., 1500 (skill rating)"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    This is a skill rating, not the rank position
-                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -522,9 +586,20 @@ const PlayersPage = () => {
                         #{i + 1}
                       </td>
                       <td className="px-2 py-2 text-center w-16">
-                        <div className="w-6 h-6 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-sm mx-auto">
-                          👤
-                        </div>
+                        {player.photoURL ? (
+                          <div className="w-8 h-8 mx-auto">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={player.photoURL}
+                              alt={player.name}
+                              className="w-full h-full object-cover rounded-full border-2 border-blue-400"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-6 h-6 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-sm mx-auto">
+                            👤
+                          </div>
+                        )}
                       </td>
                       <td className="px-3 py-2 text-lg text-gray-900">
                         {player.name}
@@ -578,9 +653,20 @@ const PlayersPage = () => {
                         #{i + 26}
                       </td>
                       <td className="px-2 py-2 text-center w-16">
-                        <div className="w-6 h-6 bg-linear-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-sm mx-auto">
-                          👤
-                        </div>
+                        {player.photoURL ? (
+                          <div className="w-8 h-8 mx-auto">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={player.photoURL}
+                              alt={player.name}
+                              className="w-full h-full object-cover rounded-full border-2 border-green-400"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-6 h-6 bg-linear-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-sm mx-auto">
+                            👤
+                          </div>
+                        )}
                       </td>
                       <td className="px-3 py-2 text-lg text-gray-900">
                         {player.name}
@@ -634,9 +720,20 @@ const PlayersPage = () => {
                         #{i + 51}
                       </td>
                       <td className="px-2 py-2 text-center w-16">
-                        <div className="w-6 h-6 bg-linear-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-sm mx-auto">
-                          👤
-                        </div>
+                        {player.photoURL ? (
+                          <div className="w-8 h-8 mx-auto">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={player.photoURL}
+                              alt={player.name}
+                              className="w-full h-full object-cover rounded-full border-2 border-purple-400"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-6 h-6 bg-linear-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-sm mx-auto">
+                            👤
+                          </div>
+                        )}
                       </td>
                       <td className="px-3 py-2 text-lg text-gray-900">
                         {player.name}
