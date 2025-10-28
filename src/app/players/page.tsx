@@ -349,7 +349,7 @@ const PlayersPage = () => {
           <button
             onClick={handleAddPlayerClick}
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center font-bold transition-colors disabled:opacity-50"
           >
             <span className="text-white font-bold text-2xl mr-2">+</span>
             Add Player
@@ -515,7 +515,7 @@ const PlayersPage = () => {
                     <button
                       onClick={handleDeletePlayer}
                       disabled={loading}
-                      className="bg-red-600 hover:bg-red-700 text-white px-2 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2"
+                      className="bg-red-600 hover:bg-red-700 text-white px-2 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2 font-bold"
                     >
                       🗑️ Delete
                     </button>
@@ -524,7 +524,7 @@ const PlayersPage = () => {
                 <div className="flex space-x-3">
                   <button
                     onClick={handleCancelEdit}
-                    className="px-2 py-2 text-gray-600 hover:text-gray-800"
+                    className="px-2 py-2 text-gray-600 hover:text-gray-800 font-bold"
                   >
                     Cancel
                   </button>
@@ -533,7 +533,7 @@ const PlayersPage = () => {
                       editingPlayer ? handleUpdatePlayer : handleCreatePlayer
                     }
                     disabled={loading}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-2 rounded-lg disabled:opacity-50 flex items-center gap-2 font-bold"
                   >
                     {editingPlayer ? (
                       <>

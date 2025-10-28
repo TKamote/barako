@@ -3,6 +3,15 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import LoginModal from "@/components/LoginModal";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface Tournament {
   id: string;
@@ -17,88 +26,33 @@ interface Tournament {
 const TournamentPage = () => {
   const { signOut, isManager, username } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
-  // Default tournament data
-  const defaultTournaments: Tournament[] = [
-    {
-      id: "1",
-      name: "Barako 9-Ball Championship - November 2025",
-      date: "2025-11-15",
-      status: "upcoming",
-      participants: 0,
-      maxParticipants: 32,
-      prize: "$800",
-    },
-    {
-      id: "2",
-      name: "Barako 9-Ball Championship - December 2025",
-      date: "2025-12-20",
-      status: "upcoming",
-      participants: 0,
-      maxParticipants: 32,
-      prize: "$800",
-    },
-    {
-      id: "3",
-      name: "Barako 9-Ball Championship - January 2026",
-      date: "2026-01-17",
-      status: "upcoming",
-      participants: 0,
-      maxParticipants: 32,
-      prize: "$800",
-    },
-    {
-      id: "4",
-      name: "Barako 9-Ball Championship - February 2026",
-      date: "2026-02-21",
-      status: "upcoming",
-      participants: 0,
-      maxParticipants: 32,
-      prize: "$800",
-    },
-    {
-      id: "5",
-      name: "Barako 9-Ball Championship - March 2026",
-      date: "2026-03-21",
-      status: "upcoming",
-      participants: 0,
-      maxParticipants: 32,
-      prize: "$800",
-    },
-    {
-      id: "6",
-      name: "Barako 9-Ball Championship - April 2026",
-      date: "2026-04-18",
-      status: "upcoming",
-      participants: 0,
-      maxParticipants: 32,
-      prize: "$800",
-    },
-  ];
+  const [tournaments, setTournaments] = useState<Tournament[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [tournaments, setTournaments] =
-    useState<Tournament[]>(defaultTournaments);
-
-  // Load persisted data on component mount
+  // Load tournaments from Firestore on component mount
   useEffect(() => {
-    const loadPersistedData = () => {
-      const savedTournaments = localStorage.getItem("tournaments-data");
-      if (savedTournaments) {
-        try {
-          const parsedTournaments = JSON.parse(savedTournaments);
-          setTournaments(parsedTournaments);
-        } catch (error) {
-          console.error("Error loading tournaments data:", error);
-        }
+    const loadTournaments = async () => {
+      try {
+        setLoading(true);
+        const tournamentsCollection = collection(db, "tournaments");
+        const tournamentsSnapshot = await getDocs(tournamentsCollection);
+        const tournamentsList = tournamentsSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            participants: data.participants || 0,
+          };
+        }) as Tournament[];
+        setTournaments(tournamentsList);
+      } catch (error) {
+        console.error("Error loading tournaments:", error);
+      } finally {
+        setLoading(false);
       }
     };
-
-    loadPersistedData();
+    loadTournaments();
   }, []);
-
-  // Save data whenever tournaments change
-  useEffect(() => {
-    localStorage.setItem("tournaments-data", JSON.stringify(tournaments));
-  }, [tournaments]);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingTournament, setEditingTournament] = useState<Tournament | null>(
@@ -111,27 +65,47 @@ const TournamentPage = () => {
     prize: "",
   });
 
-  const handleCreateTournament = () => {
-    console.log("Creating tournament with data:", newTournament);
+  const handleCreateTournament = async () => {
+    if (!isManager) {
+      setShowLoginModal(true);
+      return;
+    }
 
-    const tournament: Tournament = {
-      id: Date.now().toString(),
-      name: newTournament.name,
-      date: newTournament.date,
-      status: "upcoming",
-      participants: 0,
-      maxParticipants: newTournament.maxParticipants,
-      prize: newTournament.prize,
-    };
+    try {
+      const tournamentData = {
+        name: newTournament.name,
+        date: newTournament.date,
+        status: "upcoming" as const,
+        participants: 0,
+        maxParticipants: newTournament.maxParticipants,
+        prize: newTournament.prize,
+      };
 
-    console.log("New tournament object:", tournament);
-    setTournaments([...tournaments, tournament]);
-    setNewTournament({ name: "", date: "", maxParticipants: 16, prize: "" });
-    setShowCreateForm(false);
+      // Add to Firestore
+      const docRef = await addDoc(
+        collection(db, "tournaments"),
+        tournamentData
+      );
+
+      // Update local state with new tournament including Firestore ID
+      const newTournamentWithId: Tournament = {
+        id: docRef.id,
+        ...tournamentData,
+      };
+
+      setTournaments([...tournaments, newTournamentWithId]);
+      setNewTournament({ name: "", date: "", maxParticipants: 16, prize: "" });
+      setShowCreateForm(false);
+    } catch (error) {
+      console.error("Error creating tournament:", error);
+    }
   };
 
   const handleEditTournament = (tournament: Tournament) => {
-    console.log("Editing tournament:", tournament);
+    if (!isManager) {
+      setShowLoginModal(true);
+      return;
+    }
     setEditingTournament(tournament);
     setNewTournament({
       name: tournament.name,
@@ -142,10 +116,23 @@ const TournamentPage = () => {
     setShowCreateForm(true);
   };
 
-  const handleUpdateTournament = () => {
-    if (editingTournament) {
-      console.log("Updating tournament:", editingTournament.id);
+  const handleUpdateTournament = async () => {
+    if (!editingTournament || !isManager) {
+      return;
+    }
 
+    try {
+      const tournamentRef = doc(db, "tournaments", editingTournament.id);
+      const updateData = {
+        name: newTournament.name,
+        date: newTournament.date,
+        maxParticipants: newTournament.maxParticipants,
+        prize: newTournament.prize,
+      };
+
+      await updateDoc(tournamentRef, updateData);
+
+      // Update local state
       const updatedTournaments = tournaments.map((tournament) =>
         tournament.id === editingTournament.id
           ? {
@@ -162,6 +149,8 @@ const TournamentPage = () => {
       setEditingTournament(null);
       setNewTournament({ name: "", date: "", maxParticipants: 16, prize: "" });
       setShowCreateForm(false);
+    } catch (error) {
+      console.error("Error updating tournament:", error);
     }
   };
 
@@ -169,6 +158,22 @@ const TournamentPage = () => {
     setEditingTournament(null);
     setNewTournament({ name: "", date: "", maxParticipants: 16, prize: "" });
     setShowCreateForm(false);
+  };
+
+  const handleDeleteTournament = async (tournamentId: string) => {
+    if (!isManager) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (window.confirm("Are you sure you want to delete this tournament?")) {
+      try {
+        await deleteDoc(doc(db, "tournaments", tournamentId));
+        setTournaments(tournaments.filter((t) => t.id !== tournamentId));
+      } catch (error) {
+        console.error("Error deleting tournament:", error);
+      }
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -190,7 +195,7 @@ const TournamentPage = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              🏆 Manage your billiards tournaments
+              Manage your billiards tournaments
             </h1>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -201,7 +206,7 @@ const TournamentPage = () => {
                 </span>
                 <button
                   onClick={() => signOut()}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg text-sm font-bold transition-colors"
                 >
                   Logout
                 </button>
@@ -209,17 +214,28 @@ const TournamentPage = () => {
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-sm font-bold transition-colors"
               >
                 Manager Login
               </button>
             )}
-            <button
-              onClick={() => setShowCreateForm(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg flex items-center justify-center transition-colors w-full sm:w-auto"
-            >
-              ➕ Create Tournament
-            </button>
+            {isManager ? (
+              <button
+                onClick={() => setShowCreateForm(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg text-sm font-bold transition-colors w-full sm:w-auto"
+              >
+                <span className="text-white font-bold text-lg mr-2">+</span>
+                Create Tournament
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg text-sm font-bold transition-colors w-full sm:w-auto"
+              >
+                <span className="text-white font-bold text-lg mr-2">+</span>
+                Create Tournament
+              </button>
+            )}
           </div>
         </div>
 
@@ -240,13 +256,12 @@ const TournamentPage = () => {
                   <input
                     type="text"
                     value={newTournament.name}
-                    onChange={(e) => {
-                      console.log("Name changing to:", e.target.value);
+                    onChange={(e) =>
                       setNewTournament({
                         ...newTournament,
                         name: e.target.value,
-                      });
-                    }}
+                      })
+                    }
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     placeholder="Enter tournament name"
                   />
@@ -306,7 +321,7 @@ const TournamentPage = () => {
               <div className="flex justify-end space-x-3 mt-6">
                 <button
                   onClick={handleCancelEdit}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 font-bold"
                 >
                   Cancel
                 </button>
@@ -316,7 +331,7 @@ const TournamentPage = () => {
                       ? handleUpdateTournament
                       : handleCreateTournament
                   }
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold"
                 >
                   {editingTournament
                     ? "Update Tournament"
@@ -328,77 +343,95 @@ const TournamentPage = () => {
         )}
 
         {/* Tournaments Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {tournaments.map((tournament) => (
-            <div
-              key={tournament.id}
-              className="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-lg sm:text-2xl font-semibold text-gray-900">
-                    Barako 9-Ball Championship
-                  </h3>
-                  <p className="text-base sm:text-xl text-blue-600 font-medium">
-                    {tournament.name.replace(
-                      "Barako 9-Ball Championship - ",
-                      ""
-                    )}
-                  </p>
-                </div>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                    tournament.status
-                  )}`}
-                >
-                  {tournament.status.charAt(0).toUpperCase() +
-                    tournament.status.slice(1)}
-                </span>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center text-gray-600">
-                  <span className="mr-2">📅</span>
-                  <span>{new Date(tournament.date).toLocaleDateString()}</span>
-                </div>
-
-                <div className="flex items-center text-gray-600">
-                  <span className="mr-2">👥</span>
-                  <span>
-                    {tournament.participants}/{tournament.maxParticipants}{" "}
-                    participants
-                  </span>
-                </div>
-
-                <div className="flex items-center text-gray-600">
-                  <span className="mr-2">🏆</span>
-                  <span>Prize: {tournament.prize}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
-                  <div className="text-sm text-gray-500">
-                    {tournament.status === "ongoing" && (
-                      <span className="flex items-center">
-                        <span className="mr-1">⏱️</span>
-                        In Progress
-                      </span>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="text-4xl mb-4">⏳</div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Loading tournaments...
+            </h3>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {tournaments.map((tournament) => (
+              <div
+                key={tournament.id}
+                className="bg-white rounded-lg shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-semibold text-gray-900">
+                      {tournament.name}
+                    </h3>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                        tournament.status
+                      )}`}
+                    >
+                      {tournament.status.charAt(0).toUpperCase() +
+                        tournament.status.slice(1)}
+                    </span>
+                    {isManager && (
+                      <button
+                        onClick={() => handleDeleteTournament(tournament.id)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                        title="Delete tournament"
+                      >
+                        🗑️
+                      </button>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleEditTournament(tournament)}
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium py-2 px-3 rounded hover:bg-blue-50 transition-colors w-full sm:w-auto"
-                  >
-                    Edit Tournament
-                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-2">📅</span>
+                    <span>
+                      {new Date(tournament.date).toLocaleDateString()}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-2">👥</span>
+                    <span>
+                      {tournament.participants}/{tournament.maxParticipants}{" "}
+                      participants
+                    </span>
+                  </div>
+
+                  <div className="flex items-center text-gray-600">
+                    <span className="mr-2">🏆</span>
+                    <span>Prize: {tournament.prize}</span>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
+                    <div className="text-sm text-gray-500">
+                      {tournament.status === "ongoing" && (
+                        <span className="flex items-center">
+                          <span className="mr-1">⏱️</span>
+                          In Progress
+                        </span>
+                      )}
+                    </div>
+                    {isManager && (
+                      <button
+                        onClick={() => handleEditTournament(tournament)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-bold py-2 px-3 rounded hover:bg-blue-50 transition-colors w-full sm:w-auto"
+                      >
+                        Edit Tournament
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {tournaments.length === 0 && (
+        {!loading && tournaments.length === 0 && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🏆</div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">
