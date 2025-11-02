@@ -1,5 +1,5 @@
 {
-  "/matches/page": "app/matches/page.js",
-  "/page": "app/page.js",
-  "/tournament/page": "app/tournament/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/credits/page": "app/credits/page.js",
+  "/live-match/page": "app/live-match/page.js"
 }

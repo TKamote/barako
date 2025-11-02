@@ -37,6 +37,10 @@ const Navigation = () => {
       name: "Live Match",
       href: "/live-match",
     },
+    {
+      name: "Credits",
+      href: "/credits",
+    },
   ];
 
   return (

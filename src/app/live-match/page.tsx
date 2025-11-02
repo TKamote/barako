@@ -5,37 +5,31 @@ import { useLive } from "@/contexts/LiveContext";
 
 const BilliardsBall = ({
   number,
-  color,
   isMobile = false,
 }: {
   number: number;
-  color: string;
   isMobile?: boolean;
 }) => (
   <div
     className={`${
-      isMobile ? "w-8 h-8 text-sm" : "w-12 h-12 text-xl"
-    } rounded-full flex items-center justify-center text-white font-bold border border-white`}
-    style={{ backgroundColor: color, borderWidth: "0.5px" }}
+      isMobile ? "w-8 h-8" : "w-12 h-12"
+    } flex items-center justify-center`}
   >
-    {number}
+    <Image
+      src={`/ballicons/ball-${number}.png`}
+      alt={`Ball ${number}`}
+      width={isMobile ? 32 : 48}
+      height={isMobile ? 32 : 48}
+      className="object-contain"
+    />
   </div>
 );
 
 const LiveMatchPage = () => {
   const { isLive, setIsLive } = useLive();
 
-  const ballColors = [
-    "#ef4444", // Red
-    "#eab308", // Yellow
-    "#3b82f6", // Blue
-    "#a855f7", // Purple
-    "#f97316", // Orange
-    "#22c55e", // Green
-    "#ec4899", // Pink
-    "#1f2937", // Black
-    "#facc15", // Light Yellow (9-ball)
-  ];
+  // Array of ball numbers 1-10
+  const ballNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (
     <div className="min-h-screen bg-transparent relative">
@@ -62,14 +56,13 @@ const LiveMatchPage = () => {
             )}
           </button>
 
-          {/* Mobile: Billiards Balls - Vertical (All 9) */}
+          {/* Mobile: Billiards Balls - Vertical (All 10) */}
           <div className="bg-gray-800 rounded-full px-2 py-1">
             <div className="flex flex-col space-y-1">
-              {ballColors.map((color, index) => (
+              {ballNumbers.map((ballNumber) => (
                 <BilliardsBall
-                  key={index + 1}
-                  number={index + 1}
-                  color={color}
+                  key={ballNumber}
+                  number={ballNumber}
                   isMobile={true}
                 />
               ))}
@@ -104,12 +97,8 @@ const LiveMatchPage = () => {
             style={{ marginRight: "20px", marginTop: "50px" }}
           >
             <div className="flex flex-col space-y-2">
-              {ballColors.map((color, index) => (
-                <BilliardsBall
-                  key={index + 1}
-                  number={index + 1}
-                  color={color}
-                />
+              {ballNumbers.map((ballNumber) => (
+                <BilliardsBall key={ballNumber} number={ballNumber} />
               ))}
             </div>
           </div>
@@ -207,10 +196,11 @@ const LiveMatchPage = () => {
         <Image
           src="/favicon.png"
           alt="Barako Logo"
-          width={100}
-          height={100}
+          width={130}
+          height={130}
           style={{
             filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+            borderRadius: "10px",
           }}
         />
       </div>
@@ -220,10 +210,11 @@ const LiveMatchPage = () => {
         <Image
           src="/favicon.png"
           alt="Barako Logo"
-          width={120}
-          height={120}
+          width={156}
+          height={156}
           style={{
             filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+            borderRadius: "10px",
           }}
         />
       </div>
