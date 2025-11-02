@@ -771,16 +771,18 @@ const LiveMatchPage = () => {
         />
       </div>
 
-      {/* Mobile Logo - Centered */}
-      <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 sm:hidden">
+      {/* Mobile Logo - Top Right */}
+      <div className="fixed top-2 right-2 z-50 sm:hidden">
         <Image
           src="/favicon.png"
           alt="Barako Logo"
-          width={156}
-          height={156}
+          width={78}
+          height={78}
+          className="w-[78px] h-[78px]"
           style={{
             filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
             borderRadius: "10px",
+            objectFit: "contain",
           }}
         />
       </div>
