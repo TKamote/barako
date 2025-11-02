@@ -466,7 +466,7 @@ const LiveMatchPage = () => {
             </button>
 
             {/* Mobile: Billiards Balls - Vertical (All 10) */}
-            <div className="bg-gray-800 rounded-full px-2 py-1">
+            <div className="bg-gray-400 rounded-full px-2 py-1">
               <div className="flex flex-col space-y-1">
                 {ballNumbers.map((ballNumber) => (
                   <BilliardsBall
@@ -512,7 +512,7 @@ const LiveMatchPage = () => {
 
             {/* Billiards Balls - Vertical Desktop (All 10) */}
             <div
-              className="bg-gray-800 rounded-full px-2 py-2"
+              className="bg-gray-400 rounded-full px-2 py-2"
               style={{ marginRight: "20px", marginTop: "50px" }}
             >
               <div className="flex flex-col space-y-2">
@@ -554,7 +554,7 @@ const LiveMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-linear-to-r from-purple-900 via-purple-800 to-purple-900 rounded-xl py-1 px-2 sm:py-2 sm:px-4 shadow-2xl max-w-4xl w-full mx-1 sm:mx-4 relative overflow-hidden">
+            <div className="bg-linear-to-r from-purple-900 via-purple-800 to-purple-900 rounded-xl py-1 px-2 sm:py-2 sm:px-4 shadow-2xl max-w-[85%] sm:max-w-[80%] w-full mx-1 sm:mx-4 relative overflow-hidden">
               <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
               <div className="relative z-10">
                 {/* Mobile Layout */}
@@ -572,21 +572,21 @@ const LiveMatchPage = () => {
                           : "cursor-default"
                       } transition-opacity`}
                     >
-                      <div className="text-3xl">
+                      <div className="text-4xl">
                         {getPlayer1Photo() ? (
                           <Image
                             src={getPlayer1Photo()!}
                             alt={getPlayer1Name()}
-                            width={32}
-                            height={32}
-                            className="w-8 h-8 rounded-full object-cover"
+                            width={48}
+                            height={48}
+                            className="w-12 h-12 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
                           "👨"
                         )}
                       </div>
-                      <div className="text-lg font-bold text-white truncate max-w-[80px]">
+                      <div className="text-3xl font-bold text-white truncate max-w-[80px]">
                         {getPlayer1Name()}
                       </div>
                     </button>
@@ -594,17 +594,17 @@ const LiveMatchPage = () => {
                     {/* Score & RaceTo Center Group */}
                     <div className="flex flex-col items-center shrink-0 px-4">
                       <div className="flex items-center space-x-4">
-                        <div className="text-3xl font-bold text-yellow-500">
+                        <div className="text-5xl font-bold text-yellow-500">
                           {player1Score}
                         </div>
-                        <div className="text-3xl font-bold text-yellow-500">
+                        <div className="text-5xl font-bold text-yellow-500">
                           -
                         </div>
-                        <div className="text-3xl font-bold text-yellow-500">
+                        <div className="text-5xl font-bold text-yellow-500">
                           {player2Score}
                         </div>
                       </div>
-                      <div className="text-sm font-semibold text-white mt-1">
+                      <div className="text-xl font-semibold text-white mt-1">
                         Race to {raceTo}
                       </div>
                     </div>
@@ -615,23 +615,23 @@ const LiveMatchPage = () => {
                         canSelectPlayers && setShowPlayer2Modal(true)
                       }
                       disabled={!canSelectPlayers}
-                      className={`flex items-center justify-start space-x-2 flex-1 min-w-0 ${
+                      className={`flex items-center justify-end space-x-2 flex-1 min-w-0 ${
                         canSelectPlayers
                           ? "cursor-pointer hover:opacity-80"
                           : "cursor-default"
                       } transition-opacity`}
                     >
-                      <div className="text-lg font-bold text-white truncate max-w-[80px]">
+                      <div className="text-3xl font-bold text-white truncate max-w-[80px]">
                         {getPlayer2Name()}
                       </div>
-                      <div className="text-3xl">
+                      <div className="text-4xl">
                         {getPlayer2Photo() ? (
                           <Image
                             src={getPlayer2Photo()!}
                             alt={getPlayer2Name()}
-                            width={32}
-                            height={32}
-                            className="w-8 h-8 rounded-full object-cover"
+                            width={48}
+                            height={48}
+                            className="w-12 h-12 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
@@ -661,21 +661,21 @@ const LiveMatchPage = () => {
                           : ""
                       }`}
                     >
-                      <div className="text-6xl">
+                      <div className="text-9xl">
                         {getPlayer1Photo() ? (
                           <Image
                             src={getPlayer1Photo()!}
                             alt={getPlayer1Name()}
-                            width={64}
-                            height={64}
-                            className="w-16 h-16 rounded-full object-cover"
+                            width={96}
+                            height={96}
+                            className="w-24 h-24 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
                           "👨"
                         )}
                       </div>
-                      <div className="text-3xl font-bold text-white truncate max-w-[200px] text-left">
+                      <div className="text-5xl font-bold text-white truncate max-w-[200px] text-left">
                         {getPlayer1Name()}
                       </div>
                     </button>
@@ -683,17 +683,17 @@ const LiveMatchPage = () => {
                     {/* Score & RaceTo Center Group */}
                     <div className="flex flex-col items-center shrink-0 px-8">
                       <div className="flex items-center space-x-8">
-                        <div className="text-5xl font-bold text-yellow-500">
+                        <div className="text-7xl font-bold text-yellow-500">
                           {player1Score}
                         </div>
-                        <div className="text-5xl font-bold text-yellow-500">
+                        <div className="text-7xl font-bold text-yellow-500">
                           -
                         </div>
-                        <div className="text-5xl font-bold text-yellow-500">
+                        <div className="text-7xl font-bold text-yellow-500">
                           {player2Score}
                         </div>
                       </div>
-                      <div className="text-lg font-semibold text-white mt-2">
+                      <div className="text-2xl font-semibold text-white mt-2">
                         Race to {raceTo}
                       </div>
                     </div>
@@ -704,7 +704,7 @@ const LiveMatchPage = () => {
                         canSelectPlayers && setShowPlayer2Modal(true)
                       }
                       disabled={!canSelectPlayers}
-                      className={`flex items-center justify-start space-x-4 flex-1 min-w-0 ${
+                      className={`flex items-center justify-end space-x-4 flex-1 min-w-0 ${
                         canSelectPlayers
                           ? "cursor-pointer hover:opacity-80"
                           : "cursor-default"
@@ -714,17 +714,17 @@ const LiveMatchPage = () => {
                           : ""
                       }`}
                     >
-                      <div className="text-3xl font-bold text-white truncate max-w-[200px] text-left">
+                      <div className="text-5xl font-bold text-white truncate max-w-[200px] text-left">
                         {getPlayer2Name()}
                       </div>
-                      <div className="text-6xl">
+                      <div className="text-9xl">
                         {getPlayer2Photo() ? (
                           <Image
                             src={getPlayer2Photo()!}
                             alt={getPlayer2Name()}
-                            width={64}
-                            height={64}
-                            className="w-16 h-16 rounded-full object-cover"
+                            width={96}
+                            height={96}
+                            className="w-24 h-24 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
@@ -753,12 +753,12 @@ const LiveMatchPage = () => {
           </div>
         </div>
 
-        {/* Barako Logo - Bottom Left */}
+        {/* Barako Logo - Top Right */}
         <div
           className="fixed z-50 hidden sm:block"
           style={{
-            bottom: "5px",
-            left: "50px",
+            top: "5px",
+            right: "50px",
           }}
         >
           <Image
