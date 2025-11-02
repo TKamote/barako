@@ -439,372 +439,376 @@ const LiveMatchPage = () => {
   const canSelectPlayers = isManager && !isLive;
 
   return (
-    <div className="min-h-screen bg-transparent relative">
-      {/* Header with Live Button and Balls */}
-      <div className="flex justify-between items-start p-2 sm:p-4">
-        {/* Mobile: Live Button and Balls on left side vertically */}
-        <div className="flex flex-col sm:hidden items-start space-y-2">
-          {/* Live Toggle Button - Mobile */}
-          <button
-            onClick={() => setIsLive(!isLive)}
-            className={`px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300 transform hover:scale-105 ${
-              isLive
-                ? "bg-red-600 hover:bg-red-700 text-white animate-pulse-live inline-flex items-center"
-                : "bg-green-600 hover:bg-green-700 text-white"
-            }`}
-          >
-            {isLive ? (
-              <>
-                <span className="mr-1">🔴</span>
-                LIVE
-              </>
-            ) : (
-              "GO LIVE"
-            )}
-          </button>
-
-          {/* Mobile: Billiards Balls - Vertical (All 10) */}
-          <div className="bg-gray-800 rounded-full px-2 py-1">
-            <div className="flex flex-col space-y-1">
-              {ballNumbers.map((ballNumber) => (
-                <BilliardsBall
-                  key={ballNumber}
-                  number={ballNumber}
-                  isMobile={true}
-                  isPocketed={pocketedBalls.has(ballNumber)}
-                  onClick={() => handleBallClick(ballNumber)}
-                />
-              ))}
-            </div>
-          </div>
-          {/* Reset Balls Button - Mobile */}
-          <button
-            onClick={handleResetBalls}
-            className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 text-xs mt-1"
-            title="Reset all balls"
-          >
-            Reset Balls
-          </button>
-        </div>
-
-        {/* Desktop: Right side - Live Button and Balls */}
-        <div className="hidden sm:flex sm:flex-col sm:items-end sm:space-y-4">
-          {/* Live Toggle Button - Desktop */}
-          <button
-            onClick={() => setIsLive(!isLive)}
-            className={`px-6 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
-              isLive
-                ? "bg-red-600 hover:bg-red-700 text-white animate-pulse-live inline-flex items-center"
-                : "bg-green-600 hover:bg-green-700 text-white"
-            }`}
-          >
-            {isLive ? (
-              <>
-                <span className="mr-2">🔴</span>
-                LIVE
-              </>
-            ) : (
-              "GO LIVE"
-            )}
-          </button>
-
-          {/* Billiards Balls - Vertical Desktop (All 10) */}
-          <div
-            className="bg-gray-800 rounded-full px-2 py-2"
-            style={{ marginRight: "20px", marginTop: "50px" }}
-          >
-            <div className="flex flex-col space-y-2">
-              {ballNumbers.map((ballNumber) => (
-                <BilliardsBall
-                  key={ballNumber}
-                  number={ballNumber}
-                  isPocketed={pocketedBalls.has(ballNumber)}
-                  onClick={() => handleBallClick(ballNumber)}
-                />
-              ))}
-            </div>
-          </div>
-          {/* Reset Balls Button - Desktop */}
-          <button
-            onClick={handleResetBalls}
-            className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 text-sm mt-2"
-            style={{ marginRight: "20px" }}
-            title="Reset all balls"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+    <div className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden">
+      {/* 16:9 Aspect Ratio Container */}
+      <div className="w-full max-w-[1920px] aspect-video bg-transparent relative">
+        {/* Header with Live Button and Balls */}
+        <div className="flex justify-between items-start p-2 sm:p-4">
+          {/* Mobile: Live Button and Balls on left side vertically */}
+          <div className="flex flex-col sm:hidden items-start space-y-2">
+            {/* Live Toggle Button - Mobile */}
+            <button
+              onClick={() => setIsLive(!isLive)}
+              className={`px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300 transform hover:scale-105 ${
+                isLive
+                  ? "bg-red-600 hover:bg-red-700 text-white animate-pulse-live inline-flex items-center"
+                  : "bg-green-600 hover:bg-green-700 text-white"
+              }`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
+              {isLive ? (
+                <>
+                  <span className="mr-1">🔴</span>
+                  LIVE
+                </>
+              ) : (
+                "GO LIVE"
+              )}
+            </button>
 
-      {/* Score Display - Fixed at Bottom */}
-      <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
-        <div className="flex justify-center">
-          <div className="bg-linear-to-r from-purple-900 via-purple-800 to-purple-900 rounded-xl py-1 px-2 sm:py-2 sm:px-4 shadow-2xl max-w-4xl w-full mx-1 sm:mx-4 relative overflow-hidden">
-            <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
-            <div className="relative z-10">
-              {/* Mobile Layout */}
-              <div className="sm:hidden">
-                <div className="flex items-center gap-4">
-                  {/* Player 1 Group - Left Side */}
-                  <button
-                    onClick={() =>
-                      canSelectPlayers && setShowPlayer1Modal(true)
-                    }
-                    disabled={!canSelectPlayers}
-                    className={`flex items-center space-x-2 flex-1 justify-start min-w-0 ${
-                      canSelectPlayers
-                        ? "cursor-pointer hover:opacity-80"
-                        : "cursor-default"
-                    } transition-opacity`}
-                  >
-                    <div className="text-3xl">
-                      {getPlayer1Photo() ? (
-                        <Image
-                          src={getPlayer1Photo()!}
-                          alt={getPlayer1Name()}
-                          width={32}
-                          height={32}
-                          className="w-8 h-8 rounded-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        "👨"
-                      )}
-                    </div>
-                    <div className="text-lg font-bold text-white truncate max-w-[80px]">
-                      {getPlayer1Name()}
-                    </div>
-                  </button>
-
-                  {/* Score & RaceTo Center Group */}
-                  <div className="flex flex-col items-center shrink-0 px-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="text-3xl font-bold text-yellow-500">
-                        {player1Score}
-                      </div>
-                      <div className="text-3xl font-bold text-yellow-500">
-                        -
-                      </div>
-                      <div className="text-3xl font-bold text-yellow-500">
-                        {player2Score}
-                      </div>
-                    </div>
-                    <div className="text-sm font-semibold text-white mt-1">
-                      Race to {raceTo}
-                    </div>
-                  </div>
-
-                  {/* Player 2 Group - Right Side */}
-                  <button
-                    onClick={() =>
-                      canSelectPlayers && setShowPlayer2Modal(true)
-                    }
-                    disabled={!canSelectPlayers}
-                    className={`flex items-center justify-start space-x-2 flex-1 min-w-0 ${
-                      canSelectPlayers
-                        ? "cursor-pointer hover:opacity-80"
-                        : "cursor-default"
-                    } transition-opacity`}
-                  >
-                    <div className="text-lg font-bold text-white truncate max-w-[80px]">
-                      {getPlayer2Name()}
-                    </div>
-                    <div className="text-3xl">
-                      {getPlayer2Photo() ? (
-                        <Image
-                          src={getPlayer2Photo()!}
-                          alt={getPlayer2Name()}
-                          width={32}
-                          height={32}
-                          className="w-8 h-8 rounded-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        "👩"
-                      )}
-                    </div>
-                  </button>
-                </div>
+            {/* Mobile: Billiards Balls - Vertical (All 10) */}
+            <div className="bg-gray-800 rounded-full px-2 py-1">
+              <div className="flex flex-col space-y-1">
+                {ballNumbers.map((ballNumber) => (
+                  <BilliardsBall
+                    key={ballNumber}
+                    number={ballNumber}
+                    isMobile={true}
+                    isPocketed={pocketedBalls.has(ballNumber)}
+                    onClick={() => handleBallClick(ballNumber)}
+                  />
+                ))}
               </div>
+            </div>
+            {/* Reset Balls Button - Mobile */}
+            <button
+              onClick={handleResetBalls}
+              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 text-xs mt-1"
+              title="Reset all balls"
+            >
+              Reset Balls
+            </button>
+          </div>
 
-              {/* Desktop Layout */}
-              <div className="hidden sm:block">
-                <div className="flex items-center gap-8">
-                  {/* Player 1 Group - Left Side */}
-                  <button
-                    onClick={() =>
-                      canSelectPlayers && setShowPlayer1Modal(true)
-                    }
-                    disabled={!canSelectPlayers}
-                    className={`flex items-center justify-start space-x-4 flex-1 min-w-0 ${
-                      canSelectPlayers
-                        ? "cursor-pointer hover:opacity-80"
-                        : "cursor-default"
-                    } transition-opacity ${
-                      currentTurn === "player1"
-                        ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
-                        : ""
-                    }`}
-                  >
-                    <div className="text-6xl">
-                      {getPlayer1Photo() ? (
-                        <Image
-                          src={getPlayer1Photo()!}
-                          alt={getPlayer1Name()}
-                          width={64}
-                          height={64}
-                          className="w-16 h-16 rounded-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        "👨"
-                      )}
-                    </div>
-                    <div className="text-3xl font-bold text-white truncate max-w-[200px] text-left">
-                      {getPlayer1Name()}
-                    </div>
-                  </button>
+          {/* Desktop: Right side - Live Button and Balls */}
+          <div className="hidden sm:flex sm:flex-col sm:items-end sm:space-y-4">
+            {/* Live Toggle Button - Desktop */}
+            <button
+              onClick={() => setIsLive(!isLive)}
+              className={`px-6 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
+                isLive
+                  ? "bg-red-600 hover:bg-red-700 text-white animate-pulse-live inline-flex items-center"
+                  : "bg-green-600 hover:bg-green-700 text-white"
+              }`}
+            >
+              {isLive ? (
+                <>
+                  <span className="mr-2">🔴</span>
+                  LIVE
+                </>
+              ) : (
+                "GO LIVE"
+              )}
+            </button>
 
-                  {/* Score & RaceTo Center Group */}
-                  <div className="flex flex-col items-center shrink-0 px-8">
-                    <div className="flex items-center space-x-8">
-                      <div className="text-5xl font-bold text-yellow-500">
-                        {player1Score}
+            {/* Billiards Balls - Vertical Desktop (All 10) */}
+            <div
+              className="bg-gray-800 rounded-full px-2 py-2"
+              style={{ marginRight: "20px", marginTop: "50px" }}
+            >
+              <div className="flex flex-col space-y-2">
+                {ballNumbers.map((ballNumber) => (
+                  <BilliardsBall
+                    key={ballNumber}
+                    number={ballNumber}
+                    isPocketed={pocketedBalls.has(ballNumber)}
+                    onClick={() => handleBallClick(ballNumber)}
+                  />
+                ))}
+              </div>
+            </div>
+            {/* Reset Balls Button - Desktop */}
+            <button
+              onClick={handleResetBalls}
+              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 text-sm mt-2"
+              style={{ marginRight: "20px" }}
+              title="Reset all balls"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Score Display - Fixed at Bottom */}
+        <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
+          <div className="flex justify-center">
+            <div className="bg-linear-to-r from-purple-900 via-purple-800 to-purple-900 rounded-xl py-1 px-2 sm:py-2 sm:px-4 shadow-2xl max-w-4xl w-full mx-1 sm:mx-4 relative overflow-hidden">
+              <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
+              <div className="relative z-10">
+                {/* Mobile Layout */}
+                <div className="sm:hidden">
+                  <div className="flex items-center gap-4">
+                    {/* Player 1 Group - Left Side */}
+                    <button
+                      onClick={() =>
+                        canSelectPlayers && setShowPlayer1Modal(true)
+                      }
+                      disabled={!canSelectPlayers}
+                      className={`flex items-center space-x-2 flex-1 justify-start min-w-0 ${
+                        canSelectPlayers
+                          ? "cursor-pointer hover:opacity-80"
+                          : "cursor-default"
+                      } transition-opacity`}
+                    >
+                      <div className="text-3xl">
+                        {getPlayer1Photo() ? (
+                          <Image
+                            src={getPlayer1Photo()!}
+                            alt={getPlayer1Name()}
+                            width={32}
+                            height={32}
+                            className="w-8 h-8 rounded-full object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          "👨"
+                        )}
                       </div>
-                      <div className="text-5xl font-bold text-yellow-500">
-                        -
+                      <div className="text-lg font-bold text-white truncate max-w-[80px]">
+                        {getPlayer1Name()}
                       </div>
-                      <div className="text-5xl font-bold text-yellow-500">
-                        {player2Score}
+                    </button>
+
+                    {/* Score & RaceTo Center Group */}
+                    <div className="flex flex-col items-center shrink-0 px-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="text-3xl font-bold text-yellow-500">
+                          {player1Score}
+                        </div>
+                        <div className="text-3xl font-bold text-yellow-500">
+                          -
+                        </div>
+                        <div className="text-3xl font-bold text-yellow-500">
+                          {player2Score}
+                        </div>
+                      </div>
+                      <div className="text-sm font-semibold text-white mt-1">
+                        Race to {raceTo}
                       </div>
                     </div>
-                    <div className="text-lg font-semibold text-white mt-2">
-                      Race to {raceTo}
-                    </div>
+
+                    {/* Player 2 Group - Right Side */}
+                    <button
+                      onClick={() =>
+                        canSelectPlayers && setShowPlayer2Modal(true)
+                      }
+                      disabled={!canSelectPlayers}
+                      className={`flex items-center justify-start space-x-2 flex-1 min-w-0 ${
+                        canSelectPlayers
+                          ? "cursor-pointer hover:opacity-80"
+                          : "cursor-default"
+                      } transition-opacity`}
+                    >
+                      <div className="text-lg font-bold text-white truncate max-w-[80px]">
+                        {getPlayer2Name()}
+                      </div>
+                      <div className="text-3xl">
+                        {getPlayer2Photo() ? (
+                          <Image
+                            src={getPlayer2Photo()!}
+                            alt={getPlayer2Name()}
+                            width={32}
+                            height={32}
+                            className="w-8 h-8 rounded-full object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          "👩"
+                        )}
+                      </div>
+                    </button>
                   </div>
+                </div>
 
-                  {/* Player 2 Group - Right Side */}
-                  <button
-                    onClick={() =>
-                      canSelectPlayers && setShowPlayer2Modal(true)
-                    }
-                    disabled={!canSelectPlayers}
-                    className={`flex items-center justify-start space-x-4 flex-1 min-w-0 ${
-                      canSelectPlayers
-                        ? "cursor-pointer hover:opacity-80"
-                        : "cursor-default"
-                    } transition-opacity ${
-                      currentTurn === "player2"
-                        ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
-                        : ""
-                    }`}
-                  >
-                    <div className="text-3xl font-bold text-white truncate max-w-[200px] text-left">
-                      {getPlayer2Name()}
+                {/* Desktop Layout */}
+                <div className="hidden sm:block">
+                  <div className="flex items-center gap-8">
+                    {/* Player 1 Group - Left Side */}
+                    <button
+                      onClick={() =>
+                        canSelectPlayers && setShowPlayer1Modal(true)
+                      }
+                      disabled={!canSelectPlayers}
+                      className={`flex items-center justify-start space-x-4 flex-1 min-w-0 ${
+                        canSelectPlayers
+                          ? "cursor-pointer hover:opacity-80"
+                          : "cursor-default"
+                      } transition-opacity ${
+                        currentTurn === "player1"
+                          ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
+                          : ""
+                      }`}
+                    >
+                      <div className="text-6xl">
+                        {getPlayer1Photo() ? (
+                          <Image
+                            src={getPlayer1Photo()!}
+                            alt={getPlayer1Name()}
+                            width={64}
+                            height={64}
+                            className="w-16 h-16 rounded-full object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          "👨"
+                        )}
+                      </div>
+                      <div className="text-3xl font-bold text-white truncate max-w-[200px] text-left">
+                        {getPlayer1Name()}
+                      </div>
+                    </button>
+
+                    {/* Score & RaceTo Center Group */}
+                    <div className="flex flex-col items-center shrink-0 px-8">
+                      <div className="flex items-center space-x-8">
+                        <div className="text-5xl font-bold text-yellow-500">
+                          {player1Score}
+                        </div>
+                        <div className="text-5xl font-bold text-yellow-500">
+                          -
+                        </div>
+                        <div className="text-5xl font-bold text-yellow-500">
+                          {player2Score}
+                        </div>
+                      </div>
+                      <div className="text-lg font-semibold text-white mt-2">
+                        Race to {raceTo}
+                      </div>
                     </div>
-                    <div className="text-6xl">
-                      {getPlayer2Photo() ? (
-                        <Image
-                          src={getPlayer2Photo()!}
-                          alt={getPlayer2Name()}
-                          width={64}
-                          height={64}
-                          className="w-16 h-16 rounded-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
-                        "👩"
-                      )}
-                    </div>
-                  </button>
+
+                    {/* Player 2 Group - Right Side */}
+                    <button
+                      onClick={() =>
+                        canSelectPlayers && setShowPlayer2Modal(true)
+                      }
+                      disabled={!canSelectPlayers}
+                      className={`flex items-center justify-start space-x-4 flex-1 min-w-0 ${
+                        canSelectPlayers
+                          ? "cursor-pointer hover:opacity-80"
+                          : "cursor-default"
+                      } transition-opacity ${
+                        currentTurn === "player2"
+                          ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
+                          : ""
+                      }`}
+                    >
+                      <div className="text-3xl font-bold text-white truncate max-w-[200px] text-left">
+                        {getPlayer2Name()}
+                      </div>
+                      <div className="text-6xl">
+                        {getPlayer2Photo() ? (
+                          <Image
+                            src={getPlayer2Photo()!}
+                            alt={getPlayer2Name()}
+                            width={64}
+                            height={64}
+                            className="w-16 h-16 rounded-full object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          "👩"
+                        )}
+                      </div>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* OBS Integration Instructions - Bottom */}
-      <div className="fixed bottom-1 left-2 right-2 sm:left-4 sm:right-4 z-30">
-        <div className="bg-black/80 text-white text-xs p-1 sm:p-2 rounded text-center">
-          <div className="hidden sm:block">
-            <strong>OBS Integration:</strong> Use Browser Source with URL:{" "}
-            <code className="bg-gray-700 px-1 rounded">{obsUrl}</code> | Size:
-            1920x1080 | FPS: 60
-          </div>
-          <div className="sm:hidden text-xs">
-            <strong>OBS:</strong> Browser Source | 1920x1080 | 60fps
+        {/* OBS Integration Instructions - Bottom */}
+        <div className="fixed bottom-1 left-2 right-2 sm:left-4 sm:right-4 z-30">
+          <div className="bg-black/80 text-white text-xs p-1 sm:p-2 rounded text-center">
+            <div className="hidden sm:block">
+              <strong>OBS Integration:</strong> Use Browser Source with URL:{" "}
+              <code className="bg-gray-700 px-1 rounded">{obsUrl}</code> | Size:
+              1920x1080 | FPS: 60
+            </div>
+            <div className="sm:hidden text-xs">
+              <strong>OBS:</strong> Browser Source | 1920x1080 | 60fps
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Barako Logo - Bottom Left */}
-      <div
-        className="fixed z-50 hidden sm:block"
-        style={{
-          bottom: "5px",
-          left: "50px",
-        }}
-      >
-        <Image
-          src="/favicon.png"
-          alt="Barako Logo"
-          width={130}
-          height={130}
+        {/* Barako Logo - Bottom Left */}
+        <div
+          className="fixed z-50 hidden sm:block"
           style={{
-            filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-            borderRadius: "10px",
+            bottom: "5px",
+            left: "50px",
           }}
+        >
+          <Image
+            src="/favicon.png"
+            alt="Barako Logo"
+            width={130}
+            height={130}
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+            }}
+          />
+        </div>
+
+        {/* Mobile Logo - Top Right */}
+        <div className="fixed top-2 right-2 z-50 sm:hidden">
+          <Image
+            src="/favicon.png"
+            alt="Barako Logo"
+            width={78}
+            height={78}
+            className="w-[78px] h-[78px]"
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+
+        {/* Player Selection Modals */}
+        <PlayerSelectionModal
+          isOpen={showPlayer1Modal}
+          onClose={() => setShowPlayer1Modal(false)}
+          players={players}
+          selectedPlayerId={player1?.id || null}
+          onSelect={handlePlayer1Select}
+          title="Select Player 1"
+        />
+
+        <PlayerSelectionModal
+          isOpen={showPlayer2Modal}
+          onClose={() => setShowPlayer2Modal(false)}
+          players={players}
+          selectedPlayerId={player2?.id || null}
+          onSelect={handlePlayer2Select}
+          title="Select Player 2"
         />
       </div>
-
-      {/* Mobile Logo - Top Right */}
-      <div className="fixed top-2 right-2 z-50 sm:hidden">
-        <Image
-          src="/favicon.png"
-          alt="Barako Logo"
-          width={78}
-          height={78}
-          className="w-[78px] h-[78px]"
-          style={{
-            filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-            borderRadius: "10px",
-            objectFit: "contain",
-          }}
-        />
-      </div>
-
-      {/* Player Selection Modals */}
-      <PlayerSelectionModal
-        isOpen={showPlayer1Modal}
-        onClose={() => setShowPlayer1Modal(false)}
-        players={players}
-        selectedPlayerId={player1?.id || null}
-        onSelect={handlePlayer1Select}
-        title="Select Player 1"
-      />
-
-      <PlayerSelectionModal
-        isOpen={showPlayer2Modal}
-        onClose={() => setShowPlayer2Modal(false)}
-        players={players}
-        selectedPlayerId={player2?.id || null}
-        onSelect={handlePlayer2Select}
-        title="Select Player 2"
-      />
+      {/* End 16:9 Aspect Ratio Container */}
     </div>
   );
 };
