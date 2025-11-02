@@ -554,7 +554,7 @@ const LiveMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-linear-to-r from-purple-900 via-purple-800 to-purple-900 rounded-xl py-1 px-2 sm:py-2 sm:px-4 shadow-2xl max-w-[85%] sm:max-w-[80%] w-full mx-1 sm:mx-4 relative overflow-hidden">
+            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 rounded-xl py-1 px-6 sm:py-2 sm:px-12 shadow-2xl max-w-[85%] sm:max-w-[80%] w-full mx-1 sm:mx-4 relative overflow-hidden">
               <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
               <div className="relative z-10">
                 {/* Mobile Layout */}
@@ -566,7 +566,7 @@ const LiveMatchPage = () => {
                         canSelectPlayers && setShowPlayer1Modal(true)
                       }
                       disabled={!canSelectPlayers}
-                      className={`flex items-center space-x-2 flex-1 justify-start min-w-0 ${
+                      className={`flex items-center space-x-6 flex-1 justify-start min-w-0 ${
                         canSelectPlayers
                           ? "cursor-pointer hover:opacity-80"
                           : "cursor-default"
@@ -591,6 +591,9 @@ const LiveMatchPage = () => {
                       </div>
                     </button>
 
+                    {/* Vertical Separator - Left */}
+                    <div className="h-16 w-px bg-white/30 shrink-0"></div>
+
                     {/* Score & RaceTo Center Group */}
                     <div className="flex flex-col items-center shrink-0 px-4">
                       <div className="flex items-center space-x-4">
@@ -609,13 +612,16 @@ const LiveMatchPage = () => {
                       </div>
                     </div>
 
+                    {/* Vertical Separator - Right */}
+                    <div className="h-16 w-px bg-white/30 shrink-0"></div>
+
                     {/* Player 2 Group - Right Side */}
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer2Modal(true)
                       }
                       disabled={!canSelectPlayers}
-                      className={`flex items-center justify-end space-x-2 flex-1 min-w-0 ${
+                      className={`flex items-center justify-end space-x-6 flex-1 min-w-0 ${
                         canSelectPlayers
                           ? "cursor-pointer hover:opacity-80"
                           : "cursor-default"
@@ -651,7 +657,7 @@ const LiveMatchPage = () => {
                         canSelectPlayers && setShowPlayer1Modal(true)
                       }
                       disabled={!canSelectPlayers}
-                      className={`flex items-center justify-start space-x-4 flex-1 min-w-0 ${
+                      className={`flex items-center justify-start space-x-8 flex-1 min-w-0 ${
                         canSelectPlayers
                           ? "cursor-pointer hover:opacity-80"
                           : "cursor-default"
@@ -680,6 +686,9 @@ const LiveMatchPage = () => {
                       </div>
                     </button>
 
+                    {/* Vertical Separator - Left */}
+                    <div className="h-20 w-px bg-white/30 shrink-0"></div>
+
                     {/* Score & RaceTo Center Group */}
                     <div className="flex flex-col items-center shrink-0 px-8">
                       <div className="flex items-center space-x-8">
@@ -698,13 +707,16 @@ const LiveMatchPage = () => {
                       </div>
                     </div>
 
+                    {/* Vertical Separator - Right */}
+                    <div className="h-20 w-px bg-white/30 shrink-0"></div>
+
                     {/* Player 2 Group - Right Side */}
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer2Modal(true)
                       }
                       disabled={!canSelectPlayers}
-                      className={`flex items-center justify-end space-x-4 flex-1 min-w-0 ${
+                      className={`flex items-center justify-end space-x-8 flex-1 min-w-0 ${
                         canSelectPlayers
                           ? "cursor-pointer hover:opacity-80"
                           : "cursor-default"
