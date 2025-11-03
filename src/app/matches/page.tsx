@@ -7,6 +7,7 @@ import {
   doc,
   setDoc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,7 +29,7 @@ interface Match {
   score2: number;
   raceTo: number;
   winner?: "player1" | "player2";
-  status: "pending" | "in_progress" | "completed";
+  status: "pending" | "in_progress" | "completed" | "disabled";
   round: string;
   bracket: "winners" | "losers";
   // Bracket advancement fields
@@ -43,8 +44,15 @@ const MatchesPage = () => {
   const { isManager, loading: authLoading } = useAuth();
 
   // Tournament state - can be managed by tournament manager
-  const totalPlayers = 10; // Example: 8, 9, or 10 players
-  const qualifyingMatches = totalPlayers > 8 ? totalPlayers - 8 : 0;
+  const totalPlayers = 12; // Maximum 12 players per group (minimum 8)
+  // QR matches = (players going to QR) / 2 = (totalPlayers - 8) / 2
+  // 8 players: 0 QR matches
+  // 9 players: (9-8)/2 = 0.5 → 1 QR match (2 players)
+  // 10 players: (10-8)/2 = 1 → 2 QR matches (4 players)
+  // 11 players: (11-8)/2 = 1.5 → 3 QR matches (6 players)
+  // 12 players: (12-8)/2 = 2 → 4 QR matches (8 players)
+  const playersInQR = totalPlayers > 8 ? totalPlayers - 8 : 0;
+  const qualifyingMatches = Math.floor(playersInQR / 2); // Number of QR matches
 
   // State management
   const [players, setPlayers] = useState<Player[]>([]);
@@ -52,6 +60,7 @@ const MatchesPage = () => {
   const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [tournamentStarted, setTournamentStarted] = useState(false);
 
   // Modal form state
   const [selectedPlayer1, setSelectedPlayer1] = useState<string>("");
@@ -61,6 +70,7 @@ const MatchesPage = () => {
   const [raceTo, setRaceTo] = useState<number>(9);
 
   // Generate match numbers based on structure
+  // Always show 4 QR matches (max capacity for 12 players)
   const getMatchNumbers = () => {
     let matchCounter = 1;
     const matches = {
@@ -68,25 +78,54 @@ const MatchesPage = () => {
       round1: [] as string[],
       round2: [] as string[],
       round3: [] as string[],
+      // Losers bracket match numbers (for 12 players max scenario)
+      losersQualifying: [] as string[],
+      losersR1: [] as string[],
+      losersR2: [] as string[],
+      losersR3: [] as string[],
+      losersFinal: [] as string[],
     };
 
-    // Qualifying matches (if any)
-    for (let i = 0; i < qualifyingMatches; i++) {
+    // Winners Bracket: Qualifying matches (always 4 for UI, but only active ones based on qualifyingMatches)
+    for (let i = 0; i < 4; i++) {
       matches.qualifying.push(`M${matchCounter++}`);
     }
 
-    // Round 1 matches (always 4)
+    // Winners Bracket: Round 1 matches (always 4)
     for (let i = 0; i < 4; i++) {
       matches.round1.push(`M${matchCounter++}`);
     }
 
-    // Round 2 matches (always 2)
+    // Winners Bracket: Round 2 matches (always 2)
     for (let i = 0; i < 2; i++) {
       matches.round2.push(`M${matchCounter++}`);
     }
 
-    // Round 3 match (always 1)
+    // Winners Bracket: Round 3 match (always 1)
     matches.round3.push(`M${matchCounter++}`);
+
+    // Losers Bracket: Qualifying (max 2 matches for 12 players)
+    for (let i = 0; i < 2; i++) {
+      matches.losersQualifying.push(`M${matchCounter++}`);
+    }
+
+    // Losers Bracket: R1 (max 3 matches for 12 players)
+    for (let i = 0; i < 3; i++) {
+      matches.losersR1.push(`M${matchCounter++}`);
+    }
+
+    // Losers Bracket: R2 (max 3 matches for 12 players)
+    for (let i = 0; i < 3; i++) {
+      matches.losersR2.push(`M${matchCounter++}`);
+    }
+
+    // Losers Bracket: R3 (max 2 matches for 12 players)
+    for (let i = 0; i < 2; i++) {
+      matches.losersR3.push(`M${matchCounter++}`);
+    }
+
+    // Losers Bracket: Final (1 match)
+    matches.losersFinal.push(`M${matchCounter++}`);
 
     return matches;
   };
@@ -101,26 +140,34 @@ const MatchesPage = () => {
 
     // ===== WINNERS BRACKET =====
     
-    // Qualifying matches (if any - for 9-10 players)
+    // Qualifying Round (QR) matches - Always initialize 4 matches (max for 12 players)
+    // QR winners advance to Round 1, filling player2 positions
+    // Top seeds in Round 1 get byes (player1 positions)
     const qualifyingMatchIds: string[] = [];
-    for (let i = 0; i < qualifyingMatches; i++) {
+    for (let i = 0; i < 4; i++) {
       const matchId = `winners-qualifying-${i}`;
       qualifyingMatchIds.push(matchId);
+      // Only create active matches (based on qualifyingMatches)
+      const isActive = i < qualifyingMatches;
       allMatches.push({
         id: matchId,
         matchNumber: `M${matchCounter++}`,
         score1: 0,
         score2: 0,
         raceTo: 9,
-        status: "pending",
+        status: isActive ? "pending" : "disabled", // Use "disabled" status for inactive QR matches
         round: "qualifying",
         bracket: "winners",
-        // Winners go to Round 1 matches (positions 0 or 3 if qualifying exists)
-        nextMatchId: qualifyingMatches > 0 ? `winners-round1-${i === 0 ? 0 : 3}` : undefined,
-        nextPosition: qualifyingMatches > 0 ? (i === 0 ? "player1" : "player2") : undefined,
+        // QR winners go to Round 1 matches, filling player2 positions
+        // QR Match 0 winner → Round 1 Match 0 (player2)
+        // QR Match 1 winner → Round 1 Match 1 (player2)
+        // QR Match 2 winner → Round 1 Match 2 (player2)
+        // QR Match 3 winner → Round 1 Match 3 (player2)
+        nextMatchId: isActive ? `winners-round1-${i}` : undefined,
+        nextPosition: isActive ? "player2" : undefined,
         // Losers go to losers bracket qualifying
-        loserNextMatchId: "losers-qualifying-0",
-        loserNextPosition: i === 0 ? "player1" : "player2",
+        loserNextMatchId: isActive ? "losers-qualifying-0" : undefined,
+        loserNextPosition: isActive ? (i === 0 ? "player1" : "player2") : undefined,
       });
     }
 
@@ -310,6 +357,19 @@ const MatchesPage = () => {
         console.log("Loaded players:", playersData.length);
         setPlayers(playersData);
 
+        // Load tournament state
+        try {
+          const tournamentStateRef = doc(db, "tournament_state", "current");
+          const tournamentStateDoc = await getDoc(tournamentStateRef);
+          if (tournamentStateDoc.exists()) {
+            const stateData = tournamentStateDoc.data();
+            setTournamentStarted(stateData.started || false);
+          }
+        } catch (error) {
+          console.log("No tournament state found, tournament not started");
+          setTournamentStarted(false);
+        }
+
         // Check if matches exist in Firebase
         console.log("Checking for existing matches in Firebase...");
         const matchesSnapshot = await getDocs(collection(db, "matches"));
@@ -377,6 +437,72 @@ const MatchesPage = () => {
     initializeMatches,
   ]);
 
+  // Handle delete QR match
+  const handleDeleteQRMatch = async (index: number) => {
+    if (!isManager) {
+      alert("Only managers can delete QR matches.");
+      return;
+    }
+    if (tournamentStarted) {
+      alert("Cannot delete QR matches after tournament has started.");
+      return;
+    }
+
+    const matchId = `winners-qualifying-${index}`;
+    const match = matches.find((m) => m.id === matchId);
+    
+    if (!match) return;
+
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete QR Match ${match.matchNumber}? This will remove it from the bracket.`
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      // Delete from Firebase
+      const matchRef = doc(db, "matches", matchId);
+      await updateDoc(matchRef, {
+        status: "disabled",
+        player1: null,
+        player2: null,
+        score1: 0,
+        score2: 0,
+        winner: null,
+        nextMatchId: null,
+        nextPosition: null,
+        loserNextMatchId: null,
+        loserNextPosition: null,
+      });
+
+      // Update local state
+      const updatedMatches = matches.map((m) => {
+        if (m.id === matchId) {
+          return {
+            ...m,
+            status: "disabled" as const,
+            player1: undefined,
+            player2: undefined,
+            score1: 0,
+            score2: 0,
+            winner: undefined,
+            nextMatchId: undefined,
+            nextPosition: undefined,
+            loserNextMatchId: undefined,
+            loserNextPosition: undefined,
+          };
+        }
+        return m;
+      });
+
+      setMatches(updatedMatches);
+      alert("QR match deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting QR match:", error);
+      alert("Failed to delete QR match. Please try again.");
+    }
+  };
+
   // Handle match click
   const handleMatchClick = (matchId: string) => {
     if (!isManager) {
@@ -385,13 +511,133 @@ const MatchesPage = () => {
     }
     const match = matches.find((m) => m.id === matchId);
     if (match) {
-      setSelectedMatch(match);
-      setSelectedPlayer1(match.player1?.id || "");
-      setSelectedPlayer2(match.player2?.id || "");
-      setScore1(match.score1);
-      setScore2(match.score2);
-      setRaceTo(match.raceTo);
-      setIsModalOpen(true);
+      // Don't allow editing disabled matches
+      if (match.status === "disabled") {
+        alert("This QR match is disabled and cannot be edited.");
+        return;
+      }
+      
+      // Before tournament starts, allow assigning players to QR matches
+      // After tournament starts, require tournament to be started (existing behavior)
+      if (tournamentStarted || matchId.startsWith("winners-qualifying-")) {
+        setSelectedMatch(match);
+        setSelectedPlayer1(match.player1?.id || "");
+        setSelectedPlayer2(match.player2?.id || "");
+        setScore1(match.score1);
+        setScore2(match.score2);
+        setRaceTo(match.raceTo);
+        setIsModalOpen(true);
+      } else {
+        alert("Please start the tournament first before editing matches.");
+      }
+    }
+  };
+
+  // Handle start tournament
+  const handleStartTournament = async () => {
+    if (!isManager) {
+      alert("Only managers can start the tournament.");
+      return;
+    }
+
+    // Check if we have enough players (minimum 8, maximum 12)
+    if (players.length < 8) {
+      alert(
+        `Please add at least 8 players before starting the tournament. Currently you have ${players.length} players.`
+      );
+      return;
+    }
+    if (players.length > 12) {
+      alert(
+        `Maximum 12 players allowed per group. Currently you have ${players.length} players. Please remove some players.`
+      );
+      return;
+    }
+
+    // Count active QR matches (not disabled)
+    const activeQRMatches = matches.filter(
+      (m) => m.id.startsWith("winners-qualifying-") && m.status !== "disabled"
+    );
+    const activeQRCount = activeQRMatches.length;
+
+    // Validate all active QR matches have players assigned
+    const incompleteQRMatches = activeQRMatches.filter(
+      (m) => !m.player1 || !m.player2
+    );
+
+    if (incompleteQRMatches.length > 0) {
+      alert(
+        `Please assign players to all active QR matches before starting the tournament.\n\n${
+          incompleteQRMatches.length
+        } QR match(es) still missing players.`
+      );
+      return;
+    }
+
+    // Determine player count based on active QR matches
+    let playerCountMessage = "";
+    if (activeQRCount === 0) {
+      playerCountMessage = "8 players (No QR matches)";
+    } else if (activeQRCount === 1) {
+      playerCountMessage = "9 players";
+    } else if (activeQRCount === 2) {
+      playerCountMessage = "10 players";
+    } else if (activeQRCount === 3) {
+      playerCountMessage = "11 players";
+    } else if (activeQRCount === 4) {
+      playerCountMessage = "12 players";
+    }
+
+    const confirmStart = window.confirm(
+      `Are you sure you filled up the Matches according to the flow?\n\nActive QR matches: ${activeQRCount}\nPlayer count: ${playerCountMessage}\n\nProceed to start the tournament?`
+    );
+
+    if (!confirmStart) return;
+
+    try {
+      // Renumber all matches sequentially
+      let matchCounter = 1;
+      const updatedMatches = matches.map((match) => {
+        const updatedMatch = { ...match };
+
+        // Skip disabled QR matches - remove their match numbers
+        if (match.status === "disabled" && match.id.startsWith("winners-qualifying-")) {
+          updatedMatch.matchNumber = ""; // No match number for disabled QR matches
+          return updatedMatch;
+        }
+
+        // Assign sequential match numbers to all active matches
+        updatedMatch.matchNumber = `M${matchCounter++}`;
+        return updatedMatch;
+      });
+
+      // Update all matches in Firebase with new match numbers
+      for (const match of updatedMatches) {
+        const matchRef = doc(db, "matches", match.id);
+        await updateDoc(matchRef, {
+          matchNumber: match.matchNumber || "",
+        });
+      }
+
+      // Update local state
+      setMatches(updatedMatches);
+
+      // Update tournament state
+      const tournamentStateRef = doc(db, "tournament_state", "current");
+      await setDoc(tournamentStateRef, {
+        started: true,
+        startedAt: new Date().toISOString(),
+        totalPlayers: players.length,
+        activeQRMatches: activeQRCount,
+      });
+      setTournamentStarted(true);
+
+      alert(
+        `Tournament started successfully!\n\nActive QR matches: ${activeQRCount}\nAll matches have been renumbered sequentially.`
+      );
+    } catch (error) {
+      console.error("Error starting tournament:", error);
+      alert("Failed to start tournament. Please try again.");
     }
   };
 
@@ -591,7 +837,7 @@ const MatchesPage = () => {
     if (!isManager) return;
     
     const confirmReset = window.confirm(
-      "Are you sure you want to reset ALL matches? This will clear all scores, players, and set all matches to pending status."
+      "Are you sure you want to reset ALL matches? This will clear all scores, players, set all matches to pending status, and reset the tournament start status."
     );
     
     if (!confirmReset) return;
@@ -614,6 +860,18 @@ const MatchesPage = () => {
         });
       }
 
+      // Reset tournament state
+      try {
+        const tournamentStateRef = doc(db, "tournament_state", "current");
+        await setDoc(tournamentStateRef, {
+          started: false,
+          startedAt: null,
+        });
+        setTournamentStarted(false);
+      } catch (error) {
+        console.error("Error resetting tournament state:", error);
+      }
+
       // Reload matches
       const updatedMatches = matchesSnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -628,7 +886,7 @@ const MatchesPage = () => {
       })) as Match[];
 
       setMatches(updatedMatches);
-      alert("All matches have been reset successfully!");
+      alert("All matches and tournament status have been reset successfully!");
     } catch (error) {
       console.error("Error resetting matches:", error);
       alert("Failed to reset matches. Please try again.");
@@ -804,26 +1062,54 @@ const MatchesPage = () => {
             Tournament Matches
           </h1>
           {isManager && (
-            <button
-              onClick={handleGlobalReset}
-              className="text-red-600 hover:text-red-800 transition-colors"
-              title="Reset all matches"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+            <div className="flex items-center gap-3">
+              {!tournamentStarted && (
+                <button
+                  onClick={handleStartTournament}
+                  disabled={players.length < 8 || players.length > 12}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                    players.length >= 8 && players.length <= 12
+                      ? "bg-green-600 hover:bg-green-700 text-white"
+                      : "bg-gray-400 text-white cursor-not-allowed"
+                  }`}
+                  title={
+                    players.length < 8
+                      ? `Need at least 8 players. Currently have ${players.length}.`
+                      : players.length > 12
+                      ? `Maximum 12 players allowed. Currently have ${players.length}.`
+                      : "Start Tournament"
+                  }
+                >
+                  <span>🚀</span>
+                  Start Tournament
+                </button>
+              )}
+              {tournamentStarted && (
+                <span className="text-green-600 font-semibold text-sm">
+                  ✓ Tournament Started
+                </span>
+              )}
+              <button
+                onClick={handleGlobalReset}
+                className="text-red-600 hover:text-red-800 transition-colors"
+                title="Reset all matches"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+              </button>
+            </div>
           )}
         </div>
 
@@ -843,36 +1129,71 @@ const MatchesPage = () => {
             {/* Horizontal Scrolling Container */}
             <div className="overflow-x-auto">
               <div className="flex space-x-4 min-w-max pb-2 items-center min-h-[300px]">
-                {/* Column 1: Qualifying matches (dynamic) */}
+                {/* Column 1: Qualifying matches (always show 4, max for 12 players) */}
                 <div className="flex flex-col min-h-[250px]">
+                  <div className="text-center font-bold text-sm text-gray-800 mb-2">
+                    QR
+                  </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                    {matchNumbers.qualifying.length > 0 ? (
-                      matchNumbers.qualifying.map((matchId, index) => {
-                        const match = getMatchById(
-                          `winners-qualifying-${index}`
-                        );
-                        return (
-                          <div
-                            key={index}
-                            className="w-56 h-16 border-2 border-gray-300 rounded-lg bg-white px-1 py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
-                            onClick={() =>
-                              handleMatchClick(`winners-qualifying-${index}`)
+                    {matchNumbers.qualifying.map((matchId, index) => {
+                      const match = getMatchById(`winners-qualifying-${index}`);
+                      const isDisabled = match?.status === "disabled" || index >= qualifyingMatches;
+                      // After tournament starts, use match.matchNumber (could be empty for disabled matches)
+                      // Before tournament starts, use matchNumbers array
+                      const displayMatchNumber = tournamentStarted 
+                        ? (match?.matchNumber || (isDisabled ? "—" : matchId))
+                        : matchId;
+                      
+                      return (
+                        <div
+                          key={index}
+                          className={`w-56 h-16 border-2 rounded-lg px-1 py-px transition-all relative ${
+                            isDisabled && tournamentStarted
+                              ? "border-gray-200 bg-gray-100 cursor-not-allowed opacity-50"
+                              : "border-gray-300 bg-white cursor-pointer hover:border-blue-500 hover:shadow-md"
+                          }`}
+                          onClick={() => {
+                            if (!isDisabled) {
+                              if (tournamentStarted) {
+                                handleMatchClick(`winners-qualifying-${index}`);
+                              } else {
+                                // Before tournament starts, allow clicking to assign players
+                                handleMatchClick(`winners-qualifying-${index}`);
+                              }
                             }
-                          >
-                            <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
-                              {/* Column 1: Match Number (1x1) */}
-                              <div className="flex items-center justify-center border-r border-gray-400">
-                                <div className="text-sm text-gray-700 font-medium">
-                                  {matchId}
-                                </div>
+                          }}
+                        >
+                          {/* Delete button - only show if not started and manager */}
+                          {isManager && !tournamentStarted && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteQRMatch(index);
+                              }}
+                              className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold z-10"
+                              title="Delete this QR match"
+                            >
+                              ×
+                            </button>
+                          )}
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
+                            {/* Column 1: Match Number (1x1) */}
+                            <div className="flex items-center justify-center border-r border-gray-400">
+                              <div className={`text-sm font-medium ${
+                                isDisabled && tournamentStarted ? "text-gray-400" : "text-gray-700"
+                              }`}>
+                                {displayMatchNumber}
                               </div>
+                            </div>
 
-                              {/* Column 2: Player Names (2x1) */}
-                              <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
+                            {/* Column 2: Player Names (2x1) */}
+                            <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
                                 className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
+                                    : isDisabled && tournamentStarted
+                                    ? "text-gray-400"
                                     : "text-gray-800 font-medium"
                                 }`}
                                 title={match?.player1?.name || "TBD"}
@@ -883,44 +1204,45 @@ const MatchesPage = () => {
                                 className={`text-sm text-left pt-1 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
+                                    : isDisabled && tournamentStarted
+                                    ? "text-gray-400"
                                     : "text-gray-800 font-medium"
                                 }`}
                                 title={match?.player2?.name || "TBD"}
                               >
                                 {match?.player2?.name || "TBD"}
                               </div>
-                              </div>
+                            </div>
 
-                              {/* Column 3: Scores (2x1) */}
-                              <div className="flex flex-col justify-center space-y-0">
-                                <div
-                                  className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
-                                    match?.winner === "player1"
-                                      ? "text-yellow-600"
-                                      : "text-gray-800"
-                                  }`}
-                                >
-                                  {match?.score1 || 0}
-                                </div>
-                                <div
-                                  className={`text-base font-bold text-center pt-1 ${
-                                    match?.winner === "player2"
-                                      ? "text-yellow-600"
-                                      : "text-gray-800"
-                                  }`}
-                                >
-                                  {match?.score2 || 0}
-                                </div>
+                            {/* Column 3: Scores (2x1) */}
+                            <div className="flex flex-col justify-center space-y-0">
+                              <div
+                                className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
+                                  match?.winner === "player1"
+                                    ? "text-yellow-600"
+                                    : isDisabled && tournamentStarted
+                                    ? "text-gray-400"
+                                    : "text-gray-800"
+                                }`}
+                              >
+                                {match?.score1 || 0}
+                              </div>
+                              <div
+                                className={`text-base font-bold text-center pt-1 ${
+                                  match?.winner === "player2"
+                                    ? "text-yellow-600"
+                                    : isDisabled && tournamentStarted
+                                    ? "text-gray-400"
+                                    : "text-gray-800"
+                                }`}
+                              >
+                                {match?.score2 || 0}
                               </div>
                             </div>
                           </div>
-                        );
-                      })
-                    ) : (
-                      <div className="text-gray-800 font-medium text-sm">
-                        No qualifying matches
-                      </div>
-                    )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -932,8 +1254,8 @@ const MatchesPage = () => {
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
                     {matchNumbers.round1.map((matchId, index) => {
                       const match = getMatchById(`winners-round1-${index}`);
-                      const needsQualifying =
-                        qualifyingMatches > 0 && (index === 0 || index === 3);
+                      // If there are QR matches, Round 1 matches 0 to (qualifyingMatches-1) are waiting for QR winners
+                      const waitingForQR = qualifyingMatches > 0 && index < qualifyingMatches;
                       return (
                         <div
                           key={index}
@@ -992,7 +1314,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score2 || (needsQualifying ? "-" : 0)}
+                                {match?.score2 || (waitingForQR ? "-" : 0)}
                               </div>
                             </div>
                           </div>
@@ -1193,45 +1515,54 @@ const MatchesPage = () => {
             {/* Horizontal Scrolling Container */}
             <div className="overflow-x-auto">
               <div className="flex space-x-4 min-w-max pb-2 items-center min-h-[300px]">
-                {/* Losers (Qualifying) - 1 match */}
+                {/* Column 1: Losers Qualifying (max 2 matches for 12 players) */}
                 <div className="flex flex-col min-h-[250px]">
                   <div className="text-center font-bold text-sm text-gray-800 mb-2">
-                    Losers Q
+                    LB QR
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                    {(() => {
-                      const match = getMatchById("losers-qualifying-0");
+                    {matchNumbers.losersQualifying.map((matchId, index) => {
+                      const match = getMatchById(`losers-qualifying-${index}`);
+                      // For now, show all boxes - will disable unused ones based on player count later
                       return (
                         <div
+                          key={index}
                           className="w-56 h-16 border-2 border-gray-300 rounded-lg bg-white px-1 py-px cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
-                          onClick={() => handleMatchClick("losers-qualifying-0")}
+                          onClick={() => handleMatchClick(`losers-qualifying-${index}`)}
                         >
                           <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
+                            {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center justify-center border-r border-gray-400">
                               <div className="text-sm text-gray-700 font-medium">
-                                {match?.matchNumber || "TBD"}
+                                {matchId}
                               </div>
                             </div>
+
+                            {/* Column 2: Player Names (2x1) - left aligned like winners bracket */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
-                                className={`text-base text-center border-b border-gray-400 pb-1 font-medium ${
+                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player1?.name || "TBD"}
                               >
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-base text-center pt-1 font-medium ${
+                                className={`text-sm text-left pt-1 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player2?.name || "TBD"}
                               >
                                 {match?.player2?.name || "TBD"}
                               </div>
                             </div>
+
+                            {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col justify-center space-y-0">
                               <div
                                 className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
@@ -1240,7 +1571,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score1 || "-"}
+                                {match?.score1 || 0}
                               </div>
                               <div
                                 className={`text-base font-bold text-center pt-1 ${
@@ -1249,23 +1580,23 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score2 || "-"}
+                                {match?.score2 || 0}
                               </div>
                             </div>
                           </div>
                         </div>
                       );
-                    })()}
+                    })}
                   </div>
                 </div>
 
-                {/* Losers R1 - 3 matches */}
+                {/* Column 2: Losers R1 (max 3 matches for 12 players) */}
                 <div className="flex flex-col min-h-[250px]">
                   <div className="text-center font-bold text-sm text-gray-800 mb-2">
-                    Losers R1
+                    LB R1
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                    {[0, 1, 2].map((index) => {
+                    {matchNumbers.losersR1.map((matchId, index) => {
                       const match = getMatchById(`losers-r1-${index}`);
                       return (
                         <div
@@ -1274,31 +1605,38 @@ const MatchesPage = () => {
                           onClick={() => handleMatchClick(`losers-r1-${index}`)}
                         >
                           <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
+                            {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center justify-center border-r border-gray-400">
                               <div className="text-sm text-gray-700 font-medium">
-                                {match?.matchNumber || "TBD"}
+                                {matchId}
                               </div>
                             </div>
+
+                            {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
-                                className={`text-base text-center border-b border-gray-400 pb-1 font-medium ${
+                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player1?.name || "TBD"}
                               >
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-base text-center pt-1 font-medium ${
+                                className={`text-sm text-left pt-1 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player2?.name || "TBD"}
                               >
                                 {match?.player2?.name || "TBD"}
                               </div>
                             </div>
+
+                            {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col justify-center space-y-0">
                               <div
                                 className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
@@ -1307,7 +1645,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score1 || "-"}
+                                {match?.score1 || 0}
                               </div>
                               <div
                                 className={`text-base font-bold text-center pt-1 ${
@@ -1316,7 +1654,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score2 || "-"}
+                                {match?.score2 || 0}
                               </div>
                             </div>
                           </div>
@@ -1326,13 +1664,13 @@ const MatchesPage = () => {
                   </div>
                 </div>
 
-                {/* Losers R2 - 2 matches */}
+                {/* Column 3: Losers R2 (max 3 matches for 12 players) */}
                 <div className="flex flex-col min-h-[250px]">
                   <div className="text-center font-bold text-sm text-gray-800 mb-2">
-                    Losers R2
+                    LB R2
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                    {[0, 1].map((index) => {
+                    {matchNumbers.losersR2.map((matchId, index) => {
                       const match = getMatchById(`losers-r2-${index}`);
                       return (
                         <div
@@ -1341,31 +1679,38 @@ const MatchesPage = () => {
                           onClick={() => handleMatchClick(`losers-r2-${index}`)}
                         >
                           <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
+                            {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center justify-center border-r border-gray-400">
                               <div className="text-sm text-gray-700 font-medium">
-                                {match?.matchNumber || "TBD"}
+                                {matchId}
                               </div>
                             </div>
+
+                            {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
-                                className={`text-base text-center border-b border-gray-400 pb-1 font-medium ${
+                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player1?.name || "TBD"}
                               >
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-base text-center pt-1 font-medium ${
+                                className={`text-sm text-left pt-1 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player2?.name || "TBD"}
                               >
                                 {match?.player2?.name || "TBD"}
                               </div>
                             </div>
+
+                            {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col justify-center space-y-0">
                               <div
                                 className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
@@ -1374,7 +1719,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score1 || "-"}
+                                {match?.score1 || 0}
                               </div>
                               <div
                                 className={`text-base font-bold text-center pt-1 ${
@@ -1383,7 +1728,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score2 || "-"}
+                                {match?.score2 || 0}
                               </div>
                             </div>
                           </div>
@@ -1393,45 +1738,53 @@ const MatchesPage = () => {
                   </div>
                 </div>
 
-                {/* Losers R3 - 1 match */}
+                {/* Column 4: Losers R3 (max 2 matches for 12 players) */}
                 <div className="flex flex-col min-h-[250px]">
                   <div className="text-center font-bold text-sm text-gray-800 mb-2">
-                    Losers R3
+                    LB R3
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                    {(() => {
-                      const match = getMatchById("losers-r3-0");
+                    {matchNumbers.losersR3.map((matchId, index) => {
+                      const match = getMatchById(`losers-r3-${index}`);
                       return (
                         <div
+                          key={index}
                           className="w-56 h-16 border-2 border-gray-300 rounded-lg bg-white px-1 py-px cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
-                          onClick={() => handleMatchClick("losers-r3-0")}
+                          onClick={() => handleMatchClick(`losers-r3-${index}`)}
                         >
                           <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
+                            {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center justify-center border-r border-gray-400">
                               <div className="text-sm text-gray-700 font-medium">
-                                {match?.matchNumber || "TBD"}
+                                {matchId}
                               </div>
                             </div>
+
+                            {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
-                                className={`text-base text-center border-b border-gray-400 pb-1 font-medium ${
+                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player1?.name || "TBD"}
                               >
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-base text-center pt-1 font-medium ${
+                                className={`text-sm text-left pt-1 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player2?.name || "TBD"}
                               >
                                 {match?.player2?.name || "TBD"}
                               </div>
                             </div>
+
+                            {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col justify-center space-y-0">
                               <div
                                 className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
@@ -1440,7 +1793,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score1 || "-"}
+                                {match?.score1 || 0}
                               </div>
                               <div
                                 className={`text-base font-bold text-center pt-1 ${
@@ -1449,86 +1802,20 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score2 || "-"}
+                                {match?.score2 || 0}
                               </div>
                             </div>
                           </div>
                         </div>
                       );
-                    })()}
+                    })}
                   </div>
                 </div>
 
-                {/* Losers R4 - 1 match */}
+                {/* Column 5: Losers Final (1 match) */}
                 <div className="flex flex-col min-h-[250px]">
                   <div className="text-center font-bold text-sm text-gray-800 mb-2">
-                    Losers R4
-                  </div>
-                  <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                    {(() => {
-                      const match = getMatchById("losers-r4-0");
-                      return (
-                        <div
-                          className="w-56 h-16 border-2 border-gray-300 rounded-lg bg-white px-1 py-px cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
-                          onClick={() => handleMatchClick("losers-r4-0")}
-                        >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
-                            <div className="flex items-center justify-center border-r border-gray-400">
-                              <div className="text-sm text-gray-700 font-medium">
-                                {match?.matchNumber || "TBD"}
-                              </div>
-                            </div>
-                            <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
-                              <div
-                                className={`text-base text-center border-b border-gray-400 pb-1 font-medium ${
-                                  match?.winner === "player1"
-                                    ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
-                                }`}
-                              >
-                                {match?.player1?.name || "TBD"}
-                              </div>
-                              <div
-                                className={`text-base text-center pt-1 font-medium ${
-                                  match?.winner === "player2"
-                                    ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
-                                }`}
-                              >
-                                {match?.player2?.name || "TBD"}
-                              </div>
-                            </div>
-                            <div className="flex flex-col justify-center space-y-0">
-                              <div
-                                className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
-                                  match?.winner === "player1"
-                                    ? "text-yellow-600"
-                                    : "text-gray-800"
-                                }`}
-                              >
-                                {match?.score1 || "-"}
-                              </div>
-                              <div
-                                className={`text-base font-bold text-center pt-1 ${
-                                  match?.winner === "player2"
-                                    ? "text-yellow-600"
-                                    : "text-gray-800"
-                                }`}
-                              >
-                                {match?.score2 || "-"}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-                {/* Losers R5 - Final LB match */}
-                <div className="flex flex-col min-h-[250px]">
-                  <div className="text-center font-bold text-sm text-gray-800 mb-2">
-                    Losers R5
+                    LB Final
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
                     {(() => {
@@ -1539,31 +1826,38 @@ const MatchesPage = () => {
                           onClick={() => handleMatchClick("losers-r5-0")}
                         >
                           <div className="grid grid-cols-[1fr_3fr_1fr] gap-2 h-full">
+                            {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center justify-center border-r border-gray-400">
                               <div className="text-sm text-gray-700 font-medium">
-                                {match?.matchNumber || "TBD"}
+                                {matchNumbers.losersFinal[0]}
                               </div>
                             </div>
+
+                            {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
-                                className={`text-base text-center border-b border-gray-400 pb-1 font-medium ${
+                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player1?.name || "TBD"}
                               >
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-base text-center pt-1 font-medium ${
+                                className={`text-sm text-left pt-1 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
-                                    : "text-gray-800"
+                                    : "text-gray-800 font-medium"
                                 }`}
+                                title={match?.player2?.name || "TBD"}
                               >
                                 {match?.player2?.name || "TBD"}
                               </div>
                             </div>
+
+                            {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col justify-center space-y-0">
                               <div
                                 className={`text-base font-bold text-center border-b border-gray-400 pb-1 ${
@@ -1572,7 +1866,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score1 || "-"}
+                                {match?.score1 || 0}
                               </div>
                               <div
                                 className={`text-base font-bold text-center pt-1 ${
@@ -1581,7 +1875,7 @@ const MatchesPage = () => {
                                     : "text-gray-800"
                                 }`}
                               >
-                                {match?.score2 || "-"}
+                                {match?.score2 || 0}
                               </div>
                             </div>
                           </div>
@@ -1591,7 +1885,7 @@ const MatchesPage = () => {
                   </div>
                 </div>
 
-                {/* Loser Bracket Winner */}
+                {/* Column 6: Loser Bracket Winner */}
                 <div className="flex flex-col min-h-[250px]">
                   <div className="text-center font-bold text-sm text-gray-800 mb-2">
                     Winner
