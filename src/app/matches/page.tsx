@@ -586,6 +586,110 @@ const MatchesPage = () => {
     setMatches(updatedMatches);
   };
 
+  // Global reset - reset all matches
+  const handleGlobalReset = async () => {
+    if (!isManager) return;
+    
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset ALL matches? This will clear all scores, players, and set all matches to pending status."
+    );
+    
+    if (!confirmReset) return;
+
+    try {
+      // Reset all matches in Firebase
+      const matchesCollection = collection(db, "matches");
+      const matchesSnapshot = await getDocs(matchesCollection);
+      
+      for (const matchDoc of matchesSnapshot.docs) {
+        const matchRef = doc(db, "matches", matchDoc.id);
+        await updateDoc(matchRef, {
+          player1: null,
+          player2: null,
+          score1: 0,
+          score2: 0,
+          winner: null,
+          status: "pending",
+          raceTo: 9,
+        });
+      }
+
+      // Reload matches
+      const updatedMatches = matchesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        player1: undefined,
+        player2: undefined,
+        score1: 0,
+        score2: 0,
+        winner: undefined,
+        status: "pending" as const,
+        raceTo: 9,
+      })) as Match[];
+
+      setMatches(updatedMatches);
+      alert("All matches have been reset successfully!");
+    } catch (error) {
+      console.error("Error resetting matches:", error);
+      alert("Failed to reset matches. Please try again.");
+    }
+  };
+
+  // Reset individual match
+  const handleResetMatch = async (matchId: string) => {
+    if (!isManager) return;
+
+    const confirmReset = window.confirm(
+      "Are you sure you want to reset this match? This will clear scores, players, and set status to pending."
+    );
+
+    if (!confirmReset) return;
+
+    try {
+      const matchRef = doc(db, "matches", matchId);
+      await updateDoc(matchRef, {
+        player1: null,
+        player2: null,
+        score1: 0,
+        score2: 0,
+        winner: null,
+        status: "pending",
+      });
+
+      // Update local state
+      const updatedMatches = matches.map((match) => {
+        if (match.id === matchId) {
+          return {
+            ...match,
+            player1: undefined,
+            player2: undefined,
+            score1: 0,
+            score2: 0,
+            winner: undefined,
+            status: "pending" as const,
+          };
+        }
+        return match;
+      });
+
+      setMatches(updatedMatches);
+
+      // If modal is open for this match, update the form
+      if (selectedMatch?.id === matchId) {
+        setSelectedPlayer1("");
+        setSelectedPlayer2("");
+        setScore1(0);
+        setScore2(0);
+        setSelectedMatch(updatedMatches.find((m) => m.id === matchId) || null);
+      }
+
+      alert("Match reset successfully!");
+    } catch (error) {
+      console.error("Error resetting match:", error);
+      alert("Failed to reset match. Please try again.");
+    }
+  };
+
   // Save match data
   const handleSaveMatch = async () => {
     if (!selectedMatch) return;
@@ -695,10 +799,32 @@ const MatchesPage = () => {
   return (
     <div className="p-3 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-4">
+        <div className="mb-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             Tournament Matches
           </h1>
+          {isManager && (
+            <button
+              onClick={handleGlobalReset}
+              className="text-red-600 hover:text-red-800 transition-colors"
+              title="Reset all matches"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+            </button>
+          )}
         </div>
 
         {/* Main Container: Column Layout */}
@@ -743,26 +869,26 @@ const MatchesPage = () => {
 
                               {/* Column 2: Player Names (2x1) */}
                               <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
-                                <div
-                                  className={`text-sm text-center border-b border-gray-400 pb-1 truncate ${
-                                    match?.winner === "player1"
-                                      ? "text-yellow-600 font-bold"
-                                      : "text-gray-800 font-medium"
-                                  }`}
-                                  title={match?.player1?.name || "TBD"}
-                                >
-                                  {match?.player1?.name || "TBD"}
-                                </div>
-                                <div
-                                  className={`text-sm text-center pt-1 truncate ${
-                                    match?.winner === "player2"
-                                      ? "text-yellow-600 font-bold"
-                                      : "text-gray-800 font-medium"
-                                  }`}
-                                  title={match?.player2?.name || "TBD"}
-                                >
-                                  {match?.player2?.name || "TBD"}
-                                </div>
+                              <div
+                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
+                                  match?.winner === "player1"
+                                    ? "text-yellow-600 font-bold"
+                                    : "text-gray-800 font-medium"
+                                }`}
+                                title={match?.player1?.name || "TBD"}
+                              >
+                                {match?.player1?.name || "TBD"}
+                              </div>
+                              <div
+                                className={`text-sm text-left pt-1 truncate px-1 ${
+                                  match?.winner === "player2"
+                                    ? "text-yellow-600 font-bold"
+                                    : "text-gray-800 font-medium"
+                                }`}
+                                title={match?.player2?.name || "TBD"}
+                              >
+                                {match?.player2?.name || "TBD"}
+                              </div>
                               </div>
 
                               {/* Column 3: Scores (2x1) */}
@@ -827,7 +953,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400 min-w-0 flex-1">
                               <div
-                                className={`text-xs text-center border-b border-gray-400 pb-1 font-medium truncate ${
+                                className={`text-xs text-left border-b border-gray-400 pb-1 font-medium truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -837,7 +963,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-xs text-center pt-1 font-medium truncate ${
+                                className={`text-xs text-left pt-1 font-medium truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -903,7 +1029,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400 min-w-0 flex-1">
                               <div
-                                className={`text-xs text-center border-b border-gray-400 pb-1 font-medium truncate ${
+                                className={`text-xs text-left border-b border-gray-400 pb-1 font-medium truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -913,7 +1039,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-xs text-center pt-1 font-medium truncate ${
+                                className={`text-xs text-left pt-1 font-medium truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -976,7 +1102,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400 min-w-0 flex-1">
                               <div
-                                className={`text-xs text-center border-b border-gray-400 pb-1 font-medium truncate ${
+                                className={`text-xs text-left border-b border-gray-400 pb-1 font-medium truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -986,7 +1112,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-xs text-center pt-1 font-medium truncate ${
+                                className={`text-xs text-left pt-1 font-medium truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -1498,14 +1624,38 @@ const MatchesPage = () => {
           <div className="bg-white rounded-lg p-6 w-96 max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold text-gray-900">
-                {selectedMatch.matchNumber} - {selectedMatch.round}
+                {selectedMatch.matchNumber} - {selectedMatch.round.charAt(0).toUpperCase() + selectedMatch.round.slice(1).replace(/round(\d)/i, (match, num) => `Round ${num}`)}
               </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-800 font-medium hover:text-gray-800"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-2">
+                {isManager && (
+                  <button
+                    onClick={() => handleResetMatch(selectedMatch.id)}
+                    className="text-red-600 hover:text-red-800 transition-colors"
+                    title="Reset this match"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-gray-800 font-medium hover:text-gray-800"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -1560,7 +1710,7 @@ const MatchesPage = () => {
                   type="number"
                   min="1"
                   max="21"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900"
+                  className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
                   value={raceTo}
                   onChange={(e) => setRaceTo(parseInt(e.target.value) || 9)}
                 />
@@ -1576,7 +1726,7 @@ const MatchesPage = () => {
                     type="number"
                     min="0"
                     max={raceTo}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900"
+                    className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
                     value={score1}
                     onChange={(e) => {
                       const val = parseInt(e.target.value) || 0;
@@ -1597,7 +1747,7 @@ const MatchesPage = () => {
                     type="number"
                     min="0"
                     max={raceTo}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900"
+                    className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
                     value={score2}
                     onChange={(e) => {
                       const val = parseInt(e.target.value) || 0;
@@ -1610,17 +1760,6 @@ const MatchesPage = () => {
                     </p>
                   )}
                 </div>
-              </div>
-              
-              {/* Helper text */}
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-3 text-sm text-blue-800">
-                <p className="font-semibold mb-1">💡 How it works:</p>
-                <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>Scores automatically stop at Race to X</li>
-                  <li>When a player reaches Race to X, the match completes</li>
-                  <li>Players automatically advance to next round when you save</li>
-                  <li>Winners continue in their bracket, losers go to losers bracket</li>
-                </ul>
               </div>
 
               {/* Action Buttons */}
@@ -1635,7 +1774,7 @@ const MatchesPage = () => {
                   onClick={handleSaveMatch}
                   className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
                 >
-                  Save Match
+                  Advance
                 </button>
               </div>
             </div>

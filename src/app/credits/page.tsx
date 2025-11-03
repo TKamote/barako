@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Footer from "@/components/Footer";
 
 export default function CreditsPage() {
   const attributions = [
@@ -165,6 +166,7 @@ export default function CreditsPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

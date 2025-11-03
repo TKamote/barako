@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import LoginModal from "@/components/LoginModal";
+import Footer from "@/components/Footer";
 import {
   collection,
   getDocs,
@@ -447,6 +448,7 @@ const TournamentPage = () => {
           onClose={() => setShowLoginModal(false)}
         />
       </div>
+      <Footer />
     </div>
   );
 };

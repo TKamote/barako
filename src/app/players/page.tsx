@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
+import Footer from "@/components/Footer";
 
 interface Player {
   id: string;
@@ -342,14 +343,23 @@ const PlayersPage = () => {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Players</h1>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+          <div className="flex items-center justify-between w-full sm:w-auto sm:justify-start">
+            <h1 className="text-xl font-bold text-gray-900">Players</h1>
+            <button
+              onClick={handleAddPlayerClick}
+              disabled={loading}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center font-bold transition-colors disabled:opacity-50 sm:hidden"
+              style={{ width: "40vw" }}
+            >
+              <span className="text-white font-bold text-2xl mr-2">+</span>
+              Add Player
+            </button>
           </div>
           <button
             onClick={handleAddPlayerClick}
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center font-bold transition-colors disabled:opacity-50"
+            className="hidden sm:flex bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg items-center font-bold transition-colors disabled:opacity-50"
           >
             <span className="text-white font-bold text-2xl mr-2">+</span>
             Add Player
@@ -563,16 +573,16 @@ const PlayersPage = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Rank
                     </th>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Photo
                     </th>
-                    <th className="px-3 py-2 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-1 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
                       Players
                     </th>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
                       Points
                     </th>
                   </tr>
@@ -587,10 +597,10 @@ const PlayersPage = () => {
                       onClick={() => handleEditPlayer(player)}
                       title={isManager ? "Click to edit" : ""}
                     >
-                      <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
+                      <td className="px-2 py-1 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 1}
                       </td>
-                      <td className="px-2 py-2 text-center w-16">
+                      <td className="px-2 py-1 text-center w-16">
                         {player.photoURL ? (
                           <div className="w-8 h-8 mx-auto">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -606,10 +616,10 @@ const PlayersPage = () => {
                           </div>
                         )}
                       </td>
-                      <td className="px-3 py-2 text-lg text-gray-900">
+                      <td className="px-3 py-1 text-lg text-gray-900">
                         {player.name}
                       </td>
-                      <td className="px-2 py-2 text-center text-lg text-gray-900 w-20">
+                      <td className="px-2 py-1 text-center text-lg text-gray-900 w-20">
                         {player.points}
                       </td>
                     </tr>
@@ -630,16 +640,16 @@ const PlayersPage = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Rank
                     </th>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Photo
                     </th>
-                    <th className="px-3 py-2 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-1 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
                       Players
                     </th>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
                       Points
                     </th>
                   </tr>
@@ -654,10 +664,10 @@ const PlayersPage = () => {
                       onClick={() => handleEditPlayer(player)}
                       title={isManager ? "Click to edit" : ""}
                     >
-                      <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
+                      <td className="px-2 py-1 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 26}
                       </td>
-                      <td className="px-2 py-2 text-center w-16">
+                      <td className="px-2 py-1 text-center w-16">
                         {player.photoURL ? (
                           <div className="w-8 h-8 mx-auto">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -673,10 +683,10 @@ const PlayersPage = () => {
                           </div>
                         )}
                       </td>
-                      <td className="px-3 py-2 text-lg text-gray-900">
+                      <td className="px-3 py-1 text-lg text-gray-900">
                         {player.name}
                       </td>
-                      <td className="px-2 py-2 text-center text-lg text-gray-900 w-20">
+                      <td className="px-2 py-1 text-center text-lg text-gray-900 w-20">
                         {player.points}
                       </td>
                     </tr>
@@ -697,16 +707,16 @@ const PlayersPage = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Rank
                     </th>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Photo
                     </th>
-                    <th className="px-3 py-2 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-1 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
                       Players
                     </th>
-                    <th className="px-2 py-2 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
+                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
                       Points
                     </th>
                   </tr>
@@ -721,10 +731,10 @@ const PlayersPage = () => {
                       onClick={() => handleEditPlayer(player)}
                       title={isManager ? "Click to edit" : ""}
                     >
-                      <td className="px-2 py-2 text-center text-lg font-medium text-gray-900 w-16">
+                      <td className="px-2 py-1 text-center text-lg font-medium text-gray-900 w-16">
                         #{i + 51}
                       </td>
-                      <td className="px-2 py-2 text-center w-16">
+                      <td className="px-2 py-1 text-center w-16">
                         {player.photoURL ? (
                           <div className="w-8 h-8 mx-auto">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -740,10 +750,10 @@ const PlayersPage = () => {
                           </div>
                         )}
                       </td>
-                      <td className="px-3 py-2 text-lg text-gray-900">
+                      <td className="px-3 py-1 text-lg text-gray-900">
                         {player.name}
                       </td>
-                      <td className="px-2 py-2 text-center text-lg text-gray-900 w-20">
+                      <td className="px-2 py-1 text-center text-lg text-gray-900 w-20">
                         {player.points}
                       </td>
                     </tr>
@@ -766,6 +776,7 @@ const PlayersPage = () => {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 };

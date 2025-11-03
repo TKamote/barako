@@ -45,9 +45,9 @@ const Navigation = () => {
 
   return (
     <nav className="bg-white shadow-lg border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          <div className="flex items-center">
             <div className="shrink-0 flex items-center">
               <Image
                 src="/favicon.png"
@@ -60,26 +60,27 @@ const Navigation = () => {
                 Barako Tour
               </h1>
             </div>
-            {/* Desktop Navigation */}
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
+          </div>
 
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
-                      isActive
-                        ? "border-blue-500 text-blue-600"
-                        : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-            </div>
+          {/* Desktop Navigation - Grouped to the right */}
+          <div className="hidden sm:flex sm:items-center sm:space-x-8">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
+                    isActive
+                      ? "border-blue-500 text-blue-600"
+                      : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Mobile menu button */}
