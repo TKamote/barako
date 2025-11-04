@@ -44,7 +44,7 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 pt-8 sm:pt-0 relative z-[60]">
+    <nav className="bg-white shadow-lg border-b border-gray-200 relative z-[60]">
       <div className="max-w-7xl mx-auto px-3 sm:px-6">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
