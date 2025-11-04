@@ -1055,7 +1055,7 @@ const MatchesPage = () => {
   }
 
   return (
-    <div className="p-3 bg-gray-50 min-h-screen">
+    <div className="p-0 sm:p-3 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="mb-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -1164,7 +1164,7 @@ const MatchesPage = () => {
                       return (
                         <div
                           key={index}
-                          className={`w-56 border px-1 py-[1px] transition-all relative ${
+                          className={`w-56 border px-0 sm:px-1 py-0 sm:py-[1px] transition-all relative ${
                             isDisabled && tournamentStarted
                               ? "border-gray-200 bg-gray-100 cursor-not-allowed opacity-50"
                               : "border-gray-300 bg-white cursor-pointer hover:border-blue-500 hover:shadow-md"
@@ -1194,7 +1194,7 @@ const MatchesPage = () => {
                               ×
                             </button>
                           )}
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className={`text-[18px] font-medium ${
@@ -1207,7 +1207,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] text-left py-[1px] pb-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pb-0 sm:pb-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : isDisabled && tournamentStarted
@@ -1219,7 +1219,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-[18px] text-left py-[1px] pt-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pt-0 sm:pt-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : isDisabled && tournamentStarted
@@ -1235,7 +1235,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : isDisabled && tournamentStarted
@@ -1246,7 +1246,7 @@ const MatchesPage = () => {
                                 {match?.score1 || 0}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : isDisabled && tournamentStarted
@@ -1274,12 +1274,12 @@ const MatchesPage = () => {
                       return (
                         <div
                           key={index}
-                          className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
+                          className="w-56 border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
                           onClick={() =>
                             handleMatchClick(`winners-round1-${index}`)
                           }
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-[18px] text-gray-700 font-medium">
@@ -1314,7 +1314,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1323,7 +1323,7 @@ const MatchesPage = () => {
                                 {match?.score1 || 0}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1347,12 +1347,12 @@ const MatchesPage = () => {
                       return (
                         <div
                           key={index}
-                          className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
+                          className="w-56 border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
                           onClick={() =>
                             handleMatchClick(`winners-round2-${index}`)
                           }
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-[18px] text-gray-700 font-medium">
@@ -1387,7 +1387,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1396,7 +1396,7 @@ const MatchesPage = () => {
                                 {match?.score1 || "-"}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1419,10 +1419,10 @@ const MatchesPage = () => {
                       const match = getMatchById("winners-round3-0");
                       return (
                         <div
-                          className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
+                          className="w-56 border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
                           onClick={() => handleMatchClick("winners-round3-0")}
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-[18px] text-gray-700 font-medium">
@@ -1457,7 +1457,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1466,7 +1466,7 @@ const MatchesPage = () => {
                                 {match?.score1 || "-"}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1536,7 +1536,7 @@ const MatchesPage = () => {
                           className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
                           onClick={() => handleMatchClick(`losers-qualifying-${index}`)}
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-[18px] text-gray-700 font-medium">
@@ -1547,7 +1547,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) - left aligned like winners bracket */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] text-left py-[1px] pb-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pb-0 sm:pb-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1557,7 +1557,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-[18px] text-left py-[1px] pt-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pt-0 sm:pt-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1571,7 +1571,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1580,7 +1580,7 @@ const MatchesPage = () => {
                                 {match?.score1 || 0}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1610,7 +1610,7 @@ const MatchesPage = () => {
                           className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
                           onClick={() => handleMatchClick(`losers-r1-${index}`)}
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-[18px] text-gray-700 font-medium">
@@ -1621,7 +1621,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] text-left py-[1px] pb-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pb-0 sm:pb-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1631,7 +1631,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-[18px] text-left py-[1px] pt-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pt-0 sm:pt-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1645,7 +1645,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1654,7 +1654,7 @@ const MatchesPage = () => {
                                 {match?.score1 || 0}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1684,7 +1684,7 @@ const MatchesPage = () => {
                           className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
                           onClick={() => handleMatchClick(`losers-r2-${index}`)}
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-[18px] text-gray-700 font-medium">
@@ -1695,7 +1695,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] text-left py-[1px] pb-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pb-0 sm:pb-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1705,7 +1705,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-[18px] text-left py-[1px] pt-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pt-0 sm:pt-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1719,7 +1719,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1728,7 +1728,7 @@ const MatchesPage = () => {
                                 {match?.score1 || 0}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1758,7 +1758,7 @@ const MatchesPage = () => {
                           className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
                           onClick={() => handleMatchClick(`losers-r3-${index}`)}
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-[18px] text-gray-700 font-medium">
@@ -1769,7 +1769,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] text-left py-[1px] pb-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pb-0 sm:pb-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1779,7 +1779,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-[18px] text-left py-[1px] pt-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pt-0 sm:pt-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1793,7 +1793,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1802,7 +1802,7 @@ const MatchesPage = () => {
                                 {match?.score1 || 0}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1831,7 +1831,7 @@ const MatchesPage = () => {
                           className="w-56 border border-gray-300 bg-white px-1 py-[1px] cursor-pointer hover:border-red-500 hover:shadow-md transition-all"
                           onClick={() => handleMatchClick("losers-r5-0")}
                         >
-                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-2 gap-y-0">
+                          <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
                             {/* Column 1: Match Number (1x1) */}
                             <div className="flex items-center">
                               <div className="text-sm text-gray-700 font-medium">
@@ -1842,7 +1842,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) - left aligned */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] text-left py-[1px] pb-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pb-0 sm:pb-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1852,7 +1852,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-[18px] text-left py-[1px] pt-[1px] truncate px-1 leading-relaxed ${
+                                className={`text-[18px] text-left py-0 sm:py-[1px] pt-0 sm:pt-[1px] truncate px-0 sm:px-1 leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1866,7 +1866,7 @@ const MatchesPage = () => {
                             {/* Column 3: Scores (2x1) */}
                             <div className="flex flex-col space-y-0">
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pb-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
@@ -1875,7 +1875,7 @@ const MatchesPage = () => {
                                 {match?.score1 || 0}
                               </div>
                               <div
-                                className={`text-[18px] font-bold text-center py-[1px] pt-[1px] leading-relaxed ${
+                                className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600"
                                     : "text-gray-800"
