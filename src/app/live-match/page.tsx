@@ -575,9 +575,9 @@ const LiveMatchPage = () => {
             <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0.5 px-px sm:px-6 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-2">
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 px-1">
                   {/* Player 1 Group - Left */}
-                  <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex items-center gap-1 min-w-0">
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -593,139 +593,69 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer1Photo()!}
                           alt={getPlayer1Name()}
-                          width={32}
-                          height={32}
-                          className="w-8 h-8 rounded-full object-cover"
+                          width={28}
+                          height={28}
+                          className="w-7 h-7 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                        <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
                           👨
                         </div>
                       )}
                     </button>
-                    <div className="text-xs font-bold text-white uppercase truncate min-w-0">
+                    <div className="text-xs font-bold text-white uppercase truncate min-w-0 leading-tight">
                       {getPlayer1Name()}
                     </div>
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div className="flex items-center gap-1 justify-center shrink-0">
+                  <div className="flex items-center gap-0.5 justify-center shrink-0">
                     {/* Left Arrow - Turn Indicator */}
-                    <div className="shrink-0">
-                      <svg
-                        className={`w-4 h-4 ${
-                          currentTurn === "player1"
-                            ? "text-yellow-500"
-                            : "text-purple-950"
-                        }`}
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                      </svg>
-                    </div>
+                    <svg
+                      className={`w-3 h-3 shrink-0 ${
+                        currentTurn === "player1"
+                          ? "text-yellow-500"
+                          : "text-purple-950"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
 
                     {/* Player 1 Score */}
-                    <div className="flex items-center gap-0.5 shrink-0">
-                      {isManager && (
-                        <button
-                          onClick={() =>
-                            setPlayer1Score((prev) => Math.max(0, prev - 1))
-                          }
-                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
-                          title="Decrement (A key)"
-                        >
-                          −
-                        </button>
-                      )}
-                      <div className="text-lg font-bold text-yellow-500 whitespace-nowrap">
-                        {player1Score}
-                      </div>
-                      {isManager && (
-                        <button
-                          onClick={() => setPlayer1Score((prev) => prev + 1)}
-                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
-                          title="Increment (Q key)"
-                        >
-                          +
-                        </button>
-                      )}
+                    <div className="text-base font-bold text-yellow-500 whitespace-nowrap leading-none">
+                      {player1Score}
                     </div>
 
                     {/* Race to X - Shortened on Mobile */}
-                    <div className="flex items-center gap-0.5 shrink-0">
-                      {isManager && (
-                        <button
-                          onClick={() =>
-                            setRaceTo((prev) => Math.max(1, prev - 1))
-                          }
-                          className="text-white hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
-                          title="Decrement (- key)"
-                        >
-                          −
-                        </button>
-                      )}
-                      <div className="text-xs font-bold text-white uppercase whitespace-nowrap">
-                        R{raceTo}
-                      </div>
-                      {isManager && (
-                        <button
-                          onClick={() => setRaceTo((prev) => prev + 1)}
-                          className="text-white hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
-                          title="Increment (+ key)"
-                        >
-                          +
-                        </button>
-                      )}
+                    <div className="text-xs font-bold text-white uppercase whitespace-nowrap leading-none">
+                      R{raceTo}
                     </div>
 
                     {/* Player 2 Score */}
-                    <div className="flex items-center gap-0.5 shrink-0">
-                      {isManager && (
-                        <button
-                          onClick={() =>
-                            setPlayer2Score((prev) => Math.max(0, prev - 1))
-                          }
-                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
-                          title="Decrement (D key)"
-                        >
-                          −
-                        </button>
-                      )}
-                      <div className="text-lg font-bold text-yellow-500 whitespace-nowrap">
-                        {player2Score}
-                      </div>
-                      {isManager && (
-                        <button
-                          onClick={() => setPlayer2Score((prev) => prev + 1)}
-                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
-                          title="Increment (E key)"
-                        >
-                          +
-                        </button>
-                      )}
+                    <div className="text-base font-bold text-yellow-500 whitespace-nowrap leading-none">
+                      {player2Score}
                     </div>
 
                     {/* Right Arrow - Turn Indicator */}
-                    <div className="shrink-0">
-                      <svg
-                        className={`w-4 h-4 ${
-                          currentTurn === "player2"
-                            ? "text-yellow-500"
-                            : "text-purple-950"
-                        }`}
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                      </svg>
-                    </div>
+                    <svg
+                      className={`w-3 h-3 shrink-0 ${
+                        currentTurn === "player2"
+                          ? "text-yellow-500"
+                          : "text-purple-950"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                    </svg>
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div className="flex items-center gap-2 min-w-0 justify-end">
-                    <div className="text-xs font-bold text-white uppercase truncate min-w-0">
+                  <div className="flex items-center gap-1 min-w-0 justify-end">
+                    <div className="text-xs font-bold text-white uppercase truncate min-w-0 leading-tight">
                       {getPlayer2Name()}
                     </div>
                     <button
@@ -743,13 +673,13 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer2Photo()!}
                           alt={getPlayer2Name()}
-                          width={32}
-                          height={32}
-                          className="w-8 h-8 rounded-full object-cover"
+                          width={28}
+                          height={28}
+                          className="w-7 h-7 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                        <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
                           👩
                         </div>
                       )}
@@ -818,84 +748,18 @@ const LiveMatchPage = () => {
                       </div>
 
                       {/* Player 1 Score */}
-                      <div className="flex items-center gap-1 shrink-0">
-                        {isManager && (
-                          <button
-                            onClick={() =>
-                              setPlayer1Score((prev) => Math.max(0, prev - 1))
-                            }
-                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
-                            title="Decrement (A key)"
-                          >
-                            −
-                          </button>
-                        )}
-                        <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
-                          {player1Score}
-                        </div>
-                        {isManager && (
-                          <button
-                            onClick={() => setPlayer1Score((prev) => prev + 1)}
-                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
-                            title="Increment (Q key)"
-                          >
-                            +
-                          </button>
-                        )}
+                      <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
+                        {player1Score}
                       </div>
 
                       {/* Race to X */}
-                      <div className="flex items-center gap-1 shrink-0">
-                        {isManager && (
-                          <button
-                            onClick={() =>
-                              setRaceTo((prev) => Math.max(1, prev - 1))
-                            }
-                            className="text-white hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
-                            title="Decrement (- key)"
-                          >
-                            −
-                          </button>
-                        )}
-                        <div className="text-xl sm:text-3xl font-bold text-white uppercase">
-                          Race to {raceTo}
-                        </div>
-                        {isManager && (
-                          <button
-                            onClick={() => setRaceTo((prev) => prev + 1)}
-                            className="text-white hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
-                            title="Increment (+ key)"
-                          >
-                            +
-                          </button>
-                        )}
+                      <div className="text-xl sm:text-3xl font-bold text-white uppercase">
+                        Race to {raceTo}
                       </div>
 
                       {/* Player 2 Score */}
-                      <div className="flex items-center gap-1 shrink-0">
-                        {isManager && (
-                          <button
-                            onClick={() =>
-                              setPlayer2Score((prev) => Math.max(0, prev - 1))
-                            }
-                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
-                            title="Decrement (D key)"
-                          >
-                            −
-                          </button>
-                        )}
-                        <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
-                          {player2Score}
-                        </div>
-                        {isManager && (
-                          <button
-                            onClick={() => setPlayer2Score((prev) => prev + 1)}
-                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
-                            title="Increment (E key)"
-                          >
-                            +
-                          </button>
-                        )}
+                      <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
+                        {player2Score}
                       </div>
 
                       {/* Right Arrow - Turn Indicator */}
