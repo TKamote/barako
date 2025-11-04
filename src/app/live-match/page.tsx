@@ -575,9 +575,9 @@ const LiveMatchPage = () => {
             <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0.5 px-px sm:px-6 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1 px-1">
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5">
                   {/* Player 1 Group - Left */}
-                  <div className="flex items-center gap-1 min-w-0">
+                  <div className="flex items-center gap-0.5 min-w-0">
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -593,27 +593,27 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer1Photo()!}
                           alt={getPlayer1Name()}
-                          width={28}
-                          height={28}
-                          className="w-7 h-7 rounded-full object-cover"
+                          width={20}
+                          height={20}
+                          className="w-5 h-5 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                        <div className="w-5 h-5 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👨
                         </div>
                       )}
                     </button>
-                    <div className="text-xs font-bold text-white uppercase truncate min-w-0 leading-tight">
+                    <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
                       {getPlayer1Name()}
                     </div>
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div className="flex items-center gap-0.5 justify-center shrink-0">
-                    {/* Left Arrow - Turn Indicator */}
+                  <div className="flex items-center gap-0 justify-center shrink-0">
+                    {/* Left Arrow - Turn Indicator for Player 1 */}
                     <svg
-                      className={`w-3 h-3 shrink-0 ${
+                      className={`w-9 h-9 shrink-0 -mr-2 ${
                         currentTurn === "player1"
                           ? "text-yellow-500"
                           : "text-purple-950"
@@ -625,23 +625,23 @@ const LiveMatchPage = () => {
                     </svg>
 
                     {/* Player 1 Score */}
-                    <div className="text-base font-bold text-yellow-500 whitespace-nowrap leading-none">
+                    <div className="text-[28px] font-bold text-yellow-500 whitespace-nowrap leading-none">
                       {player1Score}
                     </div>
 
                     {/* Race to X - Shortened on Mobile */}
-                    <div className="text-xs font-bold text-white uppercase whitespace-nowrap leading-none">
+                    <div className="text-[10px] font-bold text-white uppercase whitespace-nowrap leading-none px-[2px]">
                       R{raceTo}
                     </div>
 
                     {/* Player 2 Score */}
-                    <div className="text-base font-bold text-yellow-500 whitespace-nowrap leading-none">
+                    <div className="text-[28px] font-bold text-yellow-500 whitespace-nowrap leading-none">
                       {player2Score}
                     </div>
 
-                    {/* Right Arrow - Turn Indicator */}
+                    {/* Right Arrow - Turn Indicator for Player 2 */}
                     <svg
-                      className={`w-3 h-3 shrink-0 ${
+                      className={`w-9 h-9 shrink-0 -ml-2 ${
                         currentTurn === "player2"
                           ? "text-yellow-500"
                           : "text-purple-950"
@@ -654,8 +654,8 @@ const LiveMatchPage = () => {
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div className="flex items-center gap-1 min-w-0 justify-end">
-                    <div className="text-xs font-bold text-white uppercase truncate min-w-0 leading-tight">
+                  <div className="flex items-center gap-0.5 min-w-0 justify-end">
+                    <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
                       {getPlayer2Name()}
                     </div>
                     <button
@@ -673,13 +673,13 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer2Photo()!}
                           alt={getPlayer2Name()}
-                          width={28}
-                          height={28}
-                          className="w-7 h-7 rounded-full object-cover"
+                          width={20}
+                          height={20}
+                          className="w-5 h-5 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                        <div className="w-5 h-5 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👩
                         </div>
                       )}
@@ -704,11 +704,7 @@ const LiveMatchPage = () => {
                           canSelectPlayers
                             ? "cursor-pointer hover:opacity-80"
                             : "cursor-default"
-                        } transition-opacity ${
-                          currentTurn === "player1"
-                            ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
-                            : ""
-                        }`}
+                        } transition-opacity`}
                       >
                         {getPlayer1Photo() ? (
                           <Image
@@ -731,21 +727,19 @@ const LiveMatchPage = () => {
                     </div>
 
                     {/* Center Group - Scores and Race */}
-                    <div className="flex items-center gap-4 justify-center">
-                      {/* Left Arrow - Turn Indicator */}
-                      <div className="shrink-0">
-                        <svg
-                          className={`w-6 h-6 ${
-                            currentTurn === "player1"
-                              ? "text-yellow-500"
-                              : "text-purple-950"
-                          }`}
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                        </svg>
-                      </div>
+                    <div className="flex items-center gap-2 justify-center">
+                      {/* Left Arrow - Turn Indicator for Player 1 */}
+                      <svg
+                        className={`w-[72px] h-[72px] shrink-0 -mr-4 ${
+                          currentTurn === "player1"
+                            ? "text-yellow-500"
+                            : "text-purple-950"
+                        }`}
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                      </svg>
 
                       {/* Player 1 Score */}
                       <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
@@ -762,20 +756,18 @@ const LiveMatchPage = () => {
                         {player2Score}
                       </div>
 
-                      {/* Right Arrow - Turn Indicator */}
-                      <div className="shrink-0">
-                        <svg
-                          className={`w-6 h-6 ${
-                            currentTurn === "player2"
-                              ? "text-yellow-500"
-                              : "text-purple-950"
-                          }`}
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                        </svg>
-                      </div>
+                      {/* Right Arrow - Turn Indicator for Player 2 */}
+                      <svg
+                        className={`w-[72px] h-[72px] shrink-0 -ml-4 ${
+                          currentTurn === "player2"
+                            ? "text-yellow-500"
+                            : "text-purple-950"
+                        }`}
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                      </svg>
                     </div>
 
                     {/* Player 2 Group - Extreme Right */}
@@ -792,11 +784,7 @@ const LiveMatchPage = () => {
                           canSelectPlayers
                             ? "cursor-pointer hover:opacity-80"
                             : "cursor-default"
-                        } transition-opacity ${
-                          currentTurn === "player2"
-                            ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
-                            : ""
-                        }`}
+                        } transition-opacity`}
                       >
                         {getPlayer2Photo() ? (
                           <Image

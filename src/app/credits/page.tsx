@@ -90,7 +90,7 @@ export default function CreditsPage() {
   return (
     <div className="min-h-screen bg-white py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Credits & Attributions</h1>
+        <h1 className="text-[21px] font-bold text-gray-900 mb-2">Credits & Attributions</h1>
         <p className="text-sm text-gray-600 mb-8">
           Icons used throughout this application from Flaticon
         </p>
