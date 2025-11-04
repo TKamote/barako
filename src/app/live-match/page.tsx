@@ -575,9 +575,9 @@ const LiveMatchPage = () => {
             <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0.5 px-px sm:px-6 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div className="flex items-center justify-between gap-1 px-1">
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-2">
                   {/* Player 1 Group - Left */}
-                  <div className="flex items-center gap-1 shrink-0 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0">
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -593,28 +593,28 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer1Photo()!}
                           alt={getPlayer1Name()}
-                          width={28}
-                          height={28}
-                          className="w-7 h-7 rounded-full object-cover"
+                          width={32}
+                          height={32}
+                          className="w-8 h-8 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                        <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm">
                           👨
                         </div>
                       )}
                     </button>
-                    <div className="text-xs font-bold text-white uppercase truncate leading-none">
+                    <div className="text-xs font-bold text-white uppercase truncate min-w-0">
                       {getPlayer1Name()}
                     </div>
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div className="flex items-center gap-0.5 justify-center shrink-0">
+                  <div className="flex items-center gap-1 justify-center shrink-0">
                     {/* Left Arrow - Turn Indicator */}
                     <div className="shrink-0">
                       <svg
-                        className={`w-3 h-3 ${
+                        className={`w-4 h-4 ${
                           currentTurn === "player1"
                             ? "text-yellow-500"
                             : "text-purple-950"
@@ -633,19 +633,19 @@ const LiveMatchPage = () => {
                           onClick={() =>
                             setPlayer1Score((prev) => Math.max(0, prev - 1))
                           }
-                          className="text-yellow-500 hover:text-yellow-400 text-[10px] opacity-60 hover:opacity-100 transition-opacity"
+                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
                           title="Decrement (A key)"
                         >
                           −
                         </button>
                       )}
-                      <div className="text-xl font-bold text-yellow-500 leading-none whitespace-nowrap">
+                      <div className="text-lg font-bold text-yellow-500 whitespace-nowrap">
                         {player1Score}
                       </div>
                       {isManager && (
                         <button
                           onClick={() => setPlayer1Score((prev) => prev + 1)}
-                          className="text-yellow-500 hover:text-yellow-400 text-[10px] opacity-60 hover:opacity-100 transition-opacity"
+                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
                           title="Increment (Q key)"
                         >
                           +
@@ -660,19 +660,19 @@ const LiveMatchPage = () => {
                           onClick={() =>
                             setRaceTo((prev) => Math.max(1, prev - 1))
                           }
-                          className="text-white hover:text-yellow-400 text-[10px] opacity-60 hover:opacity-100 transition-opacity"
+                          className="text-white hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
                           title="Decrement (- key)"
                         >
                           −
                         </button>
                       )}
-                      <div className="text-xs font-bold text-white uppercase leading-none whitespace-nowrap">
+                      <div className="text-xs font-bold text-white uppercase whitespace-nowrap">
                         R{raceTo}
                       </div>
                       {isManager && (
                         <button
                           onClick={() => setRaceTo((prev) => prev + 1)}
-                          className="text-white hover:text-yellow-400 text-[10px] opacity-60 hover:opacity-100 transition-opacity"
+                          className="text-white hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
                           title="Increment (+ key)"
                         >
                           +
@@ -687,19 +687,19 @@ const LiveMatchPage = () => {
                           onClick={() =>
                             setPlayer2Score((prev) => Math.max(0, prev - 1))
                           }
-                          className="text-yellow-500 hover:text-yellow-400 text-[10px] opacity-60 hover:opacity-100 transition-opacity"
+                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
                           title="Decrement (D key)"
                         >
                           −
                         </button>
                       )}
-                      <div className="text-xl font-bold text-yellow-500 leading-none whitespace-nowrap">
+                      <div className="text-lg font-bold text-yellow-500 whitespace-nowrap">
                         {player2Score}
                       </div>
                       {isManager && (
                         <button
                           onClick={() => setPlayer2Score((prev) => prev + 1)}
-                          className="text-yellow-500 hover:text-yellow-400 text-[10px] opacity-60 hover:opacity-100 transition-opacity"
+                          className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
                           title="Increment (E key)"
                         >
                           +
@@ -710,7 +710,7 @@ const LiveMatchPage = () => {
                     {/* Right Arrow - Turn Indicator */}
                     <div className="shrink-0">
                       <svg
-                        className={`w-3 h-3 ${
+                        className={`w-4 h-4 ${
                           currentTurn === "player2"
                             ? "text-yellow-500"
                             : "text-purple-950"
@@ -724,8 +724,8 @@ const LiveMatchPage = () => {
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div className="flex items-center gap-1 shrink-0 min-w-0 justify-end">
-                    <div className="text-xs font-bold text-white uppercase truncate leading-none">
+                  <div className="flex items-center gap-2 min-w-0 justify-end">
+                    <div className="text-xs font-bold text-white uppercase truncate min-w-0">
                       {getPlayer2Name()}
                     </div>
                     <button
@@ -743,13 +743,13 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer2Photo()!}
                           alt={getPlayer2Name()}
-                          width={28}
-                          height={28}
-                          className="w-7 h-7 rounded-full object-cover"
+                          width={32}
+                          height={32}
+                          className="w-8 h-8 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                        <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm">
                           👩
                         </div>
                       )}
