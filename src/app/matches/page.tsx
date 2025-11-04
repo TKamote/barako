@@ -1055,7 +1055,7 @@ const MatchesPage = () => {
   }
 
   return (
-    <div className="p-0 sm:p-3 bg-gray-50 min-h-screen">
+    <div className="p-0 sm:p-3 bg-transparent sm:bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-0 sm:px-4">
         <div className="mb-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
