@@ -572,7 +572,7 @@ const LiveMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0.5 px-px sm:px-6 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
+            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-6 sm:py-2 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
               {/* Mobile Layout */}
               <div className="sm:hidden">
                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5">
@@ -593,13 +593,13 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer1Photo()!}
                           alt={getPlayer1Name()}
-                          width={20}
-                          height={20}
-                          className="w-5 h-5 rounded-full object-cover"
+                          width={24}
+                          height={24}
+                          className="w-6 h-6 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-gray-600 flex items-center justify-center text-xs">
+                        <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👨
                         </div>
                       )}
@@ -673,13 +673,13 @@ const LiveMatchPage = () => {
                         <Image
                           src={getPlayer2Photo()!}
                           alt={getPlayer2Name()}
-                          width={20}
-                          height={20}
-                          className="w-5 h-5 rounded-full object-cover"
+                          width={24}
+                          height={24}
+                          className="w-6 h-6 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-gray-600 flex items-center justify-center text-xs">
+                        <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👩
                         </div>
                       )}
