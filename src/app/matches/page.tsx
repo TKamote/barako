@@ -1059,7 +1059,7 @@ const MatchesPage = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Tournament Matches
+            Matches
           </h1>
           {isManager && (
             <div className="flex items-center gap-3">
@@ -1081,7 +1081,8 @@ const MatchesPage = () => {
                   }
                 >
                   <span>🚀</span>
-                  Start Tournament
+                  <span className="hidden sm:inline">Start Tournament</span>
+                  <span className="sm:hidden">Start</span>
                 </button>
               )}
               {tournamentStarted && (
@@ -1131,7 +1132,7 @@ const MatchesPage = () => {
               <div className="flex space-x-4 min-w-max pb-2 items-center min-h-[300px]">
                 {/* Column 1: Qualifying matches (always show 4, max for 12 players) */}
                 <div className="flex flex-col min-h-[250px]">
-                  <div className="text-center font-bold text-sm text-gray-800 mb-2">
+                  <div className="text-center font-bold text-sm text-gray-800 mb-2 w-56">
                     QR
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
@@ -1170,7 +1171,7 @@ const MatchesPage = () => {
                                 e.stopPropagation();
                                 handleDeleteQRMatch(index);
                               }}
-                              className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold z-10"
+                              className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 sm:w-5 sm:h-5 flex items-center justify-center text-xs font-bold z-10 sm:p-1 p-0.5"
                               title="Delete this QR match"
                             >
                               ×
@@ -1189,7 +1190,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
-                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
+                                className={`text-sm text-left border-b border-gray-400 sm:pb-1 pb-0.5 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : isDisabled && tournamentStarted
@@ -1201,7 +1202,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-sm text-left pt-1 truncate px-1 ${
+                                className={`text-sm text-left sm:pt-1 pt-0.5 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : isDisabled && tournamentStarted
@@ -1248,7 +1249,7 @@ const MatchesPage = () => {
 
                 {/* Column 2: 4 matches */}
                 <div className="flex flex-col min-h-[250px]">
-                  <div className="text-center font-bold text-sm text-gray-800 mb-2">
+                  <div className="text-center font-bold text-sm text-gray-800 mb-2 w-56">
                     Round 1
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
@@ -1275,7 +1276,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400 min-w-0 flex-1">
                               <div
-                                className={`text-xs text-left border-b border-gray-400 pb-1 font-medium truncate px-1 ${
+                                className={`text-xs text-left border-b border-gray-400 sm:pb-1 pb-0.5 font-medium truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -1285,7 +1286,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-xs text-left pt-1 font-medium truncate px-1 ${
+                                className={`text-xs text-left sm:pt-1 pt-0.5 font-medium truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -1326,7 +1327,7 @@ const MatchesPage = () => {
 
                 {/* Column 3: 2 matches */}
                 <div className="flex flex-col min-h-[250px]">
-                  <div className="text-center font-bold text-sm text-gray-800 mb-2">
+                  <div className="text-center font-bold text-sm text-gray-800 mb-2 w-56">
                     Round 2
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
@@ -1351,7 +1352,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400 min-w-0 flex-1">
                               <div
-                                className={`text-xs text-left border-b border-gray-400 pb-1 font-medium truncate px-1 ${
+                                className={`text-xs text-left border-b border-gray-400 sm:pb-1 pb-0.5 font-medium truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -1361,7 +1362,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-xs text-left pt-1 font-medium truncate px-1 ${
+                                className={`text-xs text-left sm:pt-1 pt-0.5 font-medium truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -1402,7 +1403,7 @@ const MatchesPage = () => {
 
                 {/* Column 4: 1 match */}
                 <div className="flex flex-col min-h-[250px]">
-                  <div className="text-center font-bold text-sm text-gray-800 mb-2">
+                  <div className="text-center font-bold text-sm text-gray-800 mb-2 w-56">
                     Round 3
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
@@ -1424,7 +1425,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400 min-w-0 flex-1">
                               <div
-                                className={`text-xs text-left border-b border-gray-400 pb-1 font-medium truncate px-1 ${
+                                className={`text-xs text-left border-b border-gray-400 sm:pb-1 pb-0.5 font-medium truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -1434,7 +1435,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-xs text-left pt-1 font-medium truncate px-1 ${
+                                className={`text-xs text-left sm:pt-1 pt-0.5 font-medium truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800"
@@ -1475,7 +1476,7 @@ const MatchesPage = () => {
 
                 {/* Winner Rectangle */}
                 <div className="flex flex-col min-h-[250px]">
-                  <div className="text-center font-bold text-sm text-gray-800 mb-2">
+                  <div className="text-center font-bold text-sm text-gray-800 mb-2 w-56">
                     Winner
                   </div>
                   <div className="flex flex-col space-y-1 items-center justify-center flex-1">
@@ -1541,7 +1542,7 @@ const MatchesPage = () => {
                             {/* Column 2: Player Names (2x1) - left aligned like winners bracket */}
                             <div className="flex flex-col justify-center space-y-0 border-r border-gray-400">
                               <div
-                                className={`text-sm text-left border-b border-gray-400 pb-1 truncate px-1 ${
+                                className={`text-sm text-left border-b border-gray-400 sm:pb-1 pb-0.5 truncate px-1 ${
                                   match?.winner === "player1"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1551,7 +1552,7 @@ const MatchesPage = () => {
                                 {match?.player1?.name || "TBD"}
                               </div>
                               <div
-                                className={`text-sm text-left pt-1 truncate px-1 ${
+                                className={`text-sm text-left sm:pt-1 pt-0.5 truncate px-1 ${
                                   match?.winner === "player2"
                                     ? "text-yellow-600 font-bold"
                                     : "text-gray-800 font-medium"
@@ -1914,8 +1915,8 @@ const MatchesPage = () => {
 
       {/* Match Input Modal */}
       {isModalOpen && selectedMatch && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 max-w-md mx-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 max-w-md mx-4 shadow-2xl transform transition-all">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold text-gray-900">
                 {selectedMatch.matchNumber} - {selectedMatch.round.charAt(0).toUpperCase() + selectedMatch.round.slice(1).replace(/round(\d)/i, (match, num) => `Round ${num}`)}
@@ -2005,8 +2006,16 @@ const MatchesPage = () => {
                   min="1"
                   max="21"
                   className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
-                  value={raceTo}
-                  onChange={(e) => setRaceTo(parseInt(e.target.value) || 9)}
+                  value={raceTo || ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      setRaceTo(9);
+                    } else {
+                      setRaceTo(parseInt(val) || 9);
+                    }
+                  }}
+                  onFocus={(e) => e.target.select()}
                 />
               </div>
 
@@ -2016,17 +2025,41 @@ const MatchesPage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Score 1
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    max={raceTo}
-                    className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
-                    value={score1}
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value) || 0;
-                      setScore1(Math.min(val, raceTo));
-                    }}
-                  />
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      min="0"
+                      max={raceTo}
+                      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
+                      value={score1}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value) || 0;
+                        setScore1(Math.min(val, raceTo));
+                      }}
+                    />
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() => setScore1(Math.min(score1 + 1, raceTo))}
+                        className="border border-gray-300 rounded-t-md px-2 py-0.5 hover:bg-gray-100 transition-colors"
+                        disabled={score1 >= raceTo}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setScore1(Math.max(score1 - 1, 0))}
+                        className="border border-gray-300 border-t-0 rounded-b-md px-2 py-0.5 hover:bg-gray-100 transition-colors"
+                        disabled={score1 <= 0}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                   {score1 >= raceTo && (
                     <p className="text-xs text-green-600 mt-1">
                       ✓ Winner! Match will auto-advance.
@@ -2037,17 +2070,41 @@ const MatchesPage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Score 2
                   </label>
-                  <input
-                    type="number"
-                    min="0"
-                    max={raceTo}
-                    className="w-full border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
-                    value={score2}
-                    onChange={(e) => {
-                      const val = parseInt(e.target.value) || 0;
-                      setScore2(Math.min(val, raceTo));
-                    }}
-                  />
+                  <div className="flex items-center gap-1">
+                    <input
+                      type="number"
+                      min="0"
+                      max={raceTo}
+                      className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
+                      value={score2}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value) || 0;
+                        setScore2(Math.min(val, raceTo));
+                      }}
+                    />
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        onClick={() => setScore2(Math.min(score2 + 1, raceTo))}
+                        className="border border-gray-300 rounded-t-md px-2 py-0.5 hover:bg-gray-100 transition-colors"
+                        disabled={score2 >= raceTo}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setScore2(Math.max(score2 - 1, 0))}
+                        className="border border-gray-300 border-t-0 rounded-b-md px-2 py-0.5 hover:bg-gray-100 transition-colors"
+                        disabled={score2 <= 0}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                   {score2 >= raceTo && (
                     <p className="text-xs text-green-600 mt-1">
                       ✓ Winner! Match will auto-advance.

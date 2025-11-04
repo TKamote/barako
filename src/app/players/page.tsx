@@ -341,9 +341,9 @@ const PlayersPage = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-3 sm:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 sm:mb-4 gap-2 sm:gap-3">
           <div className="flex items-center justify-between w-full sm:w-auto sm:justify-start">
             <h1 className="text-xl font-bold text-gray-900">Players</h1>
             <button
@@ -375,8 +375,8 @@ const PlayersPage = () => {
 
         {/* Login Prompt Modal */}
         {showLoginPrompt && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-2xl transform transition-all">
               <div className="text-center">
                 <div className="text-6xl mb-4">🔒</div>
                 <h2 className="text-2xl font-bold mb-2 text-gray-900">
@@ -410,8 +410,8 @@ const PlayersPage = () => {
 
         {/* Create Player Modal */}
         {showCreateForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all">
               <h2 className="text-xl font-bold mb-4 text-gray-900">
                 {editingPlayer ? "Edit Player" : "Add New Player"}
               </h2>
@@ -561,11 +561,11 @@ const PlayersPage = () => {
         )}
 
         {/* Players Table */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
           {/* Left Column - Players 1-32 */}
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="bg-gray-50 px-4 py-3 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">
+            <div className="bg-gray-50 px-2 sm:px-4 py-1.5 sm:py-3 border-b">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                 Players 1-25
               </h3>
             </div>
@@ -573,16 +573,16 @@ const PlayersPage = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Rank
                     </th>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Photo
                     </th>
-                    <th className="px-3 py-1 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 sm:px-3 py-0.5 sm:py-1 text-left text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider">
                       Players
                     </th>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-20">
                       Points
                     </th>
                   </tr>
@@ -597,7 +597,7 @@ const PlayersPage = () => {
                       onClick={() => handleEditPlayer(player)}
                       title={isManager ? "Click to edit" : ""}
                     >
-                      <td className="px-2 py-1 text-center text-lg font-medium text-gray-900 w-16">
+                      <td className="px-2 py-0.5 sm:py-1 text-center text-sm sm:text-lg font-medium text-gray-900 w-16">
                         #{i + 1}
                       </td>
                       <td className="px-2 py-1 text-center w-16">
@@ -616,10 +616,10 @@ const PlayersPage = () => {
                           </div>
                         )}
                       </td>
-                      <td className="px-3 py-1 text-lg text-gray-900">
+                      <td className="px-2 sm:px-3 py-0.5 sm:py-1 text-sm sm:text-lg text-gray-900">
                         {player.name}
                       </td>
-                      <td className="px-2 py-1 text-center text-lg text-gray-900 w-20">
+                      <td className="px-2 py-0.5 sm:py-1 text-center text-sm sm:text-lg text-gray-900 w-20">
                         {player.points}
                       </td>
                     </tr>
@@ -631,8 +631,8 @@ const PlayersPage = () => {
 
           {/* Middle Column - Players 26-50 */}
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="bg-gray-50 px-4 py-3 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">
+            <div className="bg-gray-50 px-2 sm:px-4 py-1.5 sm:py-3 border-b">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                 Players 26-50
               </h3>
             </div>
@@ -640,16 +640,16 @@ const PlayersPage = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Rank
                     </th>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Photo
                     </th>
-                    <th className="px-3 py-1 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 sm:px-3 py-0.5 sm:py-1 text-left text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider">
                       Players
                     </th>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-20">
                       Points
                     </th>
                   </tr>
@@ -664,7 +664,7 @@ const PlayersPage = () => {
                       onClick={() => handleEditPlayer(player)}
                       title={isManager ? "Click to edit" : ""}
                     >
-                      <td className="px-2 py-1 text-center text-lg font-medium text-gray-900 w-16">
+                      <td className="px-2 py-0.5 sm:py-1 text-center text-sm sm:text-lg font-medium text-gray-900 w-16">
                         #{i + 26}
                       </td>
                       <td className="px-2 py-1 text-center w-16">
@@ -683,10 +683,10 @@ const PlayersPage = () => {
                           </div>
                         )}
                       </td>
-                      <td className="px-3 py-1 text-lg text-gray-900">
+                      <td className="px-2 sm:px-3 py-0.5 sm:py-1 text-sm sm:text-lg text-gray-900">
                         {player.name}
                       </td>
-                      <td className="px-2 py-1 text-center text-lg text-gray-900 w-20">
+                      <td className="px-2 py-0.5 sm:py-1 text-center text-sm sm:text-lg text-gray-900 w-20">
                         {player.points}
                       </td>
                     </tr>
@@ -698,8 +698,8 @@ const PlayersPage = () => {
 
           {/* Right Column - Players 51-75 */}
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="bg-gray-50 px-4 py-3 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">
+            <div className="bg-gray-50 px-2 sm:px-4 py-1.5 sm:py-3 border-b">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                 Players 51-75
               </h3>
             </div>
@@ -707,16 +707,16 @@ const PlayersPage = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Rank
                     </th>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-16">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-16">
                       Photo
                     </th>
-                    <th className="px-3 py-1 text-left text-base font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-2 sm:px-3 py-0.5 sm:py-1 text-left text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider">
                       Players
                     </th>
-                    <th className="px-2 py-1 text-center text-base font-medium text-gray-500 uppercase tracking-wider w-20">
+                    <th className="px-2 py-0.5 sm:py-1 text-center text-xs sm:text-base font-medium text-gray-500 uppercase tracking-wider w-20">
                       Points
                     </th>
                   </tr>
@@ -731,7 +731,7 @@ const PlayersPage = () => {
                       onClick={() => handleEditPlayer(player)}
                       title={isManager ? "Click to edit" : ""}
                     >
-                      <td className="px-2 py-1 text-center text-lg font-medium text-gray-900 w-16">
+                      <td className="px-2 py-0.5 sm:py-1 text-center text-sm sm:text-lg font-medium text-gray-900 w-16">
                         #{i + 51}
                       </td>
                       <td className="px-2 py-1 text-center w-16">
@@ -750,10 +750,10 @@ const PlayersPage = () => {
                           </div>
                         )}
                       </td>
-                      <td className="px-3 py-1 text-lg text-gray-900">
+                      <td className="px-2 sm:px-3 py-0.5 sm:py-1 text-sm sm:text-lg text-gray-900">
                         {player.name}
                       </td>
-                      <td className="px-2 py-1 text-center text-lg text-gray-900 w-20">
+                      <td className="px-2 py-0.5 sm:py-1 text-center text-sm sm:text-lg text-gray-900 w-20">
                         {player.points}
                       </td>
                     </tr>
