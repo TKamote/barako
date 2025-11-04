@@ -350,7 +350,9 @@ const LiveMatchPage = () => {
       // Ignore if user is typing in an input field
       if (
         e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
+        e.target instanceof HTMLTextAreaElement ||
+        e.target instanceof HTMLSelectElement ||
+        (e.target as HTMLElement)?.isContentEditable
       ) {
         return;
       }
@@ -382,26 +384,42 @@ const LiveMatchPage = () => {
       switch (key) {
         case "q":
           // Increment Player 1 score
+          e.preventDefault();
           setPlayer1Score((prev) => prev + 1);
           break;
 
         case "a":
           // Decrement Player 1 score (prevent negative)
+          e.preventDefault();
           setPlayer1Score((prev) => Math.max(0, prev - 1));
           break;
 
         case "e":
           // Increment Player 2 score
+          e.preventDefault();
           setPlayer2Score((prev) => prev + 1);
           break;
 
         case "d":
           // Decrement Player 2 score (prevent negative)
+          e.preventDefault();
           setPlayer2Score((prev) => Math.max(0, prev - 1));
           break;
 
         case "z":
-          // Z → Reset indicator to no turn
+          // Z → Left arrow (player1's turn)
+          e.preventDefault();
+          setCurrentTurn("player1");
+          break;
+
+        case "c":
+          // C → Right arrow (player2's turn)
+          e.preventDefault();
+          setCurrentTurn("player2");
+          break;
+
+        case "x":
+          // X → No arrow (no turn)
           e.preventDefault();
           setCurrentTurn(null);
           break;
@@ -554,196 +572,384 @@ const LiveMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 rounded-xl py-1 px-6 sm:py-2 sm:px-12 shadow-2xl max-w-[85%] sm:max-w-[80%] w-full mx-1 sm:mx-4 relative overflow-hidden">
+            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0.5 px-px sm:px-6 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 relative overflow-hidden sm:rounded-xl">
               <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
               <div className="relative z-10">
                 {/* Mobile Layout */}
                 <div className="sm:hidden">
-                  <div className="flex items-center gap-4">
-                    {/* Player 1 Group - Left Side */}
-                    <button
-                      onClick={() =>
-                        canSelectPlayers && setShowPlayer1Modal(true)
-                      }
-                      disabled={!canSelectPlayers}
-                      className={`flex items-center space-x-6 flex-1 justify-start min-w-0 ${
-                        canSelectPlayers
-                          ? "cursor-pointer hover:opacity-80"
-                          : "cursor-default"
-                      } transition-opacity`}
-                    >
-                      <div className="text-4xl">
+                  <div className="grid grid-cols-3 items-center gap-1">
+                    {/* Player 1 Group - Extreme Left */}
+                    <div className="flex items-center gap-1 justify-start">
+                      <button
+                        onClick={() =>
+                          canSelectPlayers && setShowPlayer1Modal(true)
+                        }
+                        disabled={!canSelectPlayers}
+                        className={`shrink-0 ${
+                          canSelectPlayers
+                            ? "cursor-pointer hover:opacity-80"
+                            : "cursor-default"
+                        } transition-opacity`}
+                      >
                         {getPlayer1Photo() ? (
                           <Image
                             src={getPlayer1Photo()!}
                             alt={getPlayer1Name()}
-                            width={48}
-                            height={48}
-                            className="w-12 h-12 rounded-full object-cover"
+                            width={28}
+                            height={28}
+                            className="w-7 h-7 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
-                          "👨"
+                          <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                            👨
+                          </div>
                         )}
-                      </div>
-                      <div className="text-3xl font-bold text-white truncate max-w-[80px]">
+                      </button>
+                      <div className="text-sm sm:text-base font-bold text-white shrink-0 uppercase">
                         {getPlayer1Name()}
-                      </div>
-                    </button>
-
-                    {/* Vertical Separator - Left */}
-                    <div className="h-16 w-px bg-white/30 shrink-0"></div>
-
-                    {/* Score & RaceTo Center Group */}
-                    <div className="flex flex-col items-center shrink-0 px-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="text-5xl font-bold text-yellow-500">
-                          {player1Score}
-                        </div>
-                        <div className="text-5xl font-bold text-yellow-500">
-                          -
-                        </div>
-                        <div className="text-5xl font-bold text-yellow-500">
-                          {player2Score}
-                        </div>
-                      </div>
-                      <div className="text-xl font-semibold text-white mt-1">
-                        Race to {raceTo}
                       </div>
                     </div>
 
-                    {/* Vertical Separator - Right */}
-                    <div className="h-16 w-px bg-white/30 shrink-0"></div>
+                    {/* Center Group - Scores and Race */}
+                    <div className="flex items-center gap-1 justify-center">
+                      {/* Left Arrow - Turn Indicator */}
+                      <div className="shrink-0">
+                        <svg
+                          className={`w-4 h-4 ${
+                            currentTurn === "player1"
+                              ? "text-yellow-500"
+                              : "text-purple-950"
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                        </svg>
+                      </div>
 
-                    {/* Player 2 Group - Right Side */}
-                    <button
-                      onClick={() =>
-                        canSelectPlayers && setShowPlayer2Modal(true)
-                      }
-                      disabled={!canSelectPlayers}
-                      className={`flex items-center justify-end space-x-6 flex-1 min-w-0 ${
-                        canSelectPlayers
-                          ? "cursor-pointer hover:opacity-80"
-                          : "cursor-default"
-                      } transition-opacity`}
-                    >
-                      <div className="text-3xl font-bold text-white truncate max-w-[80px]">
+                      {/* Player 1 Score */}
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        {isManager && (
+                          <button
+                            onClick={() =>
+                              setPlayer1Score((prev) => Math.max(0, prev - 1))
+                            }
+                            className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
+                            title="Decrement (A key)"
+                          >
+                            −
+                          </button>
+                        )}
+                        <div className="text-2xl sm:text-3xl font-bold text-yellow-500">
+                          {player1Score}
+                        </div>
+                        {isManager && (
+                          <button
+                            onClick={() => setPlayer1Score((prev) => prev + 1)}
+                            className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
+                            title="Increment (Q key)"
+                          >
+                            +
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Race to X */}
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        {isManager && (
+                          <button
+                            onClick={() =>
+                              setRaceTo((prev) => Math.max(1, prev - 1))
+                            }
+                            className="text-white hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
+                            title="Decrement (- key)"
+                          >
+                            −
+                          </button>
+                        )}
+                        <div className="text-sm sm:text-base font-bold text-white uppercase">
+                          Race to {raceTo}
+                        </div>
+                        {isManager && (
+                          <button
+                            onClick={() => setRaceTo((prev) => prev + 1)}
+                            className="text-white hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
+                            title="Increment (+ key)"
+                          >
+                            +
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Player 2 Score */}
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        {isManager && (
+                          <button
+                            onClick={() =>
+                              setPlayer2Score((prev) => Math.max(0, prev - 1))
+                            }
+                            className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
+                            title="Decrement (D key)"
+                          >
+                            −
+                          </button>
+                        )}
+                        <div className="text-2xl sm:text-3xl font-bold text-yellow-500">
+                          {player2Score}
+                        </div>
+                        {isManager && (
+                          <button
+                            onClick={() => setPlayer2Score((prev) => prev + 1)}
+                            className="text-yellow-500 hover:text-yellow-400 text-xs opacity-60 hover:opacity-100 transition-opacity"
+                            title="Increment (E key)"
+                          >
+                            +
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Right Arrow - Turn Indicator */}
+                      <div className="shrink-0">
+                        <svg
+                          className={`w-4 h-4 ${
+                            currentTurn === "player2"
+                              ? "text-yellow-500"
+                              : "text-purple-950"
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Player 2 Group - Extreme Right */}
+                    <div className="flex items-center gap-1 justify-end">
+                      <div className="text-sm sm:text-base font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>
-                      <div className="text-4xl">
+                      <button
+                        onClick={() =>
+                          canSelectPlayers && setShowPlayer2Modal(true)
+                        }
+                        disabled={!canSelectPlayers}
+                        className={`shrink-0 ${
+                          canSelectPlayers
+                            ? "cursor-pointer hover:opacity-80"
+                            : "cursor-default"
+                        } transition-opacity`}
+                      >
                         {getPlayer2Photo() ? (
                           <Image
                             src={getPlayer2Photo()!}
                             alt={getPlayer2Name()}
-                            width={48}
-                            height={48}
-                            className="w-12 h-12 rounded-full object-cover"
+                            width={28}
+                            height={28}
+                            className="w-7 h-7 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
-                          "👩"
+                          <div className="w-7 h-7 rounded-full bg-gray-600 flex items-center justify-center text-sm">
+                            👩
+                          </div>
                         )}
-                      </div>
-                    </button>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Desktop Layout */}
                 <div className="hidden sm:block">
-                  <div className="flex items-center gap-8">
-                    {/* Player 1 Group - Left Side */}
-                    <button
-                      onClick={() =>
-                        canSelectPlayers && setShowPlayer1Modal(true)
-                      }
-                      disabled={!canSelectPlayers}
-                      className={`flex items-center justify-start space-x-8 flex-1 min-w-0 ${
-                        canSelectPlayers
-                          ? "cursor-pointer hover:opacity-80"
-                          : "cursor-default"
-                      } transition-opacity ${
-                        currentTurn === "player1"
-                          ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
-                          : ""
-                      }`}
-                    >
-                      <div className="text-9xl">
+                  <div className="grid grid-cols-3 items-center gap-4">
+                    {/* Player 1 Group - Extreme Left */}
+                    <div className="flex items-center gap-4 justify-start">
+                      <button
+                        onClick={() =>
+                          canSelectPlayers && setShowPlayer1Modal(true)
+                        }
+                        disabled={!canSelectPlayers}
+                        className={`shrink-0 ${
+                          canSelectPlayers
+                            ? "cursor-pointer hover:opacity-80"
+                            : "cursor-default"
+                        } transition-opacity ${
+                          currentTurn === "player1"
+                            ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
+                            : ""
+                        }`}
+                      >
                         {getPlayer1Photo() ? (
                           <Image
                             src={getPlayer1Photo()!}
                             alt={getPlayer1Name()}
-                            width={96}
-                            height={96}
-                            className="w-24 h-24 rounded-full object-cover"
+                            width={64}
+                            height={64}
+                            className="w-16 h-16 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
-                          "👨"
+                          <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
+                            👨
+                          </div>
                         )}
-                      </div>
-                      <div className="text-5xl font-bold text-white truncate max-w-[200px] text-left">
+                      </button>
+                      <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer1Name()}
-                      </div>
-                    </button>
-
-                    {/* Vertical Separator - Left */}
-                    <div className="h-20 w-px bg-white/30 shrink-0"></div>
-
-                    {/* Score & RaceTo Center Group */}
-                    <div className="flex flex-col items-center shrink-0 px-8">
-                      <div className="flex items-center space-x-8">
-                        <div className="text-7xl font-bold text-yellow-500">
-                          {player1Score}
-                        </div>
-                        <div className="text-7xl font-bold text-yellow-500">
-                          -
-                        </div>
-                        <div className="text-7xl font-bold text-yellow-500">
-                          {player2Score}
-                        </div>
-                      </div>
-                      <div className="text-2xl font-semibold text-white mt-2">
-                        Race to {raceTo}
                       </div>
                     </div>
 
-                    {/* Vertical Separator - Right */}
-                    <div className="h-20 w-px bg-white/30 shrink-0"></div>
+                    {/* Center Group - Scores and Race */}
+                    <div className="flex items-center gap-4 justify-center">
+                      {/* Left Arrow - Turn Indicator */}
+                      <div className="shrink-0">
+                        <svg
+                          className={`w-6 h-6 ${
+                            currentTurn === "player1"
+                              ? "text-yellow-500"
+                              : "text-purple-950"
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                        </svg>
+                      </div>
 
-                    {/* Player 2 Group - Right Side */}
-                    <button
-                      onClick={() =>
-                        canSelectPlayers && setShowPlayer2Modal(true)
-                      }
-                      disabled={!canSelectPlayers}
-                      className={`flex items-center justify-end space-x-8 flex-1 min-w-0 ${
-                        canSelectPlayers
-                          ? "cursor-pointer hover:opacity-80"
-                          : "cursor-default"
-                      } transition-opacity ${
-                        currentTurn === "player2"
-                          ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
-                          : ""
-                      }`}
-                    >
-                      <div className="text-5xl font-bold text-white truncate max-w-[200px] text-left">
+                      {/* Player 1 Score */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        {isManager && (
+                          <button
+                            onClick={() =>
+                              setPlayer1Score((prev) => Math.max(0, prev - 1))
+                            }
+                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
+                            title="Decrement (A key)"
+                          >
+                            −
+                          </button>
+                        )}
+                        <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
+                          {player1Score}
+                        </div>
+                        {isManager && (
+                          <button
+                            onClick={() => setPlayer1Score((prev) => prev + 1)}
+                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
+                            title="Increment (Q key)"
+                          >
+                            +
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Race to X */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        {isManager && (
+                          <button
+                            onClick={() =>
+                              setRaceTo((prev) => Math.max(1, prev - 1))
+                            }
+                            className="text-white hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
+                            title="Decrement (- key)"
+                          >
+                            −
+                          </button>
+                        )}
+                        <div className="text-xl sm:text-3xl font-bold text-white uppercase">
+                          Race to {raceTo}
+                        </div>
+                        {isManager && (
+                          <button
+                            onClick={() => setRaceTo((prev) => prev + 1)}
+                            className="text-white hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
+                            title="Increment (+ key)"
+                          >
+                            +
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Player 2 Score */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        {isManager && (
+                          <button
+                            onClick={() =>
+                              setPlayer2Score((prev) => Math.max(0, prev - 1))
+                            }
+                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
+                            title="Decrement (D key)"
+                          >
+                            −
+                          </button>
+                        )}
+                        <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
+                          {player2Score}
+                        </div>
+                        {isManager && (
+                          <button
+                            onClick={() => setPlayer2Score((prev) => prev + 1)}
+                            className="text-yellow-500 hover:text-yellow-400 text-sm opacity-60 hover:opacity-100 transition-opacity"
+                            title="Increment (E key)"
+                          >
+                            +
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Right Arrow - Turn Indicator */}
+                      <div className="shrink-0">
+                        <svg
+                          className={`w-6 h-6 ${
+                            currentTurn === "player2"
+                              ? "text-yellow-500"
+                              : "text-purple-950"
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Player 2 Group - Extreme Right */}
+                    <div className="flex items-center gap-4 justify-end">
+                      <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>
-                      <div className="text-9xl">
+                      <button
+                        onClick={() =>
+                          canSelectPlayers && setShowPlayer2Modal(true)
+                        }
+                        disabled={!canSelectPlayers}
+                        className={`shrink-0 ${
+                          canSelectPlayers
+                            ? "cursor-pointer hover:opacity-80"
+                            : "cursor-default"
+                        } transition-opacity ${
+                          currentTurn === "player2"
+                            ? "ring-4 ring-yellow-400/50 rounded-lg p-2"
+                            : ""
+                        }`}
+                      >
                         {getPlayer2Photo() ? (
                           <Image
                             src={getPlayer2Photo()!}
                             alt={getPlayer2Name()}
-                            width={96}
-                            height={96}
-                            className="w-24 h-24 rounded-full object-cover"
+                            width={64}
+                            height={64}
+                            className="w-16 h-16 rounded-full object-cover"
                             unoptimized
                           />
                         ) : (
-                          "👩"
+                          <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
+                            👩
+                          </div>
                         )}
-                      </div>
-                    </button>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -769,18 +975,30 @@ const LiveMatchPage = () => {
         <div
           className="fixed z-50 hidden sm:block"
           style={{
-            top: "5px",
+            top: "50px",
             right: "50px",
           }}
         >
           <Image
             src="/favicon.png"
             alt="Barako Logo"
-            width={130}
-            height={130}
+            width={156}
+            height={156}
             style={{
               filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
               borderRadius: "10px",
+            }}
+          />
+          <Image
+            src="/Sponsor.jpeg"
+            alt="Sponsor"
+            width={156}
+            height={156}
+            className="mt-5"
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+              objectFit: "contain",
             }}
           />
         </div>
@@ -790,9 +1008,21 @@ const LiveMatchPage = () => {
           <Image
             src="/favicon.png"
             alt="Barako Logo"
-            width={78}
-            height={78}
-            className="w-[78px] h-[78px]"
+            width={94}
+            height={94}
+            className="w-[94px] h-[94px]"
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+              objectFit: "contain",
+            }}
+          />
+          <Image
+            src="/Sponsor.jpeg"
+            alt="Sponsor"
+            width={94}
+            height={94}
+            className="w-[94px] h-[94px] mt-5"
             style={{
               filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
               borderRadius: "10px",

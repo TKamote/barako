@@ -432,10 +432,10 @@ const PlayersPage = () => {
                         setNewPlayer({ ...newPlayer, photo: null });
                         setPhotoPreview(null);
                       }}
-                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center hover:bg-red-600 shadow-lg"
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs sm:text-base font-bold z-10 p-0.5 hover:bg-red-600 shadow-lg"
                       title="Remove photo"
                     >
-                      ✕
+                      ×
                     </button>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">Profile Photo</p>
