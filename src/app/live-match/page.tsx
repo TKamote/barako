@@ -575,9 +575,9 @@ const LiveMatchPage = () => {
             <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0.5 px-px sm:px-6 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div className="grid grid-cols-[auto_1fr_auto] items-center gap-1 px-1">
+                <div className="flex items-center justify-between gap-1 px-1">
                   {/* Player 1 Group - Left */}
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex items-center gap-1 shrink-0 min-w-0">
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -604,13 +604,13 @@ const LiveMatchPage = () => {
                         </div>
                       )}
                     </button>
-                    <div className="text-xs font-bold text-white uppercase truncate max-w-[50px] leading-none">
+                    <div className="text-xs font-bold text-white uppercase truncate leading-none">
                       {getPlayer1Name()}
                     </div>
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div className="flex items-center gap-1 justify-center min-w-0">
+                  <div className="flex items-center gap-0.5 justify-center shrink-0">
                     {/* Left Arrow - Turn Indicator */}
                     <div className="shrink-0">
                       <svg
@@ -639,7 +639,7 @@ const LiveMatchPage = () => {
                           −
                         </button>
                       )}
-                      <div className="text-xl font-bold text-yellow-500 leading-none">
+                      <div className="text-xl font-bold text-yellow-500 leading-none whitespace-nowrap">
                         {player1Score}
                       </div>
                       {isManager && (
@@ -666,7 +666,7 @@ const LiveMatchPage = () => {
                           −
                         </button>
                       )}
-                      <div className="text-xs font-bold text-white uppercase leading-none">
+                      <div className="text-xs font-bold text-white uppercase leading-none whitespace-nowrap">
                         R{raceTo}
                       </div>
                       {isManager && (
@@ -693,7 +693,7 @@ const LiveMatchPage = () => {
                           −
                         </button>
                       )}
-                      <div className="text-xl font-bold text-yellow-500 leading-none">
+                      <div className="text-xl font-bold text-yellow-500 leading-none whitespace-nowrap">
                         {player2Score}
                       </div>
                       {isManager && (
@@ -724,8 +724,8 @@ const LiveMatchPage = () => {
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div className="flex items-center gap-1 shrink-0 justify-end">
-                    <div className="text-xs font-bold text-white uppercase truncate max-w-[50px] leading-none">
+                  <div className="flex items-center gap-1 shrink-0 min-w-0 justify-end">
+                    <div className="text-xs font-bold text-white uppercase truncate leading-none">
                       {getPlayer2Name()}
                     </div>
                     <button
