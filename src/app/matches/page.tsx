@@ -1171,7 +1171,8 @@ const MatchesPage = () => {
                                 e.stopPropagation();
                                 handleDeleteQRMatch(index);
                               }}
-                              className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs sm:text-base font-bold z-10 p-0"
+                              className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-[10px] sm:text-base font-bold z-10 p-0 m-0 leading-none box-border"
+                              style={{ minWidth: 0, minHeight: 0 }}
                               title="Delete this QR match"
                             >
                               ×
