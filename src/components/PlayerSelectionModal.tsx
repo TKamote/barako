@@ -96,20 +96,20 @@ const PlayerSelectionModal = ({
                       onSelect(player);
                       onClose();
                     }}
-                    className={`w-full flex items-center gap-4 p-3 rounded-lg border-2 transition-all ${
+                    className={`w-full flex items-center gap-0 sm:gap-4 px-3 py-[1px] sm:p-3 rounded-lg border-2 transition-all ${
                       isSelected
                         ? "bg-blue-50 border-blue-500"
                         : "bg-white border-gray-200 hover:border-blue-300 hover:bg-blue-50"
                     }`}
                   >
                     {/* Player Photo */}
-                    <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-gray-300">
+                    <div className="w-[58px] h-[58px] sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0 border-2 border-gray-300">
                       {player.photoURL ? (
                         <Image
                           src={player.photoURL}
                           alt={player.name}
-                          width={48}
-                          height={48}
+                          width={58}
+                          height={58}
                           className="w-full h-full object-cover"
                           unoptimized
                         />
