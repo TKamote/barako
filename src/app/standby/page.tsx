@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useLive } from "@/contexts/LiveContext";
 
 const StandbyPage = () => {
-  const [selectedStartTime, setSelectedStartTime] = useState("15:00"); // 3:00 PM
+  const [selectedStartTime, setSelectedStartTime] = useState("20:00"); // 8:00 PM
   const [timeLeft, setTimeLeft] = useState(0); // seconds
   const [isRunning, setIsRunning] = useState(false);
   const { setIsLive } = useLive();
