@@ -1,5 +1,3 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/credits/page": "app/credits/page.js",
-  "/live-match/page": "app/live-match/page.js"
+  "/16p-match/page": "app/16p-match/page.js"
 }

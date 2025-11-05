@@ -573,8 +573,8 @@ const LiveMatchPage = () => {
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
             <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-6 sm:py-2 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
-              {/* Mobile Layout */}
-              <div className="sm:hidden">
+                {/* Mobile Layout */}
+                <div className="sm:hidden">
                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5">
                   {/* Player 1 Group - Left */}
                   <div className="flex items-center gap-0.5 min-w-0">
@@ -589,24 +589,24 @@ const LiveMatchPage = () => {
                           : "cursor-default"
                       } transition-opacity`}
                     >
-                      {getPlayer1Photo() ? (
-                        <Image
-                          src={getPlayer1Photo()!}
-                          alt={getPlayer1Name()}
+                        {getPlayer1Photo() ? (
+                          <Image
+                            src={getPlayer1Photo()!}
+                            alt={getPlayer1Name()}
                           width={24}
                           height={24}
                           className="w-6 h-6 rounded-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
+                            unoptimized
+                          />
+                        ) : (
                         <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👨
-                        </div>
+                      </div>
                       )}
                     </button>
                     <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
-                      {getPlayer1Name()}
-                    </div>
+                        {getPlayer1Name()}
+                      </div>
                   </div>
 
                   {/* Center Group - Scores and Race */}
@@ -626,18 +626,18 @@ const LiveMatchPage = () => {
 
                     {/* Player 1 Score */}
                     <div className="text-[28px] font-bold text-yellow-500 whitespace-nowrap leading-none">
-                      {player1Score}
-                    </div>
+                          {player1Score}
+                        </div>
 
                     {/* Race to X - Shortened on Mobile */}
                     <div className="text-[10px] font-bold text-white uppercase whitespace-nowrap leading-none px-[2px]">
                       R{raceTo}
-                    </div>
+                        </div>
 
                     {/* Player 2 Score */}
                     <div className="text-[28px] font-bold text-yellow-500 whitespace-nowrap leading-none">
-                      {player2Score}
-                    </div>
+                          {player2Score}
+                        </div>
 
                     {/* Right Arrow - Turn Indicator for Player 2 */}
                     <svg
@@ -651,7 +651,7 @@ const LiveMatchPage = () => {
                     >
                       <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
                     </svg>
-                  </div>
+                    </div>
 
                   {/* Player 2 Group - Right */}
                   <div className="flex items-center gap-0.5 min-w-0 justify-end">
@@ -669,43 +669,43 @@ const LiveMatchPage = () => {
                           : "cursor-default"
                       } transition-opacity`}
                     >
-                      {getPlayer2Photo() ? (
-                        <Image
-                          src={getPlayer2Photo()!}
-                          alt={getPlayer2Name()}
+                        {getPlayer2Photo() ? (
+                          <Image
+                            src={getPlayer2Photo()!}
+                            alt={getPlayer2Name()}
                           width={24}
                           height={24}
                           className="w-6 h-6 rounded-full object-cover"
-                          unoptimized
-                        />
-                      ) : (
+                            unoptimized
+                          />
+                        ) : (
                         <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👩
-                        </div>
+                      </div>
                       )}
                     </button>
                   </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Desktop Layout */}
+                {/* Desktop Layout */}
               <div className="hidden sm:block relative">
                 <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
                 <div className="relative z-10">
                   <div className="grid grid-cols-3 items-center gap-4">
                     {/* Player 1 Group - Extreme Left */}
                     <div className="flex items-center gap-4 justify-start">
-                      <button
-                        onClick={() =>
-                          canSelectPlayers && setShowPlayer1Modal(true)
-                        }
-                        disabled={!canSelectPlayers}
+                    <button
+                      onClick={() =>
+                        canSelectPlayers && setShowPlayer1Modal(true)
+                      }
+                      disabled={!canSelectPlayers}
                         className={`shrink-0 ${
-                          canSelectPlayers
-                            ? "cursor-pointer hover:opacity-80"
-                            : "cursor-default"
+                        canSelectPlayers
+                          ? "cursor-pointer hover:opacity-80"
+                          : "cursor-default"
                         } transition-opacity`}
-                      >
+                    >
                         {getPlayer1Photo() ? (
                           <Image
                             src={getPlayer1Photo()!}
@@ -718,7 +718,7 @@ const LiveMatchPage = () => {
                         ) : (
                           <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
                             👨
-                          </div>
+                      </div>
                         )}
                       </button>
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
@@ -743,18 +743,18 @@ const LiveMatchPage = () => {
 
                       {/* Player 1 Score */}
                       <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
-                        {player1Score}
-                      </div>
+                          {player1Score}
+                        </div>
 
                       {/* Race to X */}
                       <div className="text-xl sm:text-3xl font-bold text-white uppercase">
                         Race to {raceTo}
-                      </div>
+                        </div>
 
                       {/* Player 2 Score */}
                       <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
-                        {player2Score}
-                      </div>
+                          {player2Score}
+                        </div>
 
                       {/* Right Arrow - Turn Indicator for Player 2 */}
                       <svg
@@ -775,17 +775,17 @@ const LiveMatchPage = () => {
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>
-                      <button
-                        onClick={() =>
-                          canSelectPlayers && setShowPlayer2Modal(true)
-                        }
-                        disabled={!canSelectPlayers}
+                    <button
+                      onClick={() =>
+                        canSelectPlayers && setShowPlayer2Modal(true)
+                      }
+                      disabled={!canSelectPlayers}
                         className={`shrink-0 ${
-                          canSelectPlayers
-                            ? "cursor-pointer hover:opacity-80"
-                            : "cursor-default"
+                        canSelectPlayers
+                          ? "cursor-pointer hover:opacity-80"
+                          : "cursor-default"
                         } transition-opacity`}
-                      >
+                    >
                         {getPlayer2Photo() ? (
                           <Image
                             src={getPlayer2Photo()!}
@@ -798,9 +798,9 @@ const LiveMatchPage = () => {
                         ) : (
                           <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
                             👩
-                          </div>
+                      </div>
                         )}
-                      </button>
+                    </button>
                     </div>
                   </div>
                 </div>

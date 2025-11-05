@@ -30,6 +30,10 @@ const Navigation = () => {
       href: "/matches",
     },
     {
+      name: "16P-Match",
+      href: "/16p-match",
+    },
+    {
       name: "Standby",
       href: "/standby",
     },
