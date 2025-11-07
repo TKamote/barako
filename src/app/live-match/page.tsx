@@ -74,8 +74,8 @@ const LiveMatchPage = () => {
   const lastResetPress = useRef<number>(0);
   const RESET_TIMEOUT = 500; // 500ms window for double-press
 
-  // Array of ball numbers 1-10
-  const ballNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // Array of ball numbers 1-9 (9-ball tournament)
+  const ballNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   // Get player photo URL (returns null if no photo)
   const getPlayer1Photo = () => {
@@ -500,10 +500,23 @@ const LiveMatchPage = () => {
             {/* Reset Balls Button - Mobile */}
             <button
               onClick={handleResetBalls}
-              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 text-xs mt-1"
+              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 mt-1 p-2"
               title="Reset all balls"
             >
-              Reset Balls
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
             </button>
           </div>
 
@@ -547,13 +560,13 @@ const LiveMatchPage = () => {
             {/* Reset Balls Button - Desktop */}
             <button
               onClick={handleResetBalls}
-              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 text-sm mt-2"
+              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 mt-2 p-3"
               style={{ marginRight: "20px" }}
               title="Reset all balls"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-8 w-8"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

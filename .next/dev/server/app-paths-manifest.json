@@ -1,3 +1,6 @@
 {
-  "/16p-match/page": "app/16p-match/page.js"
+  "/live-match/page": "app/live-match/page.js",
+  "/page": "app/page.js",
+  "/standby/page": "app/standby/page.js",
+  "/tournament/page": "app/tournament/page.js"
 }

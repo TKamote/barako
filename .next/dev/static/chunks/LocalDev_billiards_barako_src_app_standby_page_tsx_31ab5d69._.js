@@ -16,7 +16,7 @@ var _s = __turbopack_context__.k.signature();
 ;
 const StandbyPage = ()=>{
     _s();
-    const [selectedStartTime, setSelectedStartTime] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("15:00"); // 3:00 PM
+    const [selectedStartTime, setSelectedStartTime] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("20:00"); // 8:00 PM
     const [timeLeft, setTimeLeft] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0); // seconds
     const [isRunning, setIsRunning] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const { setIsLive } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$src$2f$contexts$2f$LiveContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useLive"])();
@@ -333,7 +333,7 @@ const StandbyPage = ()=>{
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(StandbyPage, "5iBLhUW4WADOvrwTnERavkGMWb8=", false, function() {
+_s(StandbyPage, "VIKgXOv6Gr+6OxQer0E8f7cLi9M=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$LocalDev$2f$billiards$2f$barako$2f$src$2f$contexts$2f$LiveContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useLive"]
     ];

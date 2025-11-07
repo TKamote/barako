@@ -1,26 +1,9 @@
-[00:00:01.032] Server  LOG      ✓ Ready in 793ms
-[00:00:12.861] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:13.146] Browser LOG     useEffect triggered - loading data...
-[00:00:13.358] Browser LOG     Loaded players: 36
-[00:00:13.358] Browser LOG     Checking for existing matches in Firebase...
-[00:00:13.358] Browser LOG     No matches found, initializing...
-[00:00:13.358] Browser LOG     Manager is logged in, initializing matches...
-[00:00:13.358] Browser LOG     Initializing 16-player single elimination matches...
-[00:00:13.358] Browser LOG     Created matches: 15
-[00:00:13.358] Browser LOG     Saving matches to Firebase...
-[00:00:14.131] Browser LOG     Saved match M1 to Firebase
-[00:00:14.131] Browser LOG     Saved match M2 to Firebase
-[00:00:14.132] Browser LOG     Saved match M3 to Firebase
-[00:00:14.132] Browser LOG     Saved match M4 to Firebase
-[00:00:14.132] Browser LOG     Saved match M5 to Firebase
-[00:00:14.132] Browser LOG     Saved match M6 to Firebase
-[00:00:14.132] Browser LOG     Saved match M7 to Firebase
-[00:00:14.132] Browser LOG     Saved match M8 to Firebase
-[00:00:14.132] Browser LOG     Saved match M9 to Firebase
-[00:00:14.132] Browser LOG     Saved match M10 to Firebase
-[00:00:14.132] Browser LOG     Saved match M11 to Firebase
-[00:00:14.132] Browser LOG     Saved match M12 to Firebase
-[00:00:14.132] Browser LOG     Saved match M13 to Firebase
-[00:00:14.132] Browser LOG     Saved match M14 to Firebase
-[00:00:14.132] Browser LOG     Saved match M15 to Firebase
-[00:00:14.132] Browser LOG     All matches saved to Firebase successfully!
+[00:00:01.362] Server  LOG      ✓ Ready in 910ms
+[00:00:10.259] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:12.893] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:17.324] Browser WARN    Image with src "/Sponsor.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:45.514] Server  LOG      ✓ Compiled in 170ms
+[00:01:55.836] Server  LOG      ✓ Compiled in 112ms
+[00:02:04.741] Server  LOG      ✓ Compiled in 30ms
+[00:02:42.185] Server  LOG      ✓ Compiled in 470ms
+[00:02:55.469] Server  LOG      ✓ Compiled in 30ms
