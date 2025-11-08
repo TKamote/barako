@@ -8,8 +8,9 @@ import { useState } from "react";
 
 const Navigation = () => {
   const pathname = usePathname();
-  const { isLive } = useLive();
+  const { isLive, gameMode, setGameMode } = useLive();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isLiveMatchPage = pathname === "/live-match";
 
   // Don't render navigation when live
   if (isLive) {
@@ -85,6 +86,22 @@ const Navigation = () => {
                 </Link>
               );
             })}
+            
+            {/* Game Mode Selector - Desktop (only on live-match page) */}
+            {isLiveMatchPage && (
+              <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-gray-300">
+                <span className="text-sm font-medium text-gray-700">Mode:</span>
+                <select
+                  value={gameMode}
+                  onChange={(e) => setGameMode(e.target.value as "9-ball" | "10-ball" | "15-ball")}
+                  className="px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="9-ball">9-ball</option>
+                  <option value="10-ball">10-ball</option>
+                  <option value="15-ball">15-ball</option>
+                </select>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -152,6 +169,24 @@ const Navigation = () => {
                 </Link>
               );
             })}
+            
+            {/* Game Mode Selector - Mobile (only on live-match page) */}
+            {isLiveMatchPage && (
+              <div className="pl-3 pr-4 py-2 border-l-4 border-transparent">
+                <div className="flex items-center space-x-2">
+                  <span className="text-base font-medium text-gray-700">Mode:</span>
+                  <select
+                    value={gameMode}
+                    onChange={(e) => setGameMode(e.target.value as "9-ball" | "10-ball" | "15-ball")}
+                    className="flex-1 px-3 py-1 text-base border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="9-ball">9-ball</option>
+                    <option value="10-ball">10-ball</option>
+                    <option value="15-ball">15-ball</option>
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

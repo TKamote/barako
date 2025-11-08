@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { useLive } from "@/contexts/LiveContext";
+import { useLive, GameMode } from "@/contexts/LiveContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -45,7 +45,7 @@ const BilliardsBall = ({
 );
 
 const LiveMatchPage = () => {
-  const { isLive, setIsLive } = useLive();
+  const { isLive, setIsLive, gameMode, setGameMode } = useLive();
   const { isManager } = useAuth();
 
   // Player state
@@ -74,8 +74,21 @@ const LiveMatchPage = () => {
   const lastResetPress = useRef<number>(0);
   const RESET_TIMEOUT = 500; // 500ms window for double-press
 
-  // Array of ball numbers 1-9 (9-ball tournament)
-  const ballNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  // Determine ball numbers based on game mode
+  const getBallNumbers = (mode: GameMode): number[] => {
+    switch (mode) {
+      case "9-ball":
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      case "10-ball":
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      case "15-ball":
+        return []; // 15-ball shows nothing
+      default:
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    }
+  };
+
+  const ballNumbers = getBallNumbers(gameMode);
 
   // Get player photo URL (returns null if no photo)
   const getPlayer1Photo = () => {
@@ -207,6 +220,14 @@ const LiveMatchPage = () => {
           if (matchData.currentTurn) {
             setCurrentTurn(matchData.currentTurn);
           }
+
+          // Restore game mode
+          if (
+            matchData.gameMode &&
+            ["9-ball", "10-ball", "15-ball"].includes(matchData.gameMode)
+          ) {
+            setGameMode(matchData.gameMode as GameMode);
+          }
         }
       } catch (error) {
         console.error("Error loading match data:", error);
@@ -216,7 +237,7 @@ const LiveMatchPage = () => {
     };
 
     loadMatchData();
-  }, [players]);
+  }, [players, setGameMode]);
 
   // Update player objects when players array loads
   useEffect(() => {
@@ -264,6 +285,7 @@ const LiveMatchPage = () => {
           raceTo,
           currentTurn,
           pocketedBalls: Array.from(pocketedBalls),
+          gameMode,
           updatedAt: new Date().toISOString(),
         },
         { merge: true }
@@ -328,21 +350,46 @@ const LiveMatchPage = () => {
     player1,
     player2,
     pocketedBalls,
+    gameMode,
   ]);
 
-  // Handle ball click - removes/pockets the ball
+  // Handle ball click - toggles pocketed state
   const handleBallClick = (ballNumber: number) => {
     setPocketedBalls((prev) => {
       const newSet = new Set(prev);
-      newSet.add(ballNumber);
+      if (newSet.has(ballNumber)) {
+        newSet.delete(ballNumber);
+      } else {
+        newSet.add(ballNumber);
+      }
       return newSet;
     });
   };
 
+  // Handle ball toggle via keyboard
+  const handleBallToggle = useCallback(
+    (ballNumber: number) => {
+      // Only allow toggling if ball exists in current game mode
+      if (!ballNumbers.includes(ballNumber)) {
+        return;
+      }
+      setPocketedBalls((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(ballNumber)) {
+          newSet.delete(ballNumber);
+        } else {
+          newSet.add(ballNumber);
+        }
+        return newSet;
+      });
+    },
+    [ballNumbers]
+  );
+
   // Reset all balls for a new game
-  const handleResetBalls = () => {
+  const handleResetBalls = useCallback(() => {
     setPocketedBalls(new Set());
-  };
+  }, []);
 
   // Keyboard shortcuts handler
   useEffect(() => {
@@ -368,6 +415,21 @@ const LiveMatchPage = () => {
       }
 
       const key = e.key.toLowerCase();
+
+      // Handle Delete key for resetting balls
+      if (e.key === "Delete" || e.key === "Del") {
+        e.preventDefault();
+        handleResetBalls();
+        return;
+      }
+
+      // Handle number keys 0-9 for ball toggling
+      if (e.key >= "0" && e.key <= "9") {
+        e.preventDefault();
+        const ballNumber = e.key === "0" ? 10 : parseInt(e.key);
+        handleBallToggle(ballNumber);
+        return;
+      }
 
       // Handle + and - keys for raceTo (before switch)
       if (e.key === "+" || (e.shiftKey && e.key === "=")) {
@@ -444,7 +506,7 @@ const LiveMatchPage = () => {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
+  }, [handleBallToggle, handleResetBalls]);
 
   // Set OBS URL client-side only to avoid hydration mismatch
   useEffect(() => {
@@ -483,41 +545,45 @@ const LiveMatchPage = () => {
               )}
             </button>
 
-            {/* Mobile: Billiards Balls - Vertical (All 10) */}
-            <div className="bg-gray-400 rounded-full px-2 py-1">
-              <div className="flex flex-col space-y-1">
-                {ballNumbers.map((ballNumber) => (
-                  <BilliardsBall
-                    key={ballNumber}
-                    number={ballNumber}
-                    isMobile={true}
-                    isPocketed={pocketedBalls.has(ballNumber)}
-                    onClick={() => handleBallClick(ballNumber)}
-                  />
-                ))}
+            {/* Mobile: Billiards Balls - Vertical */}
+            {ballNumbers.length > 0 && (
+              <div className="bg-gray-400 rounded-full px-2 py-1">
+                <div className="flex flex-col space-y-1">
+                  {ballNumbers.map((ballNumber) => (
+                    <BilliardsBall
+                      key={ballNumber}
+                      number={ballNumber}
+                      isMobile={true}
+                      isPocketed={pocketedBalls.has(ballNumber)}
+                      onClick={() => handleBallClick(ballNumber)}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             {/* Reset Balls Button - Mobile */}
-            <button
-              onClick={handleResetBalls}
-              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 mt-1 p-2"
-              title="Reset all balls"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+            {ballNumbers.length > 0 && (
+              <button
+                onClick={handleResetBalls}
+                className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 mt-1 p-2"
+                title="Reset all balls"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Desktop: Right side - Live Button and Balls */}
@@ -541,53 +607,57 @@ const LiveMatchPage = () => {
               )}
             </button>
 
-            {/* Billiards Balls - Vertical Desktop (All 10) */}
-            <div
-              className="bg-gray-400 rounded-full px-2 py-2"
-              style={{ marginRight: "20px", marginTop: "50px" }}
-            >
-              <div className="flex flex-col space-y-2">
-                {ballNumbers.map((ballNumber) => (
-                  <BilliardsBall
-                    key={ballNumber}
-                    number={ballNumber}
-                    isPocketed={pocketedBalls.has(ballNumber)}
-                    onClick={() => handleBallClick(ballNumber)}
-                  />
-                ))}
-              </div>
-            </div>
-            {/* Reset Balls Button - Desktop */}
-            <button
-              onClick={handleResetBalls}
-              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 mt-2 p-3"
-              style={{ marginRight: "20px" }}
-              title="Reset all balls"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+            {/* Billiards Balls - Vertical Desktop */}
+            {ballNumbers.length > 0 && (
+              <div
+                className="bg-gray-400 rounded-full px-2 py-2"
+                style={{ marginRight: "20px", marginTop: "50px" }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </button>
+                <div className="flex flex-col space-y-2">
+                  {ballNumbers.map((ballNumber) => (
+                    <BilliardsBall
+                      key={ballNumber}
+                      number={ballNumber}
+                      isPocketed={pocketedBalls.has(ballNumber)}
+                      onClick={() => handleBallClick(ballNumber)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Reset Balls Button - Desktop */}
+            {ballNumbers.length > 0 && (
+              <button
+                onClick={handleResetBalls}
+                className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 mt-2 p-3"
+                style={{ marginRight: "20px" }}
+                title="Reset all balls"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-6 sm:py-2 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden sm:rounded-xl">
-                {/* Mobile Layout */}
-                <div className="sm:hidden">
+            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
+              {/* Mobile Layout */}
+              <div className="sm:hidden">
                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5">
                   {/* Player 1 Group - Left */}
                   <div className="flex items-center gap-0.5 min-w-0">
@@ -602,24 +672,24 @@ const LiveMatchPage = () => {
                           : "cursor-default"
                       } transition-opacity`}
                     >
-                        {getPlayer1Photo() ? (
-                          <Image
-                            src={getPlayer1Photo()!}
-                            alt={getPlayer1Name()}
+                      {getPlayer1Photo() ? (
+                        <Image
+                          src={getPlayer1Photo()!}
+                          alt={getPlayer1Name()}
                           width={24}
                           height={24}
                           className="w-6 h-6 rounded-full object-cover"
-                            unoptimized
-                          />
-                        ) : (
+                          unoptimized
+                        />
+                      ) : (
                         <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👨
-                      </div>
+                        </div>
                       )}
                     </button>
                     <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
-                        {getPlayer1Name()}
-                      </div>
+                      {getPlayer1Name()}
+                    </div>
                   </div>
 
                   {/* Center Group - Scores and Race */}
@@ -639,18 +709,18 @@ const LiveMatchPage = () => {
 
                     {/* Player 1 Score */}
                     <div className="text-[28px] font-bold text-yellow-500 whitespace-nowrap leading-none">
-                          {player1Score}
-                        </div>
+                      {player1Score}
+                    </div>
 
                     {/* Race to X - Shortened on Mobile */}
-                    <div className="text-[10px] font-bold text-white uppercase whitespace-nowrap leading-none px-[2px]">
+                    <div className="text-[10px] font-bold text-white uppercase whitespace-nowrap leading-none px-[2px] mx-[10px]">
                       R{raceTo}
-                        </div>
+                    </div>
 
                     {/* Player 2 Score */}
                     <div className="text-[28px] font-bold text-yellow-500 whitespace-nowrap leading-none">
-                          {player2Score}
-                        </div>
+                      {player2Score}
+                    </div>
 
                     {/* Right Arrow - Turn Indicator for Player 2 */}
                     <svg
@@ -664,7 +734,7 @@ const LiveMatchPage = () => {
                     >
                       <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
                     </svg>
-                    </div>
+                  </div>
 
                   {/* Player 2 Group - Right */}
                   <div className="flex items-center gap-0.5 min-w-0 justify-end">
@@ -682,43 +752,43 @@ const LiveMatchPage = () => {
                           : "cursor-default"
                       } transition-opacity`}
                     >
-                        {getPlayer2Photo() ? (
-                          <Image
-                            src={getPlayer2Photo()!}
-                            alt={getPlayer2Name()}
+                      {getPlayer2Photo() ? (
+                        <Image
+                          src={getPlayer2Photo()!}
+                          alt={getPlayer2Name()}
                           width={24}
                           height={24}
                           className="w-6 h-6 rounded-full object-cover"
-                            unoptimized
-                          />
-                        ) : (
+                          unoptimized
+                        />
+                      ) : (
                         <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
                           👩
-                      </div>
+                        </div>
                       )}
                     </button>
                   </div>
-                  </div>
                 </div>
+              </div>
 
-                {/* Desktop Layout */}
+              {/* Desktop Layout */}
               <div className="hidden sm:block relative">
                 <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
                 <div className="relative z-10">
                   <div className="grid grid-cols-3 items-center gap-4">
                     {/* Player 1 Group - Extreme Left */}
                     <div className="flex items-center gap-4 justify-start">
-                    <button
-                      onClick={() =>
-                        canSelectPlayers && setShowPlayer1Modal(true)
-                      }
-                      disabled={!canSelectPlayers}
+                      <button
+                        onClick={() =>
+                          canSelectPlayers && setShowPlayer1Modal(true)
+                        }
+                        disabled={!canSelectPlayers}
                         className={`shrink-0 ${
-                        canSelectPlayers
-                          ? "cursor-pointer hover:opacity-80"
-                          : "cursor-default"
+                          canSelectPlayers
+                            ? "cursor-pointer hover:opacity-80"
+                            : "cursor-default"
                         } transition-opacity`}
-                    >
+                      >
                         {getPlayer1Photo() ? (
                           <Image
                             src={getPlayer1Photo()!}
@@ -731,7 +801,7 @@ const LiveMatchPage = () => {
                         ) : (
                           <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
                             👨
-                      </div>
+                          </div>
                         )}
                       </button>
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
@@ -756,18 +826,18 @@ const LiveMatchPage = () => {
 
                       {/* Player 1 Score */}
                       <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
-                          {player1Score}
-                        </div>
+                        {player1Score}
+                      </div>
 
                       {/* Race to X */}
-                      <div className="text-xl sm:text-3xl font-bold text-white uppercase">
+                      <div className="text-xl sm:text-3xl font-bold text-white uppercase mx-[10px]">
                         Race to {raceTo}
-                        </div>
+                      </div>
 
                       {/* Player 2 Score */}
                       <div className="text-5xl sm:text-7xl font-bold text-yellow-500">
-                          {player2Score}
-                        </div>
+                        {player2Score}
+                      </div>
 
                       {/* Right Arrow - Turn Indicator for Player 2 */}
                       <svg
@@ -788,17 +858,17 @@ const LiveMatchPage = () => {
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>
-                    <button
-                      onClick={() =>
-                        canSelectPlayers && setShowPlayer2Modal(true)
-                      }
-                      disabled={!canSelectPlayers}
+                      <button
+                        onClick={() =>
+                          canSelectPlayers && setShowPlayer2Modal(true)
+                        }
+                        disabled={!canSelectPlayers}
                         className={`shrink-0 ${
-                        canSelectPlayers
-                          ? "cursor-pointer hover:opacity-80"
-                          : "cursor-default"
+                          canSelectPlayers
+                            ? "cursor-pointer hover:opacity-80"
+                            : "cursor-default"
                         } transition-opacity`}
-                    >
+                      >
                         {getPlayer2Photo() ? (
                           <Image
                             src={getPlayer2Photo()!}
@@ -811,9 +881,9 @@ const LiveMatchPage = () => {
                         ) : (
                           <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
                             👩
-                      </div>
+                          </div>
                         )}
-                    </button>
+                      </button>
                     </div>
                   </div>
                 </div>
