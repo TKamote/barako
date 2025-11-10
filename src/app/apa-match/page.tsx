@@ -594,7 +594,7 @@ const ApaMatchPage = () => {
       {/* 16:9 Aspect Ratio Container */}
       <div className="w-full max-w-[1920px] aspect-video bg-transparent relative" style={{ backgroundImage: 'none', border: 'none', outline: 'none' }}>
         {/* Live Button - Centered at Top */}
-        <div className="fixed top-2 sm:top-4 left-0 right-0 z-50 flex justify-center">
+        <div className="fixed top-[68px] sm:top-[76px] left-0 right-0 z-50 flex justify-center">
           <button
             onClick={handleLiveToggle}
             className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-bold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 ${
@@ -680,9 +680,9 @@ const ApaMatchPage = () => {
             <div className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5" style={{ border: 'none', outline: 'none' }}>
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0 px-0.5" style={{ border: 'none', outline: 'none', gap: 0 }}>
                   {/* Player 1 Group - Left */}
-                  <div className="flex items-center gap-0.5 min-w-0">
+                  <div className="flex items-center gap-0.5 min-w-0" style={{ border: 'none', outline: 'none' }}>
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -719,7 +719,7 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div className="flex items-center gap-0 justify-center shrink-0">
+                  <div className="flex items-center gap-0 justify-center shrink-0" style={{ border: 'none', outline: 'none' }}>
                     {/* Left Arrow - Turn Indicator for Player 1 */}
                     <svg
                       className={`w-9 h-9 shrink-0 -mr-2 ${
@@ -763,7 +763,7 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div className="flex items-center gap-0.5 min-w-0 justify-end">
+                  <div className="flex items-center gap-0.5 min-w-0 justify-end" style={{ border: 'none', outline: 'none' }}>
                     <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
                       {getPlayer2Name()}
                     </div>
@@ -805,9 +805,9 @@ const ApaMatchPage = () => {
               <div className="hidden sm:block relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
                 <div className="relative z-10">
-                  <div className="grid grid-cols-3 items-center gap-4" style={{ border: 'none', outline: 'none' }}>
+                  <div className="grid grid-cols-3 items-center gap-0" style={{ border: 'none', outline: 'none', gap: 0 }}>
                     {/* Player 1 Group - Extreme Left */}
-                    <div className="flex items-center gap-4 justify-start">
+                    <div className="flex items-center gap-4 justify-start" style={{ border: 'none', outline: 'none' }}>
                       <button
                         onClick={() =>
                           canSelectPlayers && setShowPlayer1Modal(true)
@@ -844,7 +844,7 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Center Group - Scores and Race */}
-                    <div className="flex items-center gap-2 justify-center">
+                    <div className="flex items-center gap-2 justify-center" style={{ border: 'none', outline: 'none' }}>
                       {/* Left Arrow - Turn Indicator for Player 1 */}
                       <svg
                         className={`w-[72px] h-[72px] shrink-0 -mr-4 ${
@@ -888,7 +888,7 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Player 2 Group - Extreme Right */}
-                    <div className="flex items-center gap-4 justify-end">
+                    <div className="flex items-center gap-4 justify-end" style={{ border: 'none', outline: 'none' }}>
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>

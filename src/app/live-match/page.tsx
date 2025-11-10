@@ -598,7 +598,7 @@ const LiveMatchPage = () => {
       {/* 16:9 Aspect Ratio Container */}
       <div className="w-full max-w-[1920px] aspect-video bg-transparent relative">
         {/* Live Button - Centered at Top */}
-        <div className="fixed top-2 sm:top-4 left-0 right-0 z-50 flex justify-center">
+        <div className="fixed top-[68px] sm:top-[76px] left-0 right-0 z-50 flex justify-center">
           <button
             onClick={handleLiveToggle}
             className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-bold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 ${
