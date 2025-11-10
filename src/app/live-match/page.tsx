@@ -106,12 +106,37 @@ const LiveMatchPage = () => {
   // Get player name or default
   const getPlayer1Name = () => {
     if (player1?.name) return player1.name;
-    return "Dave";
+    return "Player 1";
   };
 
   const getPlayer2Name = () => {
     if (player2?.name) return player2.name;
-    return "Joel";
+    return "Player 2";
+  };
+
+  // Get placeholder avatar based on player (consistent per player)
+  const getPlayer1Placeholder = () => {
+    if (player1?.id) {
+      // Use hash of player ID to consistently pick a placeholder
+      const hash = player1.id
+        .split("")
+        .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const placeholderNum = (hash % 6) + 1;
+      return `/avatar-placeholder-${placeholderNum}.svg`;
+    }
+    return "/avatar-placeholder-1.svg";
+  };
+
+  const getPlayer2Placeholder = () => {
+    if (player2?.id) {
+      // Use hash of player ID to consistently pick a placeholder
+      const hash = player2.id
+        .split("")
+        .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const placeholderNum = (hash % 6) + 1;
+      return `/avatar-placeholder-${placeholderNum}.svg`;
+    }
+    return "/avatar-placeholder-yellow.svg";
   };
 
   // Fetch players from Firestore
@@ -286,8 +311,8 @@ const LiveMatchPage = () => {
         {
           player1Id: player1?.id || null,
           player2Id: player2?.id || null,
-          player1Name: player1?.name || "Dave",
-          player2Name: player2?.name || "Joel",
+          player1Name: player1?.name || "Player 1",
+          player2Name: player2?.name || "Player 2",
           player1PhotoURL: player1?.photoURL || "",
           player2PhotoURL: player2?.photoURL || "",
           player1Score,
@@ -598,10 +623,14 @@ const LiveMatchPage = () => {
           {/* Game Mode Selector - Hidden when live */}
           {!isLive && (
             <div className="flex items-center space-x-2 mb-[50px]">
-              <span className="text-xs sm:text-sm font-medium text-gray-700">Mode:</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-700">
+                Mode:
+              </span>
               <select
                 value={gameMode}
-                onChange={(e) => handleGameModeChange(e.target.value as GameMode)}
+                onChange={(e) =>
+                  handleGameModeChange(e.target.value as GameMode)
+                }
                 className="px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="9-ball">9-ball</option>
@@ -683,9 +712,13 @@ const LiveMatchPage = () => {
                           unoptimized
                         />
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
-                          👨
-                        </div>
+                        <Image
+                          src={getPlayer1Placeholder()}
+                          alt={getPlayer1Name()}
+                          width={24}
+                          height={24}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
                       )}
                     </button>
                     <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
@@ -763,9 +796,13 @@ const LiveMatchPage = () => {
                           unoptimized
                         />
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-gray-600 flex items-center justify-center text-xs">
-                          👩
-                        </div>
+                        <Image
+                          src={getPlayer2Placeholder()}
+                          alt={getPlayer2Name()}
+                          width={24}
+                          height={24}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
                       )}
                     </button>
                   </div>
@@ -800,9 +837,13 @@ const LiveMatchPage = () => {
                             unoptimized
                           />
                         ) : (
-                          <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
-                            👨
-                          </div>
+                          <Image
+                            src={getPlayer1Placeholder()}
+                            alt={getPlayer1Name()}
+                            width={64}
+                            height={64}
+                            className="w-16 h-16 rounded-full object-cover"
+                          />
                         )}
                       </button>
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
@@ -880,9 +921,13 @@ const LiveMatchPage = () => {
                             unoptimized
                           />
                         ) : (
-                          <div className="w-16 h-16 rounded-full bg-gray-600 flex items-center justify-center text-4xl">
-                            👩
-                          </div>
+                          <Image
+                            src={getPlayer2Placeholder()}
+                            alt={getPlayer2Name()}
+                            width={64}
+                            height={64}
+                            className="w-16 h-16 rounded-full object-cover"
+                          />
                         )}
                       </button>
                     </div>
