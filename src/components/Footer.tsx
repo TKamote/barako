@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const Footer = () => {
   const [copied, setCopied] = useState(false);
@@ -23,6 +25,21 @@ const Footer = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 3000);
     });
+  };
+
+  // Handle PayPal donation
+  const handlePayPalDonation = async (amount: number) => {
+    try {
+      // Track donation attempt in Firestore
+      await addDoc(collection(db, "donations"), {
+        amount,
+        paymentMethod: "PayPal",
+        timestamp: new Date().toISOString(),
+        status: "initiated",
+      });
+    } catch (error) {
+      console.error("Error tracking donation:", error);
+    }
   };
 
   return (
@@ -51,7 +68,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-3 sm:px-6">
           {/* Single Row: All content in one row */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Left: Donation/PayNow - Aligned with logo */}
+          {/* Left: Donation/PayNow and PayPal - Aligned with logo */}
           <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-center sm:justify-start">
             <span className="text-xs sm:text-sm text-gray-600">Support us:</span>
             <button
@@ -65,6 +82,34 @@ const Footer = () => {
               <span>💚</span>
               {copied ? "Copied!" : "PayNow"}
             </button>
+            <span className="text-xs sm:text-sm text-gray-600">PayPal:</span>
+            <a
+              href="https://paypal.me/YOUR_USERNAME/5"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handlePayPalDonation(5)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors inline-block"
+            >
+              $5
+            </a>
+            <a
+              href="https://paypal.me/YOUR_USERNAME/10"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handlePayPalDonation(10)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors inline-block"
+            >
+              $10
+            </a>
+            <a
+              href="https://paypal.me/YOUR_USERNAME/50"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handlePayPalDonation(50)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition-colors inline-block"
+            >
+              $50
+            </a>
           </div>
 
           {/* Center: Social Links */}

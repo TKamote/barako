@@ -48,6 +48,14 @@ service cloud.firestore {
       // Only authenticated users (managers) can write
       allow write: if request.auth != null;
     }
+    
+    // Donations collection - for tracking PayPal donations
+    match /donations/{donationId} {
+      // Only authenticated users (managers) can read donations
+      allow read: if request.auth != null;
+      // Anyone can write (to track donation attempts)
+      allow write: if true;
+    }
   }
 }
 

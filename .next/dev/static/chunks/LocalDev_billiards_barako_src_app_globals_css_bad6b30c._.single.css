@@ -152,7 +152,6 @@
     --leading-relaxed: 1.625;
     --radius-md: .375rem;
     --radius-lg: .5rem;
-    --radius-xl: .75rem;
     --shadow-md: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
     --shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
     --ease-in-out: cubic-bezier(.4, 0, .2, 1);
@@ -494,6 +493,14 @@
     top: calc(var(--spacing) * 0);
   }
 
+  .top-2 {
+    top: calc(var(--spacing) * 2);
+  }
+
+  .top-16 {
+    top: calc(var(--spacing) * 16);
+  }
+
   .top-32 {
     top: calc(var(--spacing) * 32);
   }
@@ -596,6 +603,10 @@
     margin-inline: calc(var(--spacing) * 4);
   }
 
+  .mx-\[10px\] {
+    margin-inline: 10px;
+  }
+
   .mx-auto {
     margin-inline: auto;
   }
@@ -672,12 +683,20 @@
     margin-bottom: calc(var(--spacing) * 8);
   }
 
+  .mb-\[50px\] {
+    margin-bottom: 50px;
+  }
+
   .-ml-2 {
     margin-left: calc(var(--spacing) * -2);
   }
 
   .-ml-4 {
     margin-left: calc(var(--spacing) * -4);
+  }
+
+  .ml-4 {
+    margin-left: calc(var(--spacing) * 4);
   }
 
   .box-border {
@@ -1031,6 +1050,12 @@
     column-gap: calc(var(--spacing) * 0);
   }
 
+  :where(.space-x-2 > :not(:last-child)) {
+    --tw-space-x-reverse: 0;
+    margin-inline-start: calc(calc(var(--spacing) * 2) * var(--tw-space-x-reverse));
+    margin-inline-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   :where(.space-x-3 > :not(:last-child)) {
     --tw-space-x-reverse: 0;
     margin-inline-start: calc(calc(var(--spacing) * 3) * var(--tw-space-x-reverse));
@@ -1141,6 +1166,11 @@
   .border-b-2 {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 2px;
+  }
+
+  .border-l {
+    border-left-style: var(--tw-border-style);
+    border-left-width: 1px;
   }
 
   .border-l-4 {
@@ -1556,6 +1586,10 @@
     padding-left: calc(var(--spacing) * 3);
   }
 
+  .pl-4 {
+    padding-left: calc(var(--spacing) * 4);
+  }
+
   .text-center {
     text-align: center;
   }
@@ -1895,6 +1929,12 @@
   }
 
   @media (hover: hover) {
+    .hover\:border-gray-400:hover {
+      border-color: var(--color-gray-400);
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:border-red-500:hover {
       border-color: var(--color-red-500);
     }
@@ -2084,6 +2124,18 @@
   }
 
   @media (min-width: 40rem) {
+    .sm\:top-4 {
+      top: calc(var(--spacing) * 4);
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .sm\:top-20 {
+      top: calc(var(--spacing) * 20);
+    }
+  }
+
+  @media (min-width: 40rem) {
     .sm\:right-4 {
       right: calc(var(--spacing) * 4);
     }
@@ -2110,6 +2162,12 @@
   @media (min-width: 40rem) {
     .sm\:mt-2 {
       margin-top: calc(var(--spacing) * 2);
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .sm\:mr-2 {
+      margin-right: calc(var(--spacing) * 2);
     }
   }
 
@@ -2162,6 +2220,12 @@
   }
 
   @media (min-width: 40rem) {
+    .sm\:h-8 {
+      height: calc(var(--spacing) * 8);
+    }
+  }
+
+  @media (min-width: 40rem) {
     .sm\:h-12 {
       height: calc(var(--spacing) * 12);
     }
@@ -2170,6 +2234,12 @@
   @media (min-width: 40rem) {
     .sm\:w-5 {
       width: calc(var(--spacing) * 5);
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .sm\:w-8 {
+      width: calc(var(--spacing) * 8);
     }
   }
 
@@ -2272,6 +2342,14 @@
   }
 
   @media (min-width: 40rem) {
+    :where(.sm\:space-y-2 > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+
+  @media (min-width: 40rem) {
     :where(.sm\:space-y-4 > :not(:last-child)) {
       --tw-space-y-reverse: 0;
       margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
@@ -2290,12 +2368,6 @@
       --tw-space-x-reverse: 0;
       margin-inline-start: calc(calc(var(--spacing) * 8) * var(--tw-space-x-reverse));
       margin-inline-end: calc(calc(var(--spacing) * 8) * calc(1 - var(--tw-space-x-reverse)));
-    }
-  }
-
-  @media (min-width: 40rem) {
-    .sm\:rounded-xl {
-      border-radius: var(--radius-xl);
     }
   }
 
@@ -2338,6 +2410,12 @@
   @media (min-width: 40rem) {
     .sm\:px-1 {
       padding-inline: calc(var(--spacing) * 1);
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .sm\:px-2 {
+      padding-inline: calc(var(--spacing) * 2);
     }
   }
 

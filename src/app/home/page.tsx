@@ -190,6 +190,7 @@ const TournamentPage = () => {
     }
   };
 
+
   return (
     <div className="p-3 sm:p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">

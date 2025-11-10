@@ -390,7 +390,7 @@ const PlayersPage = () => {
                   <button
                     onClick={() => {
                       setShowLoginPrompt(false);
-                      window.location.href = "/tournament"; // Redirect to tournament page where login button is
+                      window.location.href = "/home"; // Redirect to home page where login button is
                     }}
                     className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
                   >

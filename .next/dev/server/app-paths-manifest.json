@@ -1,6 +1,6 @@
 {
+  "/apa-match/page": "app/apa-match/page.js",
+  "/home/page": "app/home/page.js",
   "/live-match/page": "app/live-match/page.js",
-  "/page": "app/page.js",
-  "/standby/page": "app/standby/page.js",
-  "/tournament/page": "app/tournament/page.js"
+  "/page": "app/page.js"
 }

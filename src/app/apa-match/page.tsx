@@ -44,7 +44,7 @@ const BilliardsBall = ({
   </div>
 );
 
-const LiveMatchPage = () => {
+const ApaMatchPage = () => {
   const { setIsLive: setGlobalIsLive } = useLive();
   const { isManager } = useAuth();
 
@@ -72,7 +72,7 @@ const LiveMatchPage = () => {
   const [pocketedBalls, setPocketedBalls] = useState<Set<number>>(new Set());
 
   // URL state for OBS integration (client-side only to avoid hydration mismatch)
-  const [obsUrl, setObsUrl] = useState<string>("localhost:3000/live-match");
+  const [obsUrl, setObsUrl] = useState<string>("localhost:3000/apa-match");
 
   // Double-press R for reset tracking
   const lastResetPress = useRef<number>(0);
@@ -145,7 +145,7 @@ const LiveMatchPage = () => {
   useEffect(() => {
     const loadMatchData = async () => {
       try {
-        const matchDocRef = doc(db, "current_match", "live");
+        const matchDocRef = doc(db, "current_match", "apa");
         const matchDoc = await getDoc(matchDocRef);
 
         if (matchDoc.exists()) {
@@ -280,7 +280,7 @@ const LiveMatchPage = () => {
       return;
     }
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "apa");
       await setDoc(
         matchDocRef,
         {
@@ -311,7 +311,7 @@ const LiveMatchPage = () => {
   const handlePlayer1Select = async (selectedPlayer: Player) => {
     setPlayer1(selectedPlayer);
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "apa");
       await setDoc(
         matchDocRef,
         {
@@ -330,7 +330,7 @@ const LiveMatchPage = () => {
   const handlePlayer2Select = async (selectedPlayer: Player) => {
     setPlayer2(selectedPlayer);
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "apa");
       await setDoc(
         matchDocRef,
         {
@@ -352,7 +352,7 @@ const LiveMatchPage = () => {
     setIsLive(newIsLive);
     setGlobalIsLive(newIsLive);
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "apa");
       await setDoc(
         matchDocRef,
         {
@@ -370,7 +370,7 @@ const LiveMatchPage = () => {
   const handleGameModeChange = async (newMode: GameMode) => {
     setGameMode(newMode);
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "apa");
       await setDoc(
         matchDocRef,
         {
@@ -937,6 +937,18 @@ const LiveMatchPage = () => {
               objectFit: "contain",
             }}
           />
+          <Image
+            src="/APA.png"
+            alt="APA Logo"
+            width={156}
+            height={156}
+            className="mt-5"
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+              objectFit: "contain",
+            }}
+          />
         </div>
 
         {/* Mobile Logo - Top Right */}
@@ -956,6 +968,18 @@ const LiveMatchPage = () => {
           <Image
             src="/Sponsor.jpeg"
             alt="Sponsor"
+            width={94}
+            height={94}
+            className="w-[94px] h-[94px] mt-5"
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+              objectFit: "contain",
+            }}
+          />
+          <Image
+            src="/APA.png"
+            alt="APA Logo"
             width={94}
             height={94}
             className="w-[94px] h-[94px] mt-5"
@@ -991,4 +1015,5 @@ const LiveMatchPage = () => {
   );
 };
 
-export default LiveMatchPage;
+export default ApaMatchPage;
+
