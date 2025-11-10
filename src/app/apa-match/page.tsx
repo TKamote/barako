@@ -590,9 +590,9 @@ const ApaMatchPage = () => {
   const canSelectPlayers = isManager && !isLive;
 
   return (
-    <div className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden">
+    <div className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden" style={{ backgroundImage: 'none', border: 'none', outline: 'none' }}>
       {/* 16:9 Aspect Ratio Container */}
-      <div className="w-full max-w-[1920px] aspect-video bg-transparent relative">
+      <div className="w-full max-w-[1920px] aspect-video bg-transparent relative" style={{ backgroundImage: 'none', border: 'none', outline: 'none' }}>
         {/* Live Button - Centered at Top */}
         <div className="fixed top-2 sm:top-4 left-0 right-0 z-50 flex justify-center">
           <button
@@ -677,10 +677,10 @@ const ApaMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
+            <div className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5">
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5" style={{ border: 'none', outline: 'none' }}>
                   {/* Player 1 Group - Left */}
                   <div className="flex items-center gap-0.5 min-w-0">
                     <button
@@ -803,9 +803,9 @@ const ApaMatchPage = () => {
 
               {/* Desktop Layout */}
               <div className="hidden sm:block relative">
-                <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
                 <div className="relative z-10">
-                  <div className="grid grid-cols-3 items-center gap-4">
+                  <div className="grid grid-cols-3 items-center gap-4" style={{ border: 'none', outline: 'none' }}>
                     {/* Player 1 Group - Extreme Left */}
                     <div className="flex items-center gap-4 justify-start">
                       <button
