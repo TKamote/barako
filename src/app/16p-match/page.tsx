@@ -202,7 +202,7 @@ const SixteenPlayerMatchPage = () => {
             const stateData = tournamentStateDoc.data();
             setTournamentStarted(stateData.started || false);
           }
-        } catch (error) {
+        } catch {
           console.log("No tournament state found, tournament not started");
           setTournamentStarted(false);
         }
@@ -272,6 +272,100 @@ const SixteenPlayerMatchPage = () => {
     initializeMatches,
   ]);
 
+  // Check if a match can be edited based on parent matches
+  const canEditMatch = (
+    match: Match
+  ): { canEdit: boolean; reason?: string } => {
+    // Round 1 matches can always be edited
+    if (match.round === "round1") {
+      return { canEdit: true };
+    }
+
+    // If tournament has started, all matches can be edited
+    if (tournamentStarted) {
+      return { canEdit: true };
+    }
+
+    // For Round 2+, check if parent matches are completed
+    if (match.round === "round2") {
+      // Round 2 matches need their two Round 1 parent matches to be completed
+      // M9 needs M1 and M2, M10 needs M3 and M4, etc.
+      const matchIndex = parseInt(match.id.split("-")[1]);
+      const parent1Index = matchIndex * 2;
+      const parent2Index = matchIndex * 2 + 1;
+      const parent1 = matches.find((m) => m.id === `round1-${parent1Index}`);
+      const parent2 = matches.find((m) => m.id === `round1-${parent2Index}`);
+
+      if (!parent1 || !parent2) {
+        return {
+          canEdit: false,
+          reason: "Parent matches not found.",
+        };
+      }
+
+      if (parent1.status !== "completed" || parent2.status !== "completed") {
+        return {
+          canEdit: false,
+          reason:
+            "Please complete the parent Round 1 matches first, or start the tournament.",
+        };
+      }
+
+      return { canEdit: true };
+    }
+
+    if (match.round === "round3") {
+      // Round 3 matches need their two Round 2 parent matches to be completed
+      const matchIndex = parseInt(match.id.split("-")[1]);
+      const parent1Index = matchIndex * 2;
+      const parent2Index = matchIndex * 2 + 1;
+      const parent1 = matches.find((m) => m.id === `round2-${parent1Index}`);
+      const parent2 = matches.find((m) => m.id === `round2-${parent2Index}`);
+
+      if (!parent1 || !parent2) {
+        return {
+          canEdit: false,
+          reason: "Parent matches not found.",
+        };
+      }
+
+      if (parent1.status !== "completed" || parent2.status !== "completed") {
+        return {
+          canEdit: false,
+          reason:
+            "Please complete the parent Round 2 matches first, or start the tournament.",
+        };
+      }
+
+      return { canEdit: true };
+    }
+
+    if (match.round === "round4") {
+      // Round 4 (M15) needs both Round 3 matches to be completed
+      const parent1 = matches.find((m) => m.id === "round3-0");
+      const parent2 = matches.find((m) => m.id === "round3-1");
+
+      if (!parent1 || !parent2) {
+        return {
+          canEdit: false,
+          reason: "Parent matches not found.",
+        };
+      }
+
+      if (parent1.status !== "completed" || parent2.status !== "completed") {
+        return {
+          canEdit: false,
+          reason:
+            "Please complete the parent Round 3 matches first, or start the tournament.",
+        };
+      }
+
+      return { canEdit: true };
+    }
+
+    return { canEdit: false, reason: "Unknown round." };
+  };
+
   // Handle match click
   const handleMatchClick = (matchId: string) => {
     if (!isManager) {
@@ -280,13 +374,13 @@ const SixteenPlayerMatchPage = () => {
     }
     const match = matches.find((m) => m.id === matchId);
     if (match) {
-      // Allow editing Round 1 matches before tournament starts (to assign initial players)
-      // Allow editing all matches after tournament starts
-      if (!tournamentStarted && match.round !== "round1") {
-        alert("Please start the tournament first, or assign players to Round 1 matches.");
+      // Check if match can be edited
+      const { canEdit, reason } = canEditMatch(match);
+      if (!canEdit) {
+        alert(reason || "This match cannot be edited at this time.");
         return;
       }
-      
+
       setSelectedMatch(match);
       setSelectedPlayer1(match.player1?.id || "");
       setSelectedPlayer2(match.player2?.id || "");
@@ -326,9 +420,7 @@ const SixteenPlayerMatchPage = () => {
 
     if (incompleteMatches.length > 0) {
       alert(
-        `Please assign players to all Round 1 matches before starting the tournament.\n\n${
-          incompleteMatches.length
-        } match(es) still missing players.`
+        `Please assign players to all Round 1 matches before starting the tournament.\n\n${incompleteMatches.length} match(es) still missing players.`
       );
       return;
     }
@@ -617,9 +709,15 @@ const SixteenPlayerMatchPage = () => {
         await advancePlayers(updatedMatch);
         // Show success message
         const winnerName = winner === "player1" ? player1?.name : player2?.name;
-        alert(
-          `Match completed! ${winnerName} wins!\n\nPlayers have been automatically advanced to the next round.`
-        );
+
+        // Special message for Round 4 (Final)
+        if (updatedMatch.round === "round4") {
+          alert(`🏆 TOURNAMENT COMPLETE! 🏆\n\n${winnerName} is the CHAMPION!`);
+        } else {
+          alert(
+            `Match completed! ${winnerName} wins!\n\nPlayers have been automatically advanced to the next round.`
+          );
+        }
 
         // Reload matches to show updated bracket
         const matchesSnapshot = await getDocs(collection(db, "16p_matches"));
@@ -708,7 +806,7 @@ const SixteenPlayerMatchPage = () => {
 
         {/* Winners Bracket Only */}
         <div className="w-full">
-          <div className="flex items-center mb-2">
+          <div className="flex items-center mb-[10px]">
             <div className="bg-blue-600 text-white px-2 py-1 rounded-lg font-bold mr-2 text-sm">
               WB
             </div>
@@ -720,34 +818,34 @@ const SixteenPlayerMatchPage = () => {
           {/* Horizontal Scrolling Container */}
           <div className="overflow-x-auto">
             {/* Headers Row */}
-            <div className="flex space-x-4 min-w-max mb-2">
-              <div className="w-56 text-center font-bold text-sm text-gray-800">
+            <div className="flex space-x-[46px] min-w-max mb-2">
+              <div className="w-[200px] text-center font-bold text-sm text-gray-800">
                 WB R1
               </div>
-              <div className="w-56 text-center font-bold text-sm text-gray-800">
+              <div className="w-[200px] text-center font-bold text-sm text-gray-800">
                 WB R2
               </div>
-              <div className="w-56 text-center font-bold text-sm text-gray-800">
+              <div className="w-[200px] text-center font-bold text-sm text-gray-800">
                 WB R3
               </div>
-              <div className="w-56 text-center font-bold text-sm text-gray-800">
+              <div className="w-[200px] text-center font-bold text-sm text-gray-800">
                 WB R4
               </div>
-              <div className="w-56 text-center font-bold text-sm text-gray-800">
+              <div className="w-[200px] text-center font-bold text-sm text-gray-800">
                 Winner
               </div>
             </div>
 
-            <div className="flex space-x-4 min-w-max pb-2 items-center min-h-[300px]">
+            <div className="flex space-x-[46px] min-w-max pb-2 items-start min-h-[600px] relative">
               {/* Column 1: Round 1 (8 matches) */}
-              <div className="flex flex-col min-h-[250px]">
-                <div className="flex flex-col space-y-1 items-center justify-center flex-1">
+              <div className="flex flex-col min-h-[600px] relative w-[200px]">
+                <div className="flex flex-col space-y-1">
                   {matchNumbers.round1.map((matchId, index) => {
                     const match = getMatchById(`round1-${index}`);
                     return (
                       <div
                         key={index}
-                        className="w-56 border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
+                        className="w-[200px] border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
                         onClick={() => handleMatchClick(`round1-${index}`)}
                       >
                         <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
@@ -758,7 +856,7 @@ const SixteenPlayerMatchPage = () => {
                           </div>
                           <div className="flex flex-col space-y-0 min-w-0 flex-1">
                             <div
-                              className={`text-[18px] text-left py-[1px] pb-[1px] font-medium truncate px-1 leading-relaxed ${
+                              className={`text-[18px] text-left py-px pb-px font-medium truncate px-1 leading-relaxed ${
                                 match?.winner === "player1"
                                   ? "text-yellow-600 font-bold"
                                   : "text-gray-800"
@@ -768,7 +866,7 @@ const SixteenPlayerMatchPage = () => {
                               {match?.player1?.name || "TBD"}
                             </div>
                             <div
-                              className={`text-[18px] text-left py-[1px] pt-[1px] font-medium truncate px-1 leading-relaxed ${
+                              className={`text-[18px] text-left py-px pt-px font-medium truncate px-1 leading-relaxed ${
                                 match?.winner === "player2"
                                   ? "text-yellow-600 font-bold"
                                   : "text-gray-800"
@@ -780,7 +878,7 @@ const SixteenPlayerMatchPage = () => {
                           </div>
                           <div className="flex flex-col space-y-0">
                             <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
+                              className={`text-[18px] font-bold text-center py-0 sm:py-px pb-0 sm:pb-px leading-relaxed ${
                                 match?.winner === "player1"
                                   ? "text-yellow-600"
                                   : "text-gray-800"
@@ -789,7 +887,7 @@ const SixteenPlayerMatchPage = () => {
                               {match?.score1 || 0}
                             </div>
                             <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
+                              className={`text-[18px] font-bold text-center py-0 sm:py-px pt-0 sm:pt-px leading-relaxed ${
                                 match?.winner === "player2"
                                   ? "text-yellow-600"
                                   : "text-gray-800"
@@ -805,222 +903,279 @@ const SixteenPlayerMatchPage = () => {
                 </div>
               </div>
 
-              {/* Column 2: Round 2 (4 matches) */}
-              <div className="flex flex-col min-h-[250px]">
-                <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                  {matchNumbers.round2.map((matchId, index) => {
-                    const match = getMatchById(`round2-${index}`);
-                    return (
-                      <div
-                        key={index}
-                        className="w-56 border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
-                        onClick={() => handleMatchClick(`round2-${index}`)}
-                      >
-                        <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
-                          <div className="flex items-center">
-                            <div className="text-[18px] text-gray-700 font-medium">
-                              {matchId}
-                            </div>
+              {/* Column 2: Round 2 (4 matches) - Centered between pairs */}
+              <div className="flex flex-col min-h-[600px] relative w-[200px]">
+                {matchNumbers.round2.map((matchId, index) => {
+                  const match = getMatchById(`round2-${index}`);
+                  // Calculate position: M9 centered between M1(0) and M2(1), M10 between M3(2) and M4(3), etc.
+                  // Each match box is approximately 60px tall with 4px spacing (space-y-1)
+                  const matchHeight = 60; // Approximate height of a match box (includes border, padding, text)
+                  const spacing = 4; // space-y-1 = 4px
+                  const totalMatchHeight = matchHeight + spacing;
+                  // Position for M9 (index 0): between round1-0 and round1-1
+                  // Position for M10 (index 1): between round1-2 and round1-3
+                  // Position for M11 (index 2): between round1-4 and round1-5
+                  // Position for M12 (index 3): between round1-6 and round1-7
+                  const firstMatchIndex = index * 2;
+                  const topPosition =
+                    firstMatchIndex * totalMatchHeight +
+                    totalMatchHeight / 2 +
+                    matchHeight / 2; // Push down by half match box height
+                  return (
+                    <div
+                      key={index}
+                      className="w-[200px] border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all absolute"
+                      style={{ top: `${topPosition}px` }}
+                      onClick={() => handleMatchClick(`round2-${index}`)}
+                    >
+                      <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
+                        <div className="flex items-center">
+                          <div className="text-[18px] text-gray-700 font-medium">
+                            {matchId}
                           </div>
-                          <div className="flex flex-col space-y-0 min-w-0 flex-1">
-                            <div
-                              className={`text-[18px] text-left py-[1px] pb-[1px] font-medium truncate px-1 leading-relaxed ${
-                                match?.winner === "player1"
-                                  ? "text-yellow-600 font-bold"
-                                  : "text-gray-800"
-                              }`}
-                              title={match?.player1?.name || "TBD"}
-                            >
-                              {match?.player1?.name || "TBD"}
-                            </div>
-                            <div
-                              className={`text-[18px] text-left py-[1px] pt-[1px] font-medium truncate px-1 leading-relaxed ${
-                                match?.winner === "player2"
-                                  ? "text-yellow-600 font-bold"
-                                  : "text-gray-800"
-                              }`}
-                              title={match?.player2?.name || "TBD"}
-                            >
-                              {match?.player2?.name || "TBD"}
-                            </div>
+                        </div>
+                        <div className="flex flex-col space-y-0 min-w-0 flex-1">
+                          <div
+                            className={`text-[18px] text-left py-px pb-px font-medium truncate px-1 leading-relaxed ${
+                              match?.winner === "player1"
+                                ? "text-yellow-600 font-bold"
+                                : "text-gray-800"
+                            }`}
+                            title={match?.player1?.name || "TBD"}
+                          >
+                            {match?.player1?.name || "TBD"}
                           </div>
-                          <div className="flex flex-col space-y-0">
-                            <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
-                                match?.winner === "player1"
-                                  ? "text-yellow-600"
-                                  : "text-gray-800"
-                              }`}
-                            >
-                              {match?.score1 || "-"}
-                            </div>
-                            <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
-                                match?.winner === "player2"
-                                  ? "text-yellow-600"
-                                  : "text-gray-800"
-                              }`}
-                            >
-                              {match?.score2 || "-"}
-                            </div>
+                          <div
+                            className={`text-[18px] text-left py-px pt-px font-medium truncate px-1 leading-relaxed ${
+                              match?.winner === "player2"
+                                ? "text-yellow-600 font-bold"
+                                : "text-gray-800"
+                            }`}
+                            title={match?.player2?.name || "TBD"}
+                          >
+                            {match?.player2?.name || "TBD"}
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-0">
+                          <div
+                            className={`text-[18px] font-bold text-center py-0 sm:py-px pb-0 sm:pb-px leading-relaxed ${
+                              match?.winner === "player1"
+                                ? "text-yellow-600"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {match?.score1 || "-"}
+                          </div>
+                          <div
+                            className={`text-[18px] font-bold text-center py-0 sm:py-px pt-0 sm:pt-px leading-relaxed ${
+                              match?.winner === "player2"
+                                ? "text-yellow-600"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {match?.score2 || "-"}
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
 
-              {/* Column 3: Round 3 (2 matches) */}
-              <div className="flex flex-col min-h-[250px]">
-                <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                  {matchNumbers.round3.map((matchId, index) => {
-                    const match = getMatchById(`round3-${index}`);
-                    return (
-                      <div
-                        key={index}
-                        className="w-56 border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
-                        onClick={() => handleMatchClick(`round3-${index}`)}
-                      >
-                        <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
-                          <div className="flex items-center">
-                            <div className="text-[18px] text-gray-700 font-medium">
-                              {matchId}
-                            </div>
+              {/* Column 3: Round 3 (2 matches) - Centered between pairs */}
+              <div className="flex flex-col min-h-[600px] relative w-[200px]">
+                {matchNumbers.round3.map((matchId, index) => {
+                  const match = getMatchById(`round3-${index}`);
+                  // M13 centered between M9(0) and M10(1), M14 between M11(2) and M12(3)
+                  const matchHeight = 60; // Approximate height of a match box
+                  const spacing = 4;
+                  const totalMatchHeight = matchHeight + spacing;
+                  // Round 2 matches are positioned at: 0, 1, 2, 3 (in terms of Round 1 pairs)
+                  // But we need their actual positions in Round 2 column
+                  // M9 is at position 0 (between M1 and M2)
+                  // M10 is at position 2 (between M3 and M4)
+                  // M11 is at position 4 (between M5 and M6)
+                  // M12 is at position 6 (between M7 and M8)
+                  const round2FirstIndex = index * 2;
+                  const round2SecondIndex = index * 2 + 1;
+                  // Round 2 matches are positioned with offset: (round2FirstIndex * totalMatchHeight) + (totalMatchHeight / 2) + matchHeight / 2
+                  const round2FirstPos =
+                    round2FirstIndex * totalMatchHeight +
+                    totalMatchHeight / 2 +
+                    matchHeight / 2; // Round 2 offset
+                  const round2SecondPos =
+                    round2SecondIndex * totalMatchHeight +
+                    totalMatchHeight / 2 +
+                    matchHeight / 2; // Round 2 offset
+                  let topPosition =
+                    (round2FirstPos + round2SecondPos) / 2 + matchHeight / 2; // Push down by half match box height
+                  // M14 (index 1) needs additional 2.0 match box height push down
+                  if (index === 1) {
+                    topPosition += matchHeight * 2.0;
+                  }
+                  return (
+                    <div
+                      key={index}
+                      className="w-[200px] border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all absolute"
+                      style={{ top: `${topPosition}px` }}
+                      onClick={() => handleMatchClick(`round3-${index}`)}
+                    >
+                      <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
+                        <div className="flex items-center">
+                          <div className="text-[18px] text-gray-700 font-medium">
+                            {matchId}
                           </div>
-                          <div className="flex flex-col space-y-0 min-w-0 flex-1">
-                            <div
-                              className={`text-[18px] text-left py-[1px] pb-[1px] font-medium truncate px-1 leading-relaxed ${
-                                match?.winner === "player1"
-                                  ? "text-yellow-600 font-bold"
-                                  : "text-gray-800"
-                              }`}
-                              title={match?.player1?.name || "TBD"}
-                            >
-                              {match?.player1?.name || "TBD"}
-                            </div>
-                            <div
-                              className={`text-[18px] text-left py-[1px] pt-[1px] font-medium truncate px-1 leading-relaxed ${
-                                match?.winner === "player2"
-                                  ? "text-yellow-600 font-bold"
-                                  : "text-gray-800"
-                              }`}
-                              title={match?.player2?.name || "TBD"}
-                            >
-                              {match?.player2?.name || "TBD"}
-                            </div>
+                        </div>
+                        <div className="flex flex-col space-y-0 min-w-0 flex-1">
+                          <div
+                            className={`text-[18px] text-left py-px pb-px font-medium truncate px-1 leading-relaxed ${
+                              match?.winner === "player1"
+                                ? "text-yellow-600 font-bold"
+                                : "text-gray-800"
+                            }`}
+                            title={match?.player1?.name || "TBD"}
+                          >
+                            {match?.player1?.name || "TBD"}
                           </div>
-                          <div className="flex flex-col space-y-0">
-                            <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
-                                match?.winner === "player1"
-                                  ? "text-yellow-600"
-                                  : "text-gray-800"
-                              }`}
-                            >
-                              {match?.score1 || "-"}
-                            </div>
-                            <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
-                                match?.winner === "player2"
-                                  ? "text-yellow-600"
-                                  : "text-gray-800"
-                              }`}
-                            >
-                              {match?.score2 || "-"}
-                            </div>
+                          <div
+                            className={`text-[18px] text-left py-px pt-px font-medium truncate px-1 leading-relaxed ${
+                              match?.winner === "player2"
+                                ? "text-yellow-600 font-bold"
+                                : "text-gray-800"
+                            }`}
+                            title={match?.player2?.name || "TBD"}
+                          >
+                            {match?.player2?.name || "TBD"}
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-0">
+                          <div
+                            className={`text-[18px] font-bold text-center py-0 sm:py-px pb-0 sm:pb-px leading-relaxed ${
+                              match?.winner === "player1"
+                                ? "text-yellow-600"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {match?.score1 || "-"}
+                          </div>
+                          <div
+                            className={`text-[18px] font-bold text-center py-0 sm:py-px pt-0 sm:pt-px leading-relaxed ${
+                              match?.winner === "player2"
+                                ? "text-yellow-600"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {match?.score2 || "-"}
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
 
-              {/* Column 4: Round 4 (1 match - Semi-Final) */}
-              <div className="flex flex-col min-h-[250px]">
-                <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                  {(() => {
-                    const match = getMatchById("round4-0");
-                    return (
-                      <div
-                        className="w-56 border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-[1px] cursor-pointer hover:border-blue-500 hover:shadow-md transition-all"
-                        onClick={() => handleMatchClick("round4-0")}
-                      >
-                        <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
-                          <div className="flex items-center">
-                            <div className="text-[18px] text-gray-700 font-medium">
-                              {matchNumbers.round4[0]}
-                            </div>
+              {/* Column 4: Round 4 (1 match - Final) - Centered between M13 and M14 */}
+              <div className="flex flex-col min-h-[600px] relative w-[200px]">
+                {(() => {
+                  const match = getMatchById("round4-0");
+                  // M15 centered between M13(0) and M14(1)
+                  const matchHeight = 60; // Approximate height of a match box
+                  const spacing = 4;
+                  const totalMatchHeight = matchHeight + spacing;
+                  // Calculate M13 and M14 positions accounting for all previous offsets (same as Champion calculation)
+                  const m13Pos = 1 * totalMatchHeight + totalMatchHeight / 2;
+                  const m14Pos = 5 * totalMatchHeight + totalMatchHeight / 2;
+                  const m15Pos = (m13Pos + m14Pos) / 2;
+                  // M15 should be inline with Champion, which is at m15Pos + matchHeight / 2 + spacing
+                  const topPosition = m15Pos + matchHeight / 2 + spacing;
+                  return (
+                    <div
+                      className="w-[200px] border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all absolute"
+                      style={{ top: `${topPosition}px` }}
+                      onClick={() => handleMatchClick("round4-0")}
+                    >
+                      <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
+                        <div className="flex items-center">
+                          <div className="text-[18px] text-gray-700 font-medium">
+                            {matchNumbers.round4[0]}
                           </div>
-                          <div className="flex flex-col space-y-0 min-w-0 flex-1">
-                            <div
-                              className={`text-[18px] text-left py-[1px] pb-[1px] font-medium truncate px-1 leading-relaxed ${
-                                match?.winner === "player1"
-                                  ? "text-yellow-600 font-bold"
-                                  : "text-gray-800"
-                              }`}
-                              title={match?.player1?.name || "TBD"}
-                            >
-                              {match?.player1?.name || "TBD"}
-                            </div>
-                            <div
-                              className={`text-[18px] text-left py-[1px] pt-[1px] font-medium truncate px-1 leading-relaxed ${
-                                match?.winner === "player2"
-                                  ? "text-yellow-600 font-bold"
-                                  : "text-gray-800"
-                              }`}
-                              title={match?.player2?.name || "TBD"}
-                            >
-                              {match?.player2?.name || "TBD"}
-                            </div>
+                        </div>
+                        <div className="flex flex-col space-y-0 min-w-0 flex-1">
+                          <div
+                            className={`text-[18px] text-left py-px pb-px font-medium truncate px-1 leading-relaxed ${
+                              match?.winner === "player1"
+                                ? "text-yellow-600 font-bold"
+                                : "text-gray-800"
+                            }`}
+                            title={match?.player1?.name || "TBD"}
+                          >
+                            {match?.player1?.name || "TBD"}
                           </div>
-                          <div className="flex flex-col space-y-0">
-                            <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pb-0 sm:pb-[1px] leading-relaxed ${
-                                match?.winner === "player1"
-                                  ? "text-yellow-600"
-                                  : "text-gray-800"
-                              }`}
-                            >
-                              {match?.score1 || "-"}
-                            </div>
-                            <div
-                              className={`text-[18px] font-bold text-center py-0 sm:py-[1px] pt-0 sm:pt-[1px] leading-relaxed ${
-                                match?.winner === "player2"
-                                  ? "text-yellow-600"
-                                  : "text-gray-800"
-                              }`}
-                            >
-                              {match?.score2 || "-"}
-                            </div>
+                          <div
+                            className={`text-[18px] text-left py-px pt-px font-medium truncate px-1 leading-relaxed ${
+                              match?.winner === "player2"
+                                ? "text-yellow-600 font-bold"
+                                : "text-gray-800"
+                            }`}
+                            title={match?.player2?.name || "TBD"}
+                          >
+                            {match?.player2?.name || "TBD"}
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-0">
+                          <div
+                            className={`text-[18px] font-bold text-center py-0 sm:py-px pb-0 sm:pb-px leading-relaxed ${
+                              match?.winner === "player1"
+                                ? "text-yellow-600"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {match?.score1 || "-"}
+                          </div>
+                          <div
+                            className={`text-[18px] font-bold text-center py-0 sm:py-px pt-0 sm:pt-px leading-relaxed ${
+                              match?.winner === "player2"
+                                ? "text-yellow-600"
+                                : "text-gray-800"
+                            }`}
+                          >
+                            {match?.score2 || "-"}
                           </div>
                         </div>
                       </div>
-                    );
-                  })()}
-                </div>
+                    </div>
+                  );
+                })()}
               </div>
 
-              {/* Winner Rectangle */}
-              <div className="flex flex-col min-h-[250px]">
-                <div className="flex flex-col space-y-1 items-center justify-center flex-1">
-                  {(() => {
-                    const finalMatch = getMatchById("round4-0");
-                    const winner = finalMatch?.winner
-                      ? finalMatch.winner === "player1"
-                        ? finalMatch.player1
-                        : finalMatch.player2
-                      : null;
-                    return (
-                      <div className="w-56 border border-gray-300 bg-white px-1 py-[1px] flex items-center">
-                        <div className="text-[20px] font-bold text-gray-700 text-center leading-none">
-                          {winner?.name || "Champion"}
-                        </div>
+              {/* Winner Rectangle - Centered below M15 */}
+              <div className="flex flex-col min-h-[600px] relative w-[200px]">
+                {(() => {
+                  const finalMatch = getMatchById("round4-0");
+                  const winner = finalMatch?.winner
+                    ? finalMatch.winner === "player1"
+                      ? finalMatch.player1
+                      : finalMatch.player2
+                    : null;
+                  // M15 is centered between M13 and M14
+                  const matchHeight = 60; // Approximate height of a match box
+                  const spacing = 4;
+                  const totalMatchHeight = matchHeight + spacing;
+                  const m13Pos = 1 * totalMatchHeight + totalMatchHeight / 2;
+                  const m14Pos = 5 * totalMatchHeight + totalMatchHeight / 2;
+                  const m15Pos = (m13Pos + m14Pos) / 2;
+                  const topPosition = m15Pos + matchHeight / 2 + spacing + 20; // Push down by 20px
+                  return (
+                    <div
+                      className="w-[200px] border border-gray-300 bg-white px-1 py-[3px] flex items-center absolute"
+                      style={{ top: `${topPosition}px` }}
+                    >
+                      <div className="text-[20px] font-bold text-gray-700 text-center leading-none w-full">
+                        {winner?.name || "Champion"}
                       </div>
-                    );
-                  })()}
-                </div>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -1035,7 +1190,9 @@ const SixteenPlayerMatchPage = () => {
               <h3 className="text-lg font-bold text-gray-900">
                 {selectedMatch.matchNumber} -{" "}
                 {selectedMatch.round.charAt(0).toUpperCase() +
-                  selectedMatch.round.slice(1).replace(/round(\d)/i, (match, num) => `Round ${num}`)}
+                  selectedMatch.round
+                    .slice(1)
+                    .replace(/round(\d)/i, (match, num) => `Round ${num}`)}
               </h3>
               <div className="flex items-center gap-2">
                 {isManager && (
@@ -1293,5 +1450,3 @@ const SixteenPlayerMatchPage = () => {
 };
 
 export default SixteenPlayerMatchPage;
-
-

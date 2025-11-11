@@ -118,7 +118,9 @@ const ApaMatchPage = () => {
   const getPlayer1Placeholder = () => {
     if (player1?.id) {
       // Use hash of player ID to consistently pick a placeholder
-      const hash = player1.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const hash = player1.id
+        .split("")
+        .reduce((acc, char) => acc + char.charCodeAt(0), 0);
       const placeholderNum = (hash % 6) + 1;
       return `/avatar-placeholder-${placeholderNum}.svg`;
     }
@@ -128,7 +130,9 @@ const ApaMatchPage = () => {
   const getPlayer2Placeholder = () => {
     if (player2?.id) {
       // Use hash of player ID to consistently pick a placeholder
-      const hash = player2.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const hash = player2.id
+        .split("")
+        .reduce((acc, char) => acc + char.charCodeAt(0), 0);
       const placeholderNum = (hash % 6) + 1;
       return `/avatar-placeholder-${placeholderNum}.svg`;
     }
@@ -590,9 +594,15 @@ const ApaMatchPage = () => {
   const canSelectPlayers = isManager && !isLive;
 
   return (
-    <div className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden" style={{ backgroundImage: 'none', border: 'none', outline: 'none' }}>
+    <div
+      className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden"
+      style={{ backgroundImage: "none", border: "none", outline: "none" }}
+    >
       {/* 16:9 Aspect Ratio Container */}
-      <div className="w-full max-w-[1920px] aspect-video bg-transparent relative" style={{ backgroundImage: 'none', border: 'none', outline: 'none' }}>
+      <div
+        className="w-full max-w-[1920px] aspect-video bg-transparent relative"
+        style={{ backgroundImage: "none", border: "none", outline: "none" }}
+      >
         {/* Live Button - Centered at Top */}
         <div className="fixed top-[68px] sm:top-[76px] left-0 right-0 z-50 flex justify-center">
           <button
@@ -619,10 +629,14 @@ const ApaMatchPage = () => {
           {/* Game Mode Selector - Hidden when live */}
           {!isLive && (
             <div className="flex items-center space-x-2 mb-[50px]">
-              <span className="text-xs sm:text-sm font-medium text-gray-700">Mode:</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-700">
+                Mode:
+              </span>
               <select
                 value={gameMode}
-                onChange={(e) => handleGameModeChange(e.target.value as GameMode)}
+                onChange={(e) =>
+                  handleGameModeChange(e.target.value as GameMode)
+                }
                 className="px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="9-ball">9-ball</option>
@@ -677,12 +691,18 @@ const ApaMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
+            <div className="bg-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0 px-0.5" style={{ border: 'none', outline: 'none', gap: 0 }}>
+                <div
+                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-0 px-0.5"
+                  style={{ border: "none", outline: "none", gap: 0 }}
+                >
                   {/* Player 1 Group - Left */}
-                  <div className="flex items-center gap-0.5 min-w-0" style={{ border: 'none', outline: 'none' }}>
+                  <div
+                    className="flex items-center gap-0.5 min-w-0"
+                    style={{ border: "none", outline: "none" }}
+                  >
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -719,7 +739,10 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div className="flex items-center gap-0 justify-center shrink-0" style={{ border: 'none', outline: 'none' }}>
+                  <div
+                    className="flex items-center gap-0 justify-center shrink-0"
+                    style={{ border: "none", outline: "none" }}
+                  >
                     {/* Left Arrow - Turn Indicator for Player 1 */}
                     <svg
                       className={`w-9 h-9 shrink-0 -mr-2 ${
@@ -763,7 +786,10 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div className="flex items-center gap-0.5 min-w-0 justify-end" style={{ border: 'none', outline: 'none' }}>
+                  <div
+                    className="flex items-center gap-0.5 min-w-0 justify-end"
+                    style={{ border: "none", outline: "none" }}
+                  >
                     <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
                       {getPlayer2Name()}
                     </div>
@@ -803,11 +829,17 @@ const ApaMatchPage = () => {
 
               {/* Desktop Layout */}
               <div className="hidden sm:block relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
+                <div className="absolute inset-0 bg-transparent"></div>
                 <div className="relative z-10">
-                  <div className="grid grid-cols-3 items-center gap-0" style={{ border: 'none', outline: 'none', gap: 0 }}>
+                  <div
+                    className="grid grid-cols-3 items-center gap-0"
+                    style={{ border: "none", outline: "none", gap: 0 }}
+                  >
                     {/* Player 1 Group - Extreme Left */}
-                    <div className="flex items-center gap-4 justify-start" style={{ border: 'none', outline: 'none' }}>
+                    <div
+                      className="flex items-center gap-4 justify-start"
+                      style={{ border: "none", outline: "none" }}
+                    >
                       <button
                         onClick={() =>
                           canSelectPlayers && setShowPlayer1Modal(true)
@@ -844,7 +876,10 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Center Group - Scores and Race */}
-                    <div className="flex items-center gap-2 justify-center" style={{ border: 'none', outline: 'none' }}>
+                    <div
+                      className="flex items-center gap-2 justify-center"
+                      style={{ border: "none", outline: "none" }}
+                    >
                       {/* Left Arrow - Turn Indicator for Player 1 */}
                       <svg
                         className={`w-[72px] h-[72px] shrink-0 -mr-4 ${
@@ -888,7 +923,10 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Player 2 Group - Extreme Right */}
-                    <div className="flex items-center gap-4 justify-end" style={{ border: 'none', outline: 'none' }}>
+                    <div
+                      className="flex items-center gap-4 justify-end"
+                      style={{ border: "none", outline: "none" }}
+                    >
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>
@@ -1053,4 +1091,3 @@ const ApaMatchPage = () => {
 };
 
 export default ApaMatchPage;
-

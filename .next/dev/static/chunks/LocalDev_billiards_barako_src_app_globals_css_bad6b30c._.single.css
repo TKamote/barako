@@ -40,6 +40,7 @@
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-outline-style: solid;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;
@@ -493,16 +494,16 @@
     top: calc(var(--spacing) * 0);
   }
 
-  .top-2 {
-    top: calc(var(--spacing) * 2);
-  }
-
   .top-16 {
     top: calc(var(--spacing) * 16);
   }
 
   .top-32 {
     top: calc(var(--spacing) * 32);
+  }
+
+  .top-\[68px\] {
+    top: 68px;
   }
 
   .right-0 {
@@ -683,6 +684,10 @@
     margin-bottom: calc(var(--spacing) * 8);
   }
 
+  .mb-\[10px\] {
+    margin-bottom: 10px;
+  }
+
   .mb-\[50px\] {
     margin-bottom: 50px;
   }
@@ -693,10 +698,6 @@
 
   .-ml-4 {
     margin-left: calc(var(--spacing) * -4);
-  }
-
-  .ml-4 {
-    margin-left: calc(var(--spacing) * 4);
   }
 
   .box-border {
@@ -717,6 +718,10 @@
 
   .hidden {
     display: none;
+  }
+
+  .inline {
+    display: inline;
   }
 
   .inline-block {
@@ -807,6 +812,10 @@
     min-height: 300px;
   }
 
+  .min-h-\[600px\] {
+    min-height: 600px;
+  }
+
   .min-h-screen {
     min-height: 100vh;
   }
@@ -847,6 +856,10 @@
     width: calc(var(--spacing) * 24);
   }
 
+  .w-50 {
+    width: calc(var(--spacing) * 50);
+  }
+
   .w-56 {
     width: calc(var(--spacing) * 56);
   }
@@ -865,6 +878,10 @@
 
   .w-\[94px\] {
     width: 94px;
+  }
+
+  .w-\[200px\] {
+    width: 200px;
   }
 
   .w-full {
@@ -1068,6 +1085,18 @@
     margin-inline-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-x-reverse)));
   }
 
+  :where(.space-x-\[41px\] > :not(:last-child)) {
+    --tw-space-x-reverse: 0;
+    margin-inline-start: calc(41px * var(--tw-space-x-reverse));
+    margin-inline-end: calc(41px * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  :where(.space-x-\[46px\] > :not(:last-child)) {
+    --tw-space-x-reverse: 0;
+    margin-inline-start: calc(46px * var(--tw-space-x-reverse));
+    margin-inline-end: calc(46px * calc(1 - var(--tw-space-x-reverse)));
+  }
+
   .gap-y-0 {
     row-gap: calc(var(--spacing) * 0);
   }
@@ -1166,11 +1195,6 @@
   .border-b-2 {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 2px;
-  }
-
-  .border-l {
-    border-left-style: var(--tw-border-style);
-    border-left-width: 1px;
   }
 
   .border-l-4 {
@@ -1286,6 +1310,10 @@
 
   .bg-orange-100 {
     background-color: var(--color-orange-100);
+  }
+
+  .bg-purple-950 {
+    background-color: var(--color-purple-950);
   }
 
   .bg-red-500 {
@@ -1534,6 +1562,14 @@
     padding-block: 1px;
   }
 
+  .py-\[3px\] {
+    padding-block: 3px;
+  }
+
+  .py-px {
+    padding-block: 1px;
+  }
+
   .pt-0 {
     padding-top: calc(var(--spacing) * 0);
   }
@@ -1550,7 +1586,7 @@
     padding-top: calc(var(--spacing) * 4);
   }
 
-  .pt-\[1px\] {
+  .pt-\[1px\], .pt-px {
     padding-top: 1px;
   }
 
@@ -1578,16 +1614,12 @@
     padding-bottom: calc(var(--spacing) * 3);
   }
 
-  .pb-\[1px\] {
+  .pb-\[1px\], .pb-px {
     padding-bottom: 1px;
   }
 
   .pl-3 {
     padding-left: calc(var(--spacing) * 3);
-  }
-
-  .pl-4 {
-    padding-left: calc(var(--spacing) * 4);
   }
 
   .text-center {
@@ -1841,6 +1873,11 @@
   .shadow-sm {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .outline {
+    outline-style: var(--tw-outline-style);
+    outline-width: 1px;
   }
 
   .filter {
@@ -2124,14 +2161,14 @@
   }
 
   @media (min-width: 40rem) {
-    .sm\:top-4 {
-      top: calc(var(--spacing) * 4);
+    .sm\:top-20 {
+      top: calc(var(--spacing) * 20);
     }
   }
 
   @media (min-width: 40rem) {
-    .sm\:top-20 {
-      top: calc(var(--spacing) * 20);
+    .sm\:top-\[76px\] {
+      top: 76px;
     }
   }
 
@@ -2280,12 +2317,6 @@
   }
 
   @media (min-width: 40rem) {
-    .sm\:flex-col {
-      flex-direction: column;
-    }
-  }
-
-  @media (min-width: 40rem) {
     .sm\:flex-row {
       flex-direction: row;
     }
@@ -2294,12 +2325,6 @@
   @media (min-width: 40rem) {
     .sm\:items-center {
       align-items: center;
-    }
-  }
-
-  @media (min-width: 40rem) {
-    .sm\:items-end {
-      align-items: flex-end;
     }
   }
 
@@ -2350,14 +2375,6 @@
   }
 
   @media (min-width: 40rem) {
-    :where(.sm\:space-y-4 > :not(:last-child)) {
-      --tw-space-y-reverse: 0;
-      margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
-      margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
-    }
-  }
-
-  @media (min-width: 40rem) {
     .sm\:gap-x-2 {
       column-gap: calc(var(--spacing) * 2);
     }
@@ -2386,12 +2403,6 @@
   @media (min-width: 40rem) {
     .sm\:p-3 {
       padding: calc(var(--spacing) * 3);
-    }
-  }
-
-  @media (min-width: 40rem) {
-    .sm\:p-4 {
-      padding: calc(var(--spacing) * 4);
     }
   }
 
@@ -2462,13 +2473,31 @@
   }
 
   @media (min-width: 40rem) {
+    .sm\:py-px {
+      padding-block: 1px;
+    }
+  }
+
+  @media (min-width: 40rem) {
     .sm\:pt-\[1px\] {
       padding-top: 1px;
     }
   }
 
   @media (min-width: 40rem) {
+    .sm\:pt-px {
+      padding-top: 1px;
+    }
+  }
+
+  @media (min-width: 40rem) {
     .sm\:pb-\[1px\] {
+      padding-bottom: 1px;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .sm\:pb-px {
       padding-bottom: 1px;
     }
   }
@@ -2845,6 +2874,12 @@ button, a, input, select, textarea {
   syntax: "*";
   inherits: false;
   initial-value: 0 0 #0000;
+}
+
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
 }
 
 @property --tw-blur {

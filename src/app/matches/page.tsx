@@ -2031,17 +2031,17 @@ const MatchesPage = () => {
                     Score 1
                   </label>
                   <div className="flex items-center gap-1">
-                    <input
-                      type="number"
-                      min="0"
-                      max={raceTo}
+                  <input
+                    type="number"
+                    min="0"
+                    max={raceTo}
                       className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
-                      value={score1}
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value) || 0;
-                        setScore1(Math.min(val, raceTo));
-                      }}
-                    />
+                    value={score1}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 0;
+                      setScore1(Math.min(val, raceTo));
+                    }}
+                  />
                     <div className="flex flex-col">
                       <button
                         type="button"
@@ -2076,17 +2076,17 @@ const MatchesPage = () => {
                     Score 2
                   </label>
                   <div className="flex items-center gap-1">
-                    <input
-                      type="number"
-                      min="0"
-                      max={raceTo}
+                  <input
+                    type="number"
+                    min="0"
+                    max={raceTo}
                       className="flex-1 border border-gray-300 rounded-md px-3 py-1.5 text-gray-900"
-                      value={score2}
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value) || 0;
-                        setScore2(Math.min(val, raceTo));
-                      }}
-                    />
+                    value={score2}
+                    onChange={(e) => {
+                      const val = parseInt(e.target.value) || 0;
+                      setScore2(Math.min(val, raceTo));
+                    }}
+                  />
                     <div className="flex flex-col">
                       <button
                         type="button"
