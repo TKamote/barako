@@ -780,10 +780,6 @@
     margin-bottom: 10px;
   }
 
-  .mb-\[50px\] {
-    margin-bottom: 50px;
-  }
-
   .-ml-2 {
     margin-left: calc(var(--spacing) * -2);
   }
@@ -2048,12 +2044,6 @@
   @media (hover: hover) {
     .hover\:border-gray-300:hover {
       border-color: var(--color-gray-300);
-    }
-  }
-
-  @media (hover: hover) {
-    .hover\:border-gray-400:hover {
-      border-color: var(--color-gray-400);
     }
   }
 

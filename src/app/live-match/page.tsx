@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { useLive } from "@/contexts/LiveContext";
+import { useLive, GameMode } from "@/contexts/LiveContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";

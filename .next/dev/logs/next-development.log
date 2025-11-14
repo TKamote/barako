@@ -1,29 +1,5 @@
-[00:00:00.991] Server  LOG      ✓ Ready in 716ms
-[00:00:04.282] Server  LOG      ○ Compiling /home ...
-[00:00:20.059] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:22.814] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:01:35.014] Server  LOG      ✓ Compiled in 474ms
-[00:01:35.031] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./LocalDev/billiards/barako/src/contexts/LiveContext.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-[00:01:46.511] Server  LOG      ✓ Compiled in 119ms
-[00:02:36.535] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:02:40.371] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:02:42.916] Browser ERROR   Error loading match data: {}
-[00:02:42.916] Browser ERROR   Error loading match data: {}
-[00:02:43.003] Browser ERROR   Error loading match data: {}
-[00:02:43.287] Browser WARN    Image with src "/FinancialP.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:02:43.288] Browser WARN    Image with src "/Sponsor.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:02:44.806] Browser ERROR   unhandledRejection: TypeError: setGlobalIsLive is not a function
-[00:02:47.639] Browser ERROR   unhandledRejection: TypeError: setGlobalIsLive is not a function
-[00:02:48.615] Browser ERROR   unhandledRejection: TypeError: setGlobalIsLive is not a function
-[00:02:51.362] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:02:51.362] Browser WARN    Image with src "/Sponsor.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:02:51.362] Browser WARN    Image with src "/FinancialP.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:02:51.672] Browser ERROR   Error loading match data: {}
-[00:02:51.672] Browser ERROR   Error loading match data: {}
-[00:03:44.064] Server  LOG      ✓ Compiled in 338ms
-[00:03:52.246] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:03:52.247] Browser WARN    Image with src "/Sponsor.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:03:52.247] Browser WARN    Image with src "/FinancialP.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:04:46.536] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:04:46.536] Browser WARN    Image with src "/Sponsor.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:04:46.536] Browser WARN    Image with src "/FinancialP.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:01.378] Server  LOG      ✓ Ready in 1050ms
+[00:00:08.430] Server  LOG      ○ Compiling / ...
+[00:00:13.574] Browser WARN    Image with src "/favicon.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:17.722] Browser WARN    Image with src "/FinancialP.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:17.888] Browser WARN    Image with src "/Sponsor.jpeg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
