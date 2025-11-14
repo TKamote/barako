@@ -3,12 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useLive } from "@/contexts/LiveContext";
+import { useLive, GameMode } from "@/contexts/LiveContext";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const pathname = usePathname();
-  const { isLive } = useLive();
+  const { isLive, gameMode, setGameMode } = useLive();
+  const { isManager } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Don't render navigation when live
@@ -91,6 +93,25 @@ const Navigation = () => {
             })}
           </div>
 
+          {/* Game Mode Selector - Desktop */}
+          {pathname === "/live-match" && isManager && !isLive && (
+            <div className="hidden sm:flex items-center ml-auto space-x-2">
+              {(["9-ball", "10-ball", "15-ball"] as GameMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setGameMode(mode)}
+                  className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+                    gameMode === mode
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                  }`}
+                >
+                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Mobile menu button */}
           <div className="sm:hidden flex items-center">
             <button
@@ -157,6 +178,33 @@ const Navigation = () => {
               );
             })}
           </div>
+
+          {/* Game Mode Selector - Mobile */}
+          {pathname === "/live-match" && isManager && !isLive && (
+            <div className="px-4 py-3 border-t border-gray-200">
+              <p className="text-sm font-medium text-gray-500 mb-2">Game Mode</p>
+              <div className="flex items-center space-x-2">
+                {(["9-ball", "10-ball", "15-ball"] as GameMode[]).map(
+                  (mode) => (
+                    <button
+                      key={mode}
+                      onClick={() => {
+                        setGameMode(mode);
+                        setIsMobileMenuOpen(false); // Close menu on selection
+                      }}
+                      className={`flex-1 px-3 py-2 text-sm font-medium rounded-md text-center transition-colors ${
+                        gameMode === mode
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                      }`}
+                    >
+                      {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>

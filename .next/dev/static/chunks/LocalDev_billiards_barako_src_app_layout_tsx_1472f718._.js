@@ -6,7 +6,7 @@
   "static/chunks/81901_@firebase_firestore_dist_index_esm_5d346810.js",
   "static/chunks/81901_@firebase_auth_dist_esm_f12475b8._.js",
   "static/chunks/81901_1f8072c8._.js",
-  "static/chunks/LocalDev_billiards_barako_src_2467c96a._.js"
+  "static/chunks/LocalDev_billiards_barako_src_70a8e0f2._.js"
 ],
     source: "dynamic"
 });
