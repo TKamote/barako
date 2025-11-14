@@ -7,7 +7,7 @@ const StandbyPage = () => {
   const [selectedStartTime, setSelectedStartTime] = useState("20:00"); // 8:00 PM
   const [timeLeft, setTimeLeft] = useState(0); // seconds
   const [isRunning, setIsRunning] = useState(false);
-  const { setIsLive } = useLive();
+  const { setStandbyIsLive } = useLive();
 
   // Generate start time options (24-hour cycle in 30-minute intervals)
   const timeOptions = [];
@@ -107,7 +107,7 @@ const StandbyPage = () => {
 
     setTimeLeft(timeUntilStart);
     setIsRunning(true);
-    setIsLive(true); // Hide navigation bar for OBS streaming
+    setStandbyIsLive(true); // Hide navigation bar for OBS streaming
 
     // Save to localStorage
     localStorage.setItem("standby-start-time", selectedStartTime);
@@ -118,12 +118,14 @@ const StandbyPage = () => {
 
   const stopTimer = () => {
     setIsRunning(false);
+    setStandbyIsLive(false); // Show navigation again
     localStorage.setItem("standby-is-running", "false");
   };
 
   const resetTimer = () => {
     setIsRunning(false);
     setTimeLeft(0);
+    setStandbyIsLive(false); // Ensure nav is visible on reset
 
     // Clear localStorage
     localStorage.removeItem("standby-start-time");

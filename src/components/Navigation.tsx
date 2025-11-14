@@ -9,12 +9,19 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const pathname = usePathname();
-  const { liveMatchIsLive, apaMatchIsLive, gameMode, setGameMode } = useLive();
+  const {
+    liveMatchIsLive,
+    apaMatchIsLive,
+    standbyIsLive,
+    gameMode,
+    setGameMode,
+  } = useLive();
   const { isManager } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Hide nav only on a live match page when that match is live
+  // Hide nav if the standby page is live, or if on a live match page when that match is live
   const shouldHideNav =
+    standbyIsLive ||
     (pathname === "/live-match" && liveMatchIsLive) ||
     (pathname === "/apa-match" && apaMatchIsLive);
 
