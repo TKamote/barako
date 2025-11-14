@@ -982,6 +982,18 @@ const LiveMatchPage = () => {
               objectFit: "contain",
             }}
           />
+          <Image
+            src="/FinancialP.jpeg"
+            alt="FinancialP"
+            width={156}
+            height={156}
+            className="mt-5"
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+              objectFit: "contain",
+            }}
+          />
         </div>
 
         {/* Mobile Logo - Top Right */}
@@ -1001,6 +1013,18 @@ const LiveMatchPage = () => {
           <Image
             src="/Sponsor.jpeg"
             alt="Sponsor"
+            width={94}
+            height={94}
+            className="w-[94px] h-[94px] mt-5"
+            style={{
+              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
+              borderRadius: "10px",
+              objectFit: "contain",
+            }}
+          />
+          <Image
+            src="/FinancialP.jpeg"
+            alt="FinancialP"
             width={94}
             height={94}
             className="w-[94px] h-[94px] mt-5"

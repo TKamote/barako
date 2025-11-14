@@ -1,5 +1,5 @@
 {
-  "/16p-match/page": "app/16p-match/page.js",
   "/home/page": "app/home/page.js",
+  "/live-match/page": "app/live-match/page.js",
   "/page": "app/page.js"
 }

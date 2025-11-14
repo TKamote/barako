@@ -380,7 +380,7 @@ const SixteenPlayerMatchPage = () => {
         alert(reason || "This match cannot be edited at this time.");
         return;
       }
-
+      
       setSelectedMatch(match);
       setSelectedPlayer1(match.player1?.id || "");
       setSelectedPlayer2(match.player2?.id || "");
@@ -714,9 +714,9 @@ const SixteenPlayerMatchPage = () => {
         if (updatedMatch.round === "round4") {
           alert(`🏆 TOURNAMENT COMPLETE! 🏆\n\n${winnerName} is the CHAMPION!`);
         } else {
-          alert(
-            `Match completed! ${winnerName} wins!\n\nPlayers have been automatically advanced to the next round.`
-          );
+        alert(
+          `Match completed! ${winnerName} wins!\n\nPlayers have been automatically advanced to the next round.`
+        );
         }
 
         // Reload matches to show updated bracket
@@ -905,8 +905,8 @@ const SixteenPlayerMatchPage = () => {
 
               {/* Column 2: Round 2 (4 matches) - Centered between pairs */}
               <div className="flex flex-col min-h-[600px] relative w-[200px]">
-                {matchNumbers.round2.map((matchId, index) => {
-                  const match = getMatchById(`round2-${index}`);
+                  {matchNumbers.round2.map((matchId, index) => {
+                    const match = getMatchById(`round2-${index}`);
                   // Calculate position: M9 centered between M1(0) and M2(1), M10 between M3(2) and M4(3), etc.
                   // Each match box is approximately 60px tall with 4px spacing (space-y-1)
                   const matchHeight = 60; // Approximate height of a match box (includes border, padding, text)
@@ -921,71 +921,71 @@ const SixteenPlayerMatchPage = () => {
                     firstMatchIndex * totalMatchHeight +
                     totalMatchHeight / 2 +
                     matchHeight / 2; // Push down by half match box height
-                  return (
-                    <div
-                      key={index}
+                    return (
+                      <div
+                        key={index}
                       className="w-[200px] border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all absolute"
                       style={{ top: `${topPosition}px` }}
-                      onClick={() => handleMatchClick(`round2-${index}`)}
-                    >
-                      <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
-                        <div className="flex items-center">
-                          <div className="text-[18px] text-gray-700 font-medium">
-                            {matchId}
+                        onClick={() => handleMatchClick(`round2-${index}`)}
+                      >
+                        <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
+                          <div className="flex items-center">
+                            <div className="text-[18px] text-gray-700 font-medium">
+                              {matchId}
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col space-y-0 min-w-0 flex-1">
-                          <div
+                          <div className="flex flex-col space-y-0 min-w-0 flex-1">
+                            <div
                             className={`text-[18px] text-left py-px pb-px font-medium truncate px-1 leading-relaxed ${
-                              match?.winner === "player1"
-                                ? "text-yellow-600 font-bold"
-                                : "text-gray-800"
-                            }`}
-                            title={match?.player1?.name || "TBD"}
-                          >
-                            {match?.player1?.name || "TBD"}
-                          </div>
-                          <div
+                                match?.winner === "player1"
+                                  ? "text-yellow-600 font-bold"
+                                  : "text-gray-800"
+                              }`}
+                              title={match?.player1?.name || "TBD"}
+                            >
+                              {match?.player1?.name || "TBD"}
+                            </div>
+                            <div
                             className={`text-[18px] text-left py-px pt-px font-medium truncate px-1 leading-relaxed ${
-                              match?.winner === "player2"
-                                ? "text-yellow-600 font-bold"
-                                : "text-gray-800"
-                            }`}
-                            title={match?.player2?.name || "TBD"}
-                          >
-                            {match?.player2?.name || "TBD"}
+                                match?.winner === "player2"
+                                  ? "text-yellow-600 font-bold"
+                                  : "text-gray-800"
+                              }`}
+                              title={match?.player2?.name || "TBD"}
+                            >
+                              {match?.player2?.name || "TBD"}
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col space-y-0">
-                          <div
+                          <div className="flex flex-col space-y-0">
+                            <div
                             className={`text-[18px] font-bold text-center py-0 sm:py-px pb-0 sm:pb-px leading-relaxed ${
-                              match?.winner === "player1"
-                                ? "text-yellow-600"
-                                : "text-gray-800"
-                            }`}
-                          >
-                            {match?.score1 || "-"}
-                          </div>
-                          <div
+                                match?.winner === "player1"
+                                  ? "text-yellow-600"
+                                  : "text-gray-800"
+                              }`}
+                            >
+                              {match?.score1 || "-"}
+                            </div>
+                            <div
                             className={`text-[18px] font-bold text-center py-0 sm:py-px pt-0 sm:pt-px leading-relaxed ${
-                              match?.winner === "player2"
-                                ? "text-yellow-600"
-                                : "text-gray-800"
-                            }`}
-                          >
-                            {match?.score2 || "-"}
+                                match?.winner === "player2"
+                                  ? "text-yellow-600"
+                                  : "text-gray-800"
+                              }`}
+                            >
+                              {match?.score2 || "-"}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
 
               {/* Column 3: Round 3 (2 matches) - Centered between pairs */}
               <div className="flex flex-col min-h-[600px] relative w-[200px]">
-                {matchNumbers.round3.map((matchId, index) => {
-                  const match = getMatchById(`round3-${index}`);
+                  {matchNumbers.round3.map((matchId, index) => {
+                    const match = getMatchById(`round3-${index}`);
                   // M13 centered between M9(0) and M10(1), M14 between M11(2) and M12(3)
                   const matchHeight = 60; // Approximate height of a match box
                   const spacing = 4;
@@ -1013,71 +1013,71 @@ const SixteenPlayerMatchPage = () => {
                   if (index === 1) {
                     topPosition += matchHeight * 2.0;
                   }
-                  return (
-                    <div
-                      key={index}
+                    return (
+                      <div
+                        key={index}
                       className="w-[200px] border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all absolute"
                       style={{ top: `${topPosition}px` }}
-                      onClick={() => handleMatchClick(`round3-${index}`)}
-                    >
-                      <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
-                        <div className="flex items-center">
-                          <div className="text-[18px] text-gray-700 font-medium">
-                            {matchId}
+                        onClick={() => handleMatchClick(`round3-${index}`)}
+                      >
+                        <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
+                          <div className="flex items-center">
+                            <div className="text-[18px] text-gray-700 font-medium">
+                              {matchId}
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col space-y-0 min-w-0 flex-1">
-                          <div
+                          <div className="flex flex-col space-y-0 min-w-0 flex-1">
+                            <div
                             className={`text-[18px] text-left py-px pb-px font-medium truncate px-1 leading-relaxed ${
-                              match?.winner === "player1"
-                                ? "text-yellow-600 font-bold"
-                                : "text-gray-800"
-                            }`}
-                            title={match?.player1?.name || "TBD"}
-                          >
-                            {match?.player1?.name || "TBD"}
-                          </div>
-                          <div
+                                match?.winner === "player1"
+                                  ? "text-yellow-600 font-bold"
+                                  : "text-gray-800"
+                              }`}
+                              title={match?.player1?.name || "TBD"}
+                            >
+                              {match?.player1?.name || "TBD"}
+                            </div>
+                            <div
                             className={`text-[18px] text-left py-px pt-px font-medium truncate px-1 leading-relaxed ${
-                              match?.winner === "player2"
-                                ? "text-yellow-600 font-bold"
-                                : "text-gray-800"
-                            }`}
-                            title={match?.player2?.name || "TBD"}
-                          >
-                            {match?.player2?.name || "TBD"}
+                                match?.winner === "player2"
+                                  ? "text-yellow-600 font-bold"
+                                  : "text-gray-800"
+                              }`}
+                              title={match?.player2?.name || "TBD"}
+                            >
+                              {match?.player2?.name || "TBD"}
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col space-y-0">
-                          <div
+                          <div className="flex flex-col space-y-0">
+                            <div
                             className={`text-[18px] font-bold text-center py-0 sm:py-px pb-0 sm:pb-px leading-relaxed ${
-                              match?.winner === "player1"
-                                ? "text-yellow-600"
-                                : "text-gray-800"
-                            }`}
-                          >
-                            {match?.score1 || "-"}
-                          </div>
-                          <div
+                                match?.winner === "player1"
+                                  ? "text-yellow-600"
+                                  : "text-gray-800"
+                              }`}
+                            >
+                              {match?.score1 || "-"}
+                            </div>
+                            <div
                             className={`text-[18px] font-bold text-center py-0 sm:py-px pt-0 sm:pt-px leading-relaxed ${
-                              match?.winner === "player2"
-                                ? "text-yellow-600"
-                                : "text-gray-800"
-                            }`}
-                          >
-                            {match?.score2 || "-"}
+                                match?.winner === "player2"
+                                  ? "text-yellow-600"
+                                  : "text-gray-800"
+                              }`}
+                            >
+                              {match?.score2 || "-"}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
 
               {/* Column 4: Round 4 (1 match - Final) - Centered between M13 and M14 */}
               <div className="flex flex-col min-h-[600px] relative w-[200px]">
-                {(() => {
-                  const match = getMatchById("round4-0");
+                  {(() => {
+                    const match = getMatchById("round4-0");
                   // M15 centered between M13(0) and M14(1)
                   const matchHeight = 60; // Approximate height of a match box
                   const spacing = 4;
@@ -1088,75 +1088,75 @@ const SixteenPlayerMatchPage = () => {
                   const m15Pos = (m13Pos + m14Pos) / 2;
                   // M15 should be inline with Champion, which is at m15Pos + matchHeight / 2 + spacing
                   const topPosition = m15Pos + matchHeight / 2 + spacing;
-                  return (
-                    <div
+                    return (
+                      <div
                       className="w-[200px] border border-gray-300 bg-white px-0 sm:px-1 py-0 sm:py-px cursor-pointer hover:border-blue-500 hover:shadow-md transition-all absolute"
                       style={{ top: `${topPosition}px` }}
-                      onClick={() => handleMatchClick("round4-0")}
-                    >
-                      <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
-                        <div className="flex items-center">
-                          <div className="text-[18px] text-gray-700 font-medium">
-                            {matchNumbers.round4[0]}
+                        onClick={() => handleMatchClick("round4-0")}
+                      >
+                        <div className="grid grid-cols-[1fr_3fr_1fr] gap-x-0 sm:gap-x-2 gap-y-0">
+                          <div className="flex items-center">
+                            <div className="text-[18px] text-gray-700 font-medium">
+                              {matchNumbers.round4[0]}
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col space-y-0 min-w-0 flex-1">
-                          <div
+                          <div className="flex flex-col space-y-0 min-w-0 flex-1">
+                            <div
                             className={`text-[18px] text-left py-px pb-px font-medium truncate px-1 leading-relaxed ${
-                              match?.winner === "player1"
-                                ? "text-yellow-600 font-bold"
-                                : "text-gray-800"
-                            }`}
-                            title={match?.player1?.name || "TBD"}
-                          >
-                            {match?.player1?.name || "TBD"}
-                          </div>
-                          <div
+                                match?.winner === "player1"
+                                  ? "text-yellow-600 font-bold"
+                                  : "text-gray-800"
+                              }`}
+                              title={match?.player1?.name || "TBD"}
+                            >
+                              {match?.player1?.name || "TBD"}
+                            </div>
+                            <div
                             className={`text-[18px] text-left py-px pt-px font-medium truncate px-1 leading-relaxed ${
-                              match?.winner === "player2"
-                                ? "text-yellow-600 font-bold"
-                                : "text-gray-800"
-                            }`}
-                            title={match?.player2?.name || "TBD"}
-                          >
-                            {match?.player2?.name || "TBD"}
+                                match?.winner === "player2"
+                                  ? "text-yellow-600 font-bold"
+                                  : "text-gray-800"
+                              }`}
+                              title={match?.player2?.name || "TBD"}
+                            >
+                              {match?.player2?.name || "TBD"}
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col space-y-0">
-                          <div
+                          <div className="flex flex-col space-y-0">
+                            <div
                             className={`text-[18px] font-bold text-center py-0 sm:py-px pb-0 sm:pb-px leading-relaxed ${
-                              match?.winner === "player1"
-                                ? "text-yellow-600"
-                                : "text-gray-800"
-                            }`}
-                          >
-                            {match?.score1 || "-"}
-                          </div>
-                          <div
+                                match?.winner === "player1"
+                                  ? "text-yellow-600"
+                                  : "text-gray-800"
+                              }`}
+                            >
+                              {match?.score1 || "-"}
+                            </div>
+                            <div
                             className={`text-[18px] font-bold text-center py-0 sm:py-px pt-0 sm:pt-px leading-relaxed ${
-                              match?.winner === "player2"
-                                ? "text-yellow-600"
-                                : "text-gray-800"
-                            }`}
-                          >
-                            {match?.score2 || "-"}
+                                match?.winner === "player2"
+                                  ? "text-yellow-600"
+                                  : "text-gray-800"
+                              }`}
+                            >
+                              {match?.score2 || "-"}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })()}
+                    );
+                  })()}
               </div>
 
               {/* Winner Rectangle - Centered below M15 */}
               <div className="flex flex-col min-h-[600px] relative w-[200px]">
-                {(() => {
-                  const finalMatch = getMatchById("round4-0");
-                  const winner = finalMatch?.winner
-                    ? finalMatch.winner === "player1"
-                      ? finalMatch.player1
-                      : finalMatch.player2
-                    : null;
+                  {(() => {
+                    const finalMatch = getMatchById("round4-0");
+                    const winner = finalMatch?.winner
+                      ? finalMatch.winner === "player1"
+                        ? finalMatch.player1
+                        : finalMatch.player2
+                      : null;
                   // M15 is centered between M13 and M14
                   const matchHeight = 60; // Approximate height of a match box
                   const spacing = 4;
@@ -1165,17 +1165,17 @@ const SixteenPlayerMatchPage = () => {
                   const m14Pos = 5 * totalMatchHeight + totalMatchHeight / 2;
                   const m15Pos = (m13Pos + m14Pos) / 2;
                   const topPosition = m15Pos + matchHeight / 2 + spacing + 20; // Push down by 20px
-                  return (
+                    return (
                     <div
                       className="w-[200px] border border-gray-300 bg-white px-1 py-[3px] flex items-center absolute"
                       style={{ top: `${topPosition}px` }}
                     >
                       <div className="text-[20px] font-bold text-gray-700 text-center leading-none w-full">
-                        {winner?.name || "Champion"}
+                          {winner?.name || "Champion"}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })()}
+                    );
+                  })()}
               </div>
             </div>
           </div>
