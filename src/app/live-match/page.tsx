@@ -45,12 +45,7 @@ const BilliardsBall = ({
 );
 
 const LiveMatchPage = () => {
-  const {
-    isLive: globalIsLive,
-    setIsLive: setGlobalIsLive,
-    gameMode,
-    setGameMode,
-  } = useLive();
+  const { gameMode, setGameMode } = useLive();
   const { isManager } = useAuth();
 
   // Local state for this page, except for gameMode which is now global
@@ -83,7 +78,7 @@ const LiveMatchPage = () => {
   const RESET_TIMEOUT = 500; // 500ms window for double-press
 
   // Determine ball numbers based on game mode
-  const getBallNumbers = (mode: string): number[] => {
+  const getBallNumbers = (mode: GameMode): number[] => {
     switch (mode) {
       case "9-ball":
         return [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -262,10 +257,9 @@ const LiveMatchPage = () => {
             setGameMode(matchData.gameMode);
           }
 
-          // Restore isLive
+          // Restore isLive - This page only cares about its local state now
           if (matchData.isLive !== undefined) {
             setIsLive(matchData.isLive);
-            setGlobalIsLive(matchData.isLive);
           }
         }
       } catch (error) {
@@ -276,7 +270,7 @@ const LiveMatchPage = () => {
     };
 
     loadMatchData();
-  }, [players, setGlobalIsLive, setGameMode]);
+  }, [players, setGameMode]);
 
   // Update player objects when players array loads
   useEffect(() => {
@@ -379,7 +373,6 @@ const LiveMatchPage = () => {
   const handleLiveToggle = async () => {
     const newIsLive = !isLive;
     setIsLive(newIsLive);
-    setGlobalIsLive(newIsLive);
     try {
       const matchDocRef = doc(db, "current_match", "live");
       await setDoc(
@@ -392,24 +385,6 @@ const LiveMatchPage = () => {
       );
     } catch (error) {
       console.error("Error saving live status:", error);
-    }
-  };
-
-  // Handle game mode change
-  const handleGameModeChange = async (newMode: string) => {
-    setGameMode(newMode);
-    try {
-      const matchDocRef = doc(db, "current_match", "live");
-      await setDoc(
-        matchDocRef,
-        {
-          gameMode: newMode,
-          updatedAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-    } catch (error) {
-      console.error("Error saving game mode:", error);
     }
   };
 

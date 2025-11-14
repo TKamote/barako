@@ -7,8 +7,8 @@ import { db } from "@/lib/firebase";
 export type GameMode = "9-ball" | "10-ball" | "15-ball";
 
 interface LiveContextType {
-  isLive: boolean;
-  setIsLive: (isLive: boolean) => void;
+  liveMatchIsLive: boolean;
+  apaMatchIsLive: boolean;
   gameMode: GameMode;
   setGameMode: (gameMode: GameMode) => void;
 }
@@ -16,39 +16,27 @@ interface LiveContextType {
 const LiveContext = createContext<LiveContextType | undefined>(undefined);
 
 export const LiveProvider = ({ children }: { children: ReactNode }) => {
-  const [isLive, setIsLive] = useState(false);
+  const [liveMatchIsLive, setLiveMatchIsLive] = useState(false);
+  const [apaMatchIsLive, setApaMatchIsLive] = useState(false);
   const [gameMode, setGameMode] = useState<GameMode>("9-ball");
 
   // Listen to both match documents to determine if either is live
   useEffect(() => {
-    let liveMatchIsLive = false;
-    let apaMatchIsLive = false;
-
-    const updateGlobalIsLive = () => {
-      setIsLive(liveMatchIsLive || apaMatchIsLive);
-    };
-
     const liveMatchRef = doc(db, "current_match", "live");
     const apaMatchRef = doc(db, "current_match", "apa");
 
     const liveMatchUnsubscribe = onSnapshot(liveMatchRef, (doc) => {
       const data = doc.data();
-      liveMatchIsLive = data?.isLive === true;
-      updateGlobalIsLive();
+      setLiveMatchIsLive(data?.isLive === true);
     }, (error) => {
-      // If document doesn't exist or error, treat as not live
-      liveMatchIsLive = false;
-      updateGlobalIsLive();
+      setLiveMatchIsLive(false);
     });
 
     const apaMatchUnsubscribe = onSnapshot(apaMatchRef, (doc) => {
       const data = doc.data();
-      apaMatchIsLive = data?.isLive === true;
-      updateGlobalIsLive();
+      setApaMatchIsLive(data?.isLive === true);
     }, (error) => {
-      // If document doesn't exist or error, treat as not live
-      apaMatchIsLive = false;
-      updateGlobalIsLive();
+      setApaMatchIsLive(false);
     });
 
     return () => {
@@ -58,7 +46,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <LiveContext.Provider value={{ isLive, setIsLive, gameMode, setGameMode }}>
+    <LiveContext.Provider value={{ liveMatchIsLive, apaMatchIsLive, gameMode, setGameMode }}>
       {children}
     </LiveContext.Provider>
   );

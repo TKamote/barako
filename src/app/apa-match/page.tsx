@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Image from "next/image";
-import { useLive, GameMode } from "@/contexts/LiveContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -45,12 +44,10 @@ const BilliardsBall = ({
 );
 
 const ApaMatchPage = () => {
-  const { setIsLive: setGlobalIsLive } = useLive();
   const { isManager } = useAuth();
 
   // Local state for this page
   const [isLive, setIsLive] = useState(false);
-  const [gameMode, setGameMode] = useState<GameMode>("9-ball");
 
   // Player state
   const [players, setPlayers] = useState<Player[]>([]);
@@ -78,21 +75,8 @@ const ApaMatchPage = () => {
   const lastResetPress = useRef<number>(0);
   const RESET_TIMEOUT = 500; // 500ms window for double-press
 
-  // Determine ball numbers based on game mode
-  const getBallNumbers = (mode: GameMode): number[] => {
-    switch (mode) {
-      case "9-ball":
-        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
-      case "10-ball":
-        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-      case "15-ball":
-        return []; // 15-ball shows nothing
-      default:
-        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    }
-  };
-
-  const ballNumbers = getBallNumbers(gameMode);
+  // APA is always 9-ball
+  const ballNumbers = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9], []);
 
   // Get player photo URL (returns null if no photo)
   const getPlayer1Photo = () => {
@@ -250,18 +234,9 @@ const ApaMatchPage = () => {
             setCurrentTurn(matchData.currentTurn);
           }
 
-          // Restore game mode
-          if (
-            matchData.gameMode &&
-            ["9-ball", "10-ball", "15-ball"].includes(matchData.gameMode)
-          ) {
-            setGameMode(matchData.gameMode as GameMode);
-          }
-
           // Restore isLive
           if (matchData.isLive !== undefined) {
             setIsLive(matchData.isLive);
-            setGlobalIsLive(matchData.isLive);
           }
         }
       } catch (error) {
@@ -272,7 +247,7 @@ const ApaMatchPage = () => {
     };
 
     loadMatchData();
-  }, [players, setGlobalIsLive]);
+  }, [players]);
 
   // Update player objects when players array loads
   useEffect(() => {
@@ -320,7 +295,6 @@ const ApaMatchPage = () => {
           raceTo,
           currentTurn,
           pocketedBalls: Array.from(pocketedBalls),
-          gameMode,
           isLive,
           updatedAt: new Date().toISOString(),
         },
@@ -375,7 +349,6 @@ const ApaMatchPage = () => {
   const handleLiveToggle = async () => {
     const newIsLive = !isLive;
     setIsLive(newIsLive);
-    setGlobalIsLive(newIsLive);
     try {
       const matchDocRef = doc(db, "current_match", "apa");
       await setDoc(
@@ -388,24 +361,6 @@ const ApaMatchPage = () => {
       );
     } catch (error) {
       console.error("Error saving live status:", error);
-    }
-  };
-
-  // Handle game mode change
-  const handleGameModeChange = async (newMode: GameMode) => {
-    setGameMode(newMode);
-    try {
-      const matchDocRef = doc(db, "current_match", "apa");
-      await setDoc(
-        matchDocRef,
-        {
-          gameMode: newMode,
-          updatedAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-    } catch (error) {
-      console.error("Error saving game mode:", error);
     }
   };
 
@@ -424,7 +379,6 @@ const ApaMatchPage = () => {
     player1,
     player2,
     pocketedBalls,
-    gameMode,
     isLive,
   ]);
 
@@ -624,28 +578,8 @@ const ApaMatchPage = () => {
           </button>
         </div>
 
-        {/* Left Side: Mode Selector, Balls, and Reset Button */}
+        {/* Left Side: Balls and Reset Button */}
         <div className="fixed left-2 sm:left-4 top-16 sm:top-20 z-40 flex flex-col items-start">
-          {/* Game Mode Selector - Hidden when live */}
-          {!isLive && (
-            <div className="flex items-center space-x-2 mb-[50px]">
-              <span className="text-xs sm:text-sm font-medium text-gray-700">
-                Mode:
-              </span>
-              <select
-                value={gameMode}
-                onChange={(e) =>
-                  handleGameModeChange(e.target.value as GameMode)
-                }
-                className="px-2 py-1 sm:px-3 sm:py-1 text-xs sm:text-sm border border-gray-300 rounded-md bg-white text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="9-ball">9-ball</option>
-                <option value="10-ball">10-ball</option>
-                <option value="15-ball">15-ball</option>
-              </select>
-            </div>
-          )}
-
           {/* Billiards Balls - Vertical */}
           {ballNumbers.length > 0 && (
             <div className="bg-gray-400 rounded-full px-2 py-1 sm:px-2 sm:py-2">

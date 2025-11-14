@@ -9,12 +9,16 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const Navigation = () => {
   const pathname = usePathname();
-  const { isLive, gameMode, setGameMode } = useLive();
+  const { liveMatchIsLive, apaMatchIsLive, gameMode, setGameMode } = useLive();
   const { isManager } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Don't render navigation when live
-  if (isLive) {
+  // Hide nav only on a live match page when that match is live
+  const shouldHideNav =
+    (pathname === "/live-match" && liveMatchIsLive) ||
+    (pathname === "/apa-match" && apaMatchIsLive);
+
+  if (shouldHideNav) {
     return null;
   }
 
@@ -94,7 +98,7 @@ const Navigation = () => {
           </div>
 
           {/* Game Mode Selector - Desktop */}
-          {pathname === "/live-match" && isManager && !isLive && (
+          {pathname === "/live-match" && isManager && !liveMatchIsLive && (
             <div className="hidden sm:flex items-center ml-auto space-x-2">
               {(["9-ball", "10-ball", "15-ball"] as GameMode[]).map((mode) => (
                 <button
@@ -180,7 +184,7 @@ const Navigation = () => {
           </div>
 
           {/* Game Mode Selector - Mobile */}
-          {pathname === "/live-match" && isManager && !isLive && (
+          {pathname === "/live-match" && isManager && !liveMatchIsLive && (
             <div className="px-4 py-3 border-t border-gray-200">
               <p className="text-sm font-medium text-gray-500 mb-2">Game Mode</p>
               <div className="flex items-center space-x-2">
