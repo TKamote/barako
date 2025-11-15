@@ -45,7 +45,7 @@ const BilliardsBall = ({
 );
 
 const LiveMatchPage = () => {
-  const { gameMode, setGameMode } = useLive();
+  const { gameMode, setGameMode, setLiveMatchIsLive } = useLive();
   const { isManager } = useAuth();
 
   // Local state for this page, except for gameMode which is now global
@@ -257,9 +257,10 @@ const LiveMatchPage = () => {
             setGameMode(matchData.gameMode);
           }
 
-          // Restore isLive - This page only cares about its local state now
+          // Restore isLive - sync both local state and LiveContext
           if (matchData.isLive !== undefined) {
             setIsLive(matchData.isLive);
+            setLiveMatchIsLive(matchData.isLive);
           }
         }
       } catch (error) {
@@ -319,7 +320,7 @@ const LiveMatchPage = () => {
           currentTurn,
           pocketedBalls: Array.from(pocketedBalls),
           gameMode,
-          isLive,
+          // Note: isLive is NOT saved here - only handleLiveToggle manages it
           updatedAt: new Date().toISOString(),
         },
         { merge: true }
@@ -372,19 +373,33 @@ const LiveMatchPage = () => {
   // Handle live toggle
   const handleLiveToggle = async () => {
     const newIsLive = !isLive;
+    
+    // Always update local state and context immediately for instant UI feedback
+    // This works even without authentication
     setIsLive(newIsLive);
-    try {
-      const matchDocRef = doc(db, "current_match", "live");
-      await setDoc(
-        matchDocRef,
-        {
-          isLive: newIsLive,
-          updatedAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-    } catch (error) {
-      console.error("Error saving live status:", error);
+    setLiveMatchIsLive(newIsLive);
+    
+    // Only try to update Firestore if authenticated (for persistence)
+    // If not authenticated, UI still works with local/context state
+    if (isManager) {
+      try {
+        const matchDocRef = doc(db, "current_match", "live");
+        await setDoc(
+          matchDocRef,
+          {
+            isLive: newIsLive,
+            updatedAt: new Date().toISOString(),
+          },
+          { merge: true }
+        );
+        console.log(`✅ Live status saved to Firestore: ${newIsLive}`);
+      } catch (error) {
+        console.error("❌ Error saving live status to Firestore:", error);
+        // Don't revert state - UI already updated and works fine without Firestore
+        // Firestore is just for persistence across refreshes
+      }
+    } else {
+      console.log(`ℹ️ Live status updated locally (not authenticated, not saving to Firestore): ${newIsLive}`);
     }
   };
 
@@ -394,6 +409,7 @@ const LiveMatchPage = () => {
       saveMatchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Note: isLive is NOT in dependencies - only handleLiveToggle manages it
   }, [
     player1Score,
     player2Score,
@@ -404,7 +420,6 @@ const LiveMatchPage = () => {
     player2,
     pocketedBalls,
     gameMode,
-    isLive,
   ]);
 
   // Handle ball click - toggles pocketed state
