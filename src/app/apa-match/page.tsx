@@ -274,7 +274,7 @@ const ApaMatchPage = () => {
   }, [players]);
 
   // Save match data to Firestore
-  const saveMatchData = async () => {
+  const saveMatchData = useCallback(async () => {
     // Only save if authenticated (manager mode)
     if (!isManager) {
       return;
@@ -304,7 +304,17 @@ const ApaMatchPage = () => {
       console.error("Error saving match data:", error);
       // Silently fail if not authenticated
     }
-  };
+  }, [
+    isManager,
+    player1,
+    player2,
+    player1Score,
+    player2Score,
+    raceTo,
+    currentTurn,
+    pocketedBalls,
+    isLive,
+  ]);
 
   // Handle player selection
   const handlePlayer1Select = async (selectedPlayer: Player) => {
@@ -369,18 +379,7 @@ const ApaMatchPage = () => {
     if (!loading) {
       saveMatchData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    player1Score,
-    player2Score,
-    raceTo,
-    currentTurn,
-    loading,
-    player1,
-    player2,
-    pocketedBalls,
-    isLive,
-  ]);
+  }, [loading, saveMatchData]);
 
   // Handle ball click - toggles pocketed state
   const handleBallClick = (ballNumber: number) => {
