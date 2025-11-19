@@ -11,6 +11,7 @@ interface LiveContextType {
   apaMatchIsLive: boolean;
   standbyIsLive: boolean;
   setStandbyIsLive: (isLive: boolean) => void;
+  setLiveMatchIsLive: (isLive: boolean) => void;
   gameMode: GameMode;
   setGameMode: (gameMode: GameMode) => void;
 }
@@ -28,12 +29,19 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
     const liveMatchRef = doc(db, "current_match", "live");
     const apaMatchRef = doc(db, "current_match", "apa");
 
-    const liveMatchUnsubscribe = onSnapshot(liveMatchRef, (doc) => {
-      const data = doc.data();
-      setLiveMatchIsLive(data?.isLive === true);
-    }, (error) => {
-      setLiveMatchIsLive(false);
-    });
+    const liveMatchUnsubscribe = onSnapshot(
+      liveMatchRef,
+      (docSnapshot) => {
+        const data = docSnapshot.data();
+        const isLiveValue = data?.isLive === true;
+        console.log(`📡 LiveContext: Received isLive update: ${isLiveValue}`, data);
+        setLiveMatchIsLive(isLiveValue);
+      },
+      (error) => {
+        console.error("❌ LiveContext: Error listening to live match:", error);
+        setLiveMatchIsLive(false);
+      }
+    );
 
     const apaMatchUnsubscribe = onSnapshot(apaMatchRef, (doc) => {
       const data = doc.data();
@@ -55,6 +63,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         apaMatchIsLive,
         standbyIsLive,
         setStandbyIsLive,
+        setLiveMatchIsLive,
         gameMode,
         setGameMode,
       }}
