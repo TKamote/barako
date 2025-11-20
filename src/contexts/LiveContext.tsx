@@ -10,8 +10,10 @@ interface LiveContextType {
   liveMatchIsLive: boolean;
   apaMatchIsLive: boolean;
   standbyIsLive: boolean;
+  ringGameIsLive: boolean;
   setStandbyIsLive: (isLive: boolean) => void;
   setLiveMatchIsLive: (isLive: boolean) => void;
+  setRingGameIsLive: (isLive: boolean) => void;
   gameMode: GameMode;
   setGameMode: (gameMode: GameMode) => void;
 }
@@ -22,6 +24,7 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
   const [liveMatchIsLive, setLiveMatchIsLive] = useState(false);
   const [apaMatchIsLive, setApaMatchIsLive] = useState(false);
   const [standbyIsLive, setStandbyIsLive] = useState(false);
+  const [ringGameIsLive, setRingGameIsLive] = useState(false);
   const [gameMode, setGameMode] = useState<GameMode>("9-ball");
 
   // Listen to both match documents to determine if either is live
@@ -62,8 +65,10 @@ export const LiveProvider = ({ children }: { children: ReactNode }) => {
         liveMatchIsLive,
         apaMatchIsLive,
         standbyIsLive,
+        ringGameIsLive,
         setStandbyIsLive,
         setLiveMatchIsLive,
+        setRingGameIsLive,
         gameMode,
         setGameMode,
       }}

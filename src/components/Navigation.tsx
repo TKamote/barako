@@ -13,6 +13,7 @@ const Navigation = () => {
     liveMatchIsLive,
     apaMatchIsLive,
     standbyIsLive,
+    ringGameIsLive,
     gameMode,
     setGameMode,
   } = useLive();
@@ -23,7 +24,8 @@ const Navigation = () => {
   const shouldHideNav =
     standbyIsLive ||
     (pathname === "/live-match" && liveMatchIsLive) ||
-    (pathname === "/apa-match" && apaMatchIsLive);
+    (pathname === "/apa-match" && apaMatchIsLive) ||
+    (pathname === "/ring" && ringGameIsLive);
 
   if (shouldHideNav) {
     return null;
@@ -57,6 +59,10 @@ const Navigation = () => {
     {
       name: "APA Match",
       href: "/apa-match",
+    },
+    {
+      name: "Ring",
+      href: "/ring",
     },
     {
       name: "Credits",
@@ -105,7 +111,7 @@ const Navigation = () => {
           </div>
 
           {/* Game Mode Selector - Desktop */}
-          {pathname === "/live-match" && isManager && !liveMatchIsLive && (
+          {(pathname === "/live-match" || pathname === "/ring") && isManager && !liveMatchIsLive && !ringGameIsLive && (
             <div className="hidden sm:flex items-center ml-auto space-x-2">
               {(["9-ball", "10-ball", "15-ball"] as GameMode[]).map((mode) => (
                 <button
@@ -191,7 +197,7 @@ const Navigation = () => {
           </div>
 
           {/* Game Mode Selector - Mobile */}
-          {pathname === "/live-match" && isManager && !liveMatchIsLive && (
+          {(pathname === "/live-match" || pathname === "/ring") && isManager && !liveMatchIsLive && !ringGameIsLive && (
             <div className="px-4 py-3 border-t border-gray-200">
               <p className="text-sm font-medium text-gray-500 mb-2">Game Mode</p>
               <div className="flex items-center space-x-2">
