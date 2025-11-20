@@ -401,7 +401,9 @@ const RingGamePage = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
                 <div className="flex items-center gap-3">
                    <button onClick={() => canSelectPlayers && setShowPlayer1Modal(true)} disabled={!canSelectPlayers}>
-                    <Image src={getPlayerPhoto(player1) || getPlayerPlaceholder(player1, "/avatar-placeholder-1.svg")} alt={getPlayerName(player1, "Player 1")} width={64} height={64} className="rounded-full" />
+                    <div className="w-16 h-16 rounded-full overflow-hidden">
+                      <Image src={getPlayerPhoto(player1) || getPlayerPlaceholder(player1, "/avatar-placeholder-1.svg")} alt={getPlayerName(player1, "Player 1")} width={64} height={64} className="w-full h-full object-cover" />
+                    </div>
                    </button>
                   <div className="flex items-baseline gap-3">
                     <p className="font-bold text-[28px] text-white">{getPlayerName(player1, "Player 1")}</p>
@@ -411,7 +413,9 @@ const RingGamePage = () => {
 
                 <div className="flex items-center gap-3 justify-center">
                    <button onClick={() => canSelectPlayers && setShowPlayer2Modal(true)} disabled={!canSelectPlayers}>
-                    <Image src={getPlayerPhoto(player2) || getPlayerPlaceholder(player2, "/avatar-placeholder-2.svg")} alt={getPlayerName(player2, "Player 2")} width={64} height={64} className="rounded-full" />
+                    <div className="w-16 h-16 rounded-full overflow-hidden">
+                      <Image src={getPlayerPhoto(player2) || getPlayerPlaceholder(player2, "/avatar-placeholder-2.svg")} alt={getPlayerName(player2, "Player 2")} width={64} height={64} className="w-full h-full object-cover" />
+                    </div>
                    </button>
                   <div className="flex items-baseline gap-3">
                     <p className="font-bold text-[28px] text-white">{getPlayerName(player2, "Player 2")}</p>
@@ -421,7 +425,9 @@ const RingGamePage = () => {
 
                 <div className="flex items-center gap-3 justify-end">
                    <button onClick={() => canSelectPlayers && setShowPlayer3Modal(true)} disabled={!canSelectPlayers}>
-                    <Image src={getPlayerPhoto(player3) || getPlayerPlaceholder(player3, "/avatar-placeholder-3.svg")} alt={getPlayerName(player3, "Player 3")} width={64} height={64} className="rounded-full" />
+                    <div className="w-16 h-16 rounded-full overflow-hidden">
+                      <Image src={getPlayerPhoto(player3) || getPlayerPlaceholder(player3, "/avatar-placeholder-3.svg")} alt={getPlayerName(player3, "Player 3")} width={64} height={64} className="w-full h-full object-cover" />
+                    </div>
                    </button>
                   <div className="flex items-baseline gap-3">
                     <p className="font-bold text-[28px] text-white">{getPlayerName(player3, "Player 3")}</p>
@@ -437,8 +443,8 @@ const RingGamePage = () => {
           className="fixed z-50 hidden sm:block"
           style={{ top: "50px", right: "50px" }}
         >
-          <Image src="/tourtrack.png" alt="TourTrack Logo" width={156} height={156} style={{ filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))", borderRadius: "10px", objectFit: "contain" }} />
-          <Image src="/qr-code copy.png" alt="QR Code" width={156} height={156} className="mt-5" style={{ filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))", borderRadius: "10px", objectFit: "contain" }} />
+          <Image src="/Tourtrack.png" alt="TourTrack Logo" width={109} height={109} style={{ filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))", borderRadius: "10px", objectFit: "contain" }} />
+          <Image src="/qr-code copy.png" alt="QR Code" width={109} height={109} className="mt-5" style={{ filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))", borderRadius: "10px", objectFit: "contain" }} />
       </div>
 
       <PlayerSelectionModal
