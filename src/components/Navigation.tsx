@@ -13,7 +13,6 @@ const Navigation = () => {
     liveMatchIsLive,
     apaMatchIsLive,
     standbyIsLive,
-    ringGameIsLive,
     gameMode,
     setGameMode,
   } = useLive();
@@ -24,8 +23,9 @@ const Navigation = () => {
   const shouldHideNav =
     standbyIsLive ||
     (pathname === "/live-match" && liveMatchIsLive) ||
-    (pathname === "/apa-match" && apaMatchIsLive) ||
-    (pathname === "/ring" && ringGameIsLive);
+    (pathname === "/live-match-experimental" && liveMatchIsLive) ||
+    (pathname === "/generic" && liveMatchIsLive) ||
+    (pathname === "/apa-match" && apaMatchIsLive);
 
   if (shouldHideNav) {
     return null;
@@ -49,20 +49,20 @@ const Navigation = () => {
       href: "/16p-match",
     },
     {
-      name: "Standby",
-      href: "/standby",
-    },
-    {
       name: "Live Match",
       href: "/live-match",
     },
     {
-      name: "APA Match",
-      href: "/apa-match",
+      name: "Live Match (Exp)",
+      href: "/live-match-experimental",
     },
     {
-      name: "Ring",
-      href: "/ring",
+      name: "Generic",
+      href: "/generic",
+    },
+    {
+      name: "APA Match",
+      href: "/apa-match",
     },
     {
       name: "Credits",
@@ -111,7 +111,7 @@ const Navigation = () => {
           </div>
 
           {/* Game Mode Selector - Desktop */}
-          {(pathname === "/live-match" || pathname === "/ring") && isManager && !liveMatchIsLive && !ringGameIsLive && (
+          {(pathname === "/live-match" || pathname === "/live-match-experimental" || pathname === "/generic") && isManager && !liveMatchIsLive && (
             <div className="hidden sm:flex items-center ml-auto space-x-2">
               {(["9-ball", "10-ball", "15-ball"] as GameMode[]).map((mode) => (
                 <button
@@ -197,7 +197,7 @@ const Navigation = () => {
           </div>
 
           {/* Game Mode Selector - Mobile */}
-          {(pathname === "/live-match" || pathname === "/ring") && isManager && !liveMatchIsLive && !ringGameIsLive && (
+          {(pathname === "/live-match" || pathname === "/live-match-experimental" || pathname === "/generic") && isManager && !liveMatchIsLive && (
             <div className="px-4 py-3 border-t border-gray-200">
               <p className="text-sm font-medium text-gray-500 mb-2">Game Mode</p>
               <div className="flex items-center space-x-2">

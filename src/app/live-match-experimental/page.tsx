@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import { useLive, GameMode } from "@/contexts/LiveContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import PlayerSelectionModal from "@/components/PlayerSelectionModal";
+import BallDetection from "@/components/BallDetection";
 
 interface Player {
   id: string;
@@ -43,10 +45,11 @@ const BilliardsBall = ({
   </div>
 );
 
-const ApaMatchPage = () => {
+const LiveMatchPage = () => {
+  const { gameMode, setGameMode, setLiveMatchIsLive } = useLive();
   const { isManager } = useAuth();
 
-  // Local state for this page
+  // Local state for this page, except for gameMode which is now global
   const [isLive, setIsLive] = useState(false);
 
   // Player state
@@ -68,15 +71,32 @@ const ApaMatchPage = () => {
   // Ball state
   const [pocketedBalls, setPocketedBalls] = useState<Set<number>>(new Set());
 
+  // Auto-detection state
+  const [autoDetectEnabled, setAutoDetectEnabled] = useState(false);
+  const detectedVisibleBallsRef = useRef<Set<number>>(new Set());
+
   // URL state for OBS integration (client-side only to avoid hydration mismatch)
-  const [obsUrl, setObsUrl] = useState<string>("localhost:3000/apa-match");
+  const [obsUrl, setObsUrl] = useState<string>("localhost:3000/live-match-experimental");
 
   // Double-press R for reset tracking
   const lastResetPress = useRef<number>(0);
   const RESET_TIMEOUT = 500; // 500ms window for double-press
 
-  // APA is always 9-ball
-  const ballNumbers = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9], []);
+  // Determine ball numbers based on game mode
+  const getBallNumbers = (mode: GameMode): number[] => {
+    switch (mode) {
+      case "9-ball":
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      case "10-ball":
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      case "15-ball":
+        return []; // 15-ball shows nothing
+      default:
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    }
+  };
+
+  const ballNumbers = getBallNumbers(gameMode);
 
   // Get player photo URL (returns null if no photo)
   const getPlayer1Photo = () => {
@@ -142,8 +162,13 @@ const ApaMatchPage = () => {
         // Sort by points descending
         const sortedPlayers = playersList.sort((a, b) => b.points - a.points);
         setPlayers(sortedPlayers);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching players:", error);
+        // If permission denied, continue with empty players list
+        if (error?.code === "permission-denied" || error?.code === "missing-or-insufficient-permissions") {
+          console.log("⚠️ Firestore permission denied for players - continuing with empty list");
+          setPlayers([]);
+        }
       }
     };
 
@@ -154,10 +179,10 @@ const ApaMatchPage = () => {
   useEffect(() => {
     const loadMatchData = async () => {
       try {
-        const matchDocRef = doc(db, "current_match", "apa");
+        const matchDocRef = doc(db, "current_match", "live");
         const matchDoc = await getDoc(matchDocRef);
 
-        if (matchDoc.exists()) {
+        if (matchDoc.exists() && matchDoc.data()) {
           const matchData = matchDoc.data();
 
           // Restore player 1
@@ -234,20 +259,34 @@ const ApaMatchPage = () => {
             setCurrentTurn(matchData.currentTurn);
           }
 
-          // Restore isLive
+          // Restore game mode
+          if (
+            matchData.gameMode &&
+            ["9-ball", "10-ball", "15-ball"].includes(matchData.gameMode)
+          ) {
+            setGameMode(matchData.gameMode);
+          }
+
+          // Restore isLive - sync both local state and LiveContext
           if (matchData.isLive !== undefined) {
             setIsLive(matchData.isLive);
+            setLiveMatchIsLive(matchData.isLive);
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error loading match data:", error);
+        // If it's a permissions error, just continue without loading data
+        // The page will work with default/empty state
+        if (error?.code === "permission-denied" || error?.code === "missing-or-insufficient-permissions") {
+          console.log("⚠️ Firestore permission denied - continuing with default state");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     loadMatchData();
-  }, [players]);
+  }, [players, setGameMode, setLiveMatchIsLive]);
 
   // Update player objects when players array loads
   useEffect(() => {
@@ -280,7 +319,7 @@ const ApaMatchPage = () => {
       return;
     }
     try {
-      const matchDocRef = doc(db, "current_match", "apa");
+      const matchDocRef = doc(db, "current_match", "live");
       await setDoc(
         matchDocRef,
         {
@@ -295,22 +334,28 @@ const ApaMatchPage = () => {
           raceTo,
           currentTurn,
           pocketedBalls: Array.from(pocketedBalls),
-          isLive,
+          gameMode,
+          // Note: isLive is NOT saved here - only handleLiveToggle manages it
           updatedAt: new Date().toISOString(),
         },
         { merge: true }
       );
-    } catch (error) {
-      console.error("Error saving match data:", error);
-      // Silently fail if not authenticated
+    } catch (error: any) {
+      // Silently fail if not authenticated or permission denied
+      if (error?.code === "permission-denied" || error?.code === "missing-or-insufficient-permissions") {
+        console.log("⚠️ Firestore write permission denied - data not saved");
+      } else {
+        console.error("Error saving match data:", error);
+      }
     }
   };
 
   // Handle player selection
   const handlePlayer1Select = async (selectedPlayer: Player) => {
     setPlayer1(selectedPlayer);
+    if (!isManager) return; // Only save if manager
     try {
-      const matchDocRef = doc(db, "current_match", "apa");
+      const matchDocRef = doc(db, "current_match", "live");
       await setDoc(
         matchDocRef,
         {
@@ -321,15 +366,20 @@ const ApaMatchPage = () => {
         },
         { merge: true }
       );
-    } catch (error) {
-      console.error("Error saving player 1:", error);
+    } catch (error: any) {
+      if (error?.code === "permission-denied" || error?.code === "missing-or-insufficient-permissions") {
+        console.log("⚠️ Firestore write permission denied for player 1");
+      } else {
+        console.error("Error saving player 1:", error);
+      }
     }
   };
 
   const handlePlayer2Select = async (selectedPlayer: Player) => {
     setPlayer2(selectedPlayer);
+    if (!isManager) return; // Only save if manager
     try {
-      const matchDocRef = doc(db, "current_match", "apa");
+      const matchDocRef = doc(db, "current_match", "live");
       await setDoc(
         matchDocRef,
         {
@@ -340,27 +390,49 @@ const ApaMatchPage = () => {
         },
         { merge: true }
       );
-    } catch (error) {
-      console.error("Error saving player 2:", error);
+    } catch (error: any) {
+      if (error?.code === "permission-denied" || error?.code === "missing-or-insufficient-permissions") {
+        console.log("⚠️ Firestore write permission denied for player 2");
+      } else {
+        console.error("Error saving player 2:", error);
+      }
     }
   };
 
   // Handle live toggle
   const handleLiveToggle = async () => {
     const newIsLive = !isLive;
+    
+    // Always update local state and context immediately for instant UI feedback
+    // This works even without authentication
     setIsLive(newIsLive);
-    try {
-      const matchDocRef = doc(db, "current_match", "apa");
-      await setDoc(
-        matchDocRef,
-        {
-          isLive: newIsLive,
-          updatedAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-    } catch (error) {
-      console.error("Error saving live status:", error);
+    setLiveMatchIsLive(newIsLive);
+    
+    // Only try to update Firestore if authenticated (for persistence)
+    // If not authenticated, UI still works with local/context state
+    if (isManager) {
+      try {
+        const matchDocRef = doc(db, "current_match", "live");
+        await setDoc(
+          matchDocRef,
+          {
+            isLive: newIsLive,
+            updatedAt: new Date().toISOString(),
+          },
+          { merge: true }
+        );
+        console.log(`✅ Live status saved to Firestore: ${newIsLive}`);
+      } catch (error: any) {
+        // Don't revert state - UI already updated and works fine without Firestore
+        // Firestore is just for persistence across refreshes
+        if (error?.code === "permission-denied" || error?.code === "missing-or-insufficient-permissions") {
+          console.log(`⚠️ Live status updated locally (Firestore permission denied): ${newIsLive}`);
+        } else {
+          console.error("❌ Error saving live status to Firestore:", error);
+        }
+      }
+    } else {
+      console.log(`ℹ️ Live status updated locally (not authenticated, not saving to Firestore): ${newIsLive}`);
     }
   };
 
@@ -370,6 +442,7 @@ const ApaMatchPage = () => {
       saveMatchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Note: isLive is NOT in dependencies - only handleLiveToggle manages it
   }, [
     player1Score,
     player2Score,
@@ -379,7 +452,7 @@ const ApaMatchPage = () => {
     player1,
     player2,
     pocketedBalls,
-    isLive,
+    gameMode,
   ]);
 
   // Handle ball click - toggles pocketed state
@@ -544,21 +617,43 @@ const ApaMatchPage = () => {
     }
   }, []);
 
+  // Handle detected balls from BallDetection component
+  const handleBallsDetected = useCallback((visibleBalls: Set<number>) => {
+    // Only update if the detected balls have changed to avoid unnecessary re-renders/writes
+    // Simple set equality check
+    if (detectedVisibleBallsRef.current.size === visibleBalls.size) {
+      const current = Array.from(detectedVisibleBallsRef.current);
+      const isSame = current.every((val) => visibleBalls.has(val));
+      if (isSame) return;
+    }
+
+    detectedVisibleBallsRef.current = visibleBalls;
+    
+    if (!autoDetectEnabled) return;
+
+    // Calculate pocketed balls: all balls - visible balls
+    const allBalls = new Set(ballNumbers);
+    const pocketed = new Set<number>();
+    
+    allBalls.forEach((ballNumber) => {
+      if (!visibleBalls.has(ballNumber)) {
+        pocketed.add(ballNumber);
+      }
+    });
+
+    // Update pocketed balls state
+    setPocketedBalls(pocketed);
+  }, [autoDetectEnabled, ballNumbers]);
+
   // Determine if player selection should be enabled
   const canSelectPlayers = isManager && !isLive;
 
   return (
-    <div
-      className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden"
-      style={{ backgroundImage: "none", border: "none", outline: "none" }}
-    >
+    <div className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden">
       {/* 16:9 Aspect Ratio Container */}
-      <div
-        className="w-full max-w-[1920px] aspect-video bg-transparent relative"
-        style={{ backgroundImage: "none", border: "none", outline: "none" }}
-      >
-        {/* Live Button - Centered at Top */}
-        <div className="fixed top-[68px] sm:top-[76px] left-0 right-0 z-50 flex justify-center">
+      <div className="w-full max-w-[1920px] aspect-video bg-transparent relative">
+        {/* Live Button and Auto-Detect Toggle - Centered at Top */}
+        <div className="fixed top-[68px] sm:top-[76px] left-0 right-0 z-50 flex justify-center items-center gap-4">
           <button
             onClick={handleLiveToggle}
             className={`px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-bold text-sm sm:text-lg transition-all duration-300 transform hover:scale-105 ${
@@ -576,6 +671,25 @@ const ApaMatchPage = () => {
               "GO LIVE"
             )}
           </button>
+
+          {/* Auto-Detect Toggle - Hide when live, show for everyone, but note manager requirement */}
+          {!isLive && (
+            <div className="flex items-center gap-2 bg-black/80 px-3 py-2 rounded-lg">
+              <label className="flex items-center gap-2 cursor-pointer text-white text-xs sm:text-sm">
+                <input
+                  type="checkbox"
+                  checked={autoDetectEnabled}
+                  onChange={(e) => setAutoDetectEnabled(e.target.checked)}
+                  disabled={!isManager}
+                  className="w-4 h-4 rounded disabled:opacity-50"
+                  title={!isManager ? "Manager login required" : "Enable automatic ball detection"}
+                />
+                <span className={!isManager ? "opacity-50" : ""}>
+                  Auto-Detect {!isManager && "(Manager Only)"}
+                </span>
+              </label>
+            </div>
+          )}
         </div>
 
         {/* Left Side: Balls and Reset Button */}
@@ -625,18 +739,12 @@ const ApaMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
+            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div
-                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-0 px-0.5"
-                  style={{ border: "none", outline: "none", gap: 0 }}
-                >
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5">
                   {/* Player 1 Group - Left */}
-                  <div
-                    className="flex items-center gap-0.5 min-w-0"
-                    style={{ border: "none", outline: "none" }}
-                  >
+                  <div className="flex items-center gap-0.5 min-w-0">
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -673,10 +781,7 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div
-                    className="flex items-center gap-0 justify-center shrink-0"
-                    style={{ border: "none", outline: "none" }}
-                  >
+                  <div className="flex items-center gap-0 justify-center shrink-0">
                     {/* Left Arrow - Turn Indicator for Player 1 */}
                     <svg
                       className={`w-9 h-9 shrink-0 -mr-2 ${
@@ -720,10 +825,7 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div
-                    className="flex items-center gap-0.5 min-w-0 justify-end"
-                    style={{ border: "none", outline: "none" }}
-                  >
+                  <div className="flex items-center gap-0.5 min-w-0 justify-end">
                     <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
                       {getPlayer2Name()}
                     </div>
@@ -763,17 +865,11 @@ const ApaMatchPage = () => {
 
               {/* Desktop Layout */}
               <div className="hidden sm:block relative">
-                <div className="absolute inset-0 bg-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
                 <div className="relative z-10">
-                  <div
-                    className="grid grid-cols-3 items-center gap-0"
-                    style={{ border: "none", outline: "none", gap: 0 }}
-                  >
+                  <div className="grid grid-cols-3 items-center gap-4">
                     {/* Player 1 Group - Extreme Left */}
-                    <div
-                      className="flex items-center gap-4 justify-start"
-                      style={{ border: "none", outline: "none" }}
-                    >
+                    <div className="flex items-center gap-4 justify-start">
                       <button
                         onClick={() =>
                           canSelectPlayers && setShowPlayer1Modal(true)
@@ -810,10 +906,7 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Center Group - Scores and Race */}
-                    <div
-                      className="flex items-center gap-2 justify-center"
-                      style={{ border: "none", outline: "none" }}
-                    >
+                    <div className="flex items-center gap-2 justify-center">
                       {/* Left Arrow - Turn Indicator for Player 1 */}
                       <svg
                         className={`w-[72px] h-[72px] shrink-0 -mr-4 ${
@@ -857,10 +950,7 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Player 2 Group - Extreme Right */}
-                    <div
-                      className="flex items-center gap-4 justify-end"
-                      style={{ border: "none", outline: "none" }}
-                    >
+                    <div className="flex items-center gap-4 justify-end">
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>
@@ -947,8 +1037,8 @@ const ApaMatchPage = () => {
             }}
           />
           <Image
-            src="/APA.png"
-            alt="APA Logo"
+            src="/FinancialP.jpeg"
+            alt="FinancialP"
             width={156}
             height={156}
             className="mt-5"
@@ -987,8 +1077,8 @@ const ApaMatchPage = () => {
             }}
           />
           <Image
-            src="/APA.png"
-            alt="APA Logo"
+            src="/FinancialP.jpeg"
+            alt="FinancialP"
             width={94}
             height={94}
             className="w-[94px] h-[94px] mt-5"
@@ -1018,10 +1108,17 @@ const ApaMatchPage = () => {
           onSelect={handlePlayer2Select}
           title="Select Player 2"
         />
+
+        {/* Ball Detection Component */}
+        <BallDetection
+          enabled={autoDetectEnabled}
+          onBallsDetected={handleBallsDetected}
+          gameMode={gameMode}
+        />
       </div>
       {/* End 16:9 Aspect Ratio Container */}
     </div>
   );
 };
 
-export default ApaMatchPage;
+export default LiveMatchPage;

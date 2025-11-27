@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import { useLive, GameMode } from "@/contexts/LiveContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -43,10 +44,11 @@ const BilliardsBall = ({
   </div>
 );
 
-const ApaMatchPage = () => {
+const GenericMatchPage = () => {
+  const { gameMode, setGameMode, setLiveMatchIsLive } = useLive();
   const { isManager } = useAuth();
 
-  // Local state for this page
+  // Local state for this page, except for gameMode which is now global
   const [isLive, setIsLive] = useState(false);
 
   // Player state
@@ -69,14 +71,27 @@ const ApaMatchPage = () => {
   const [pocketedBalls, setPocketedBalls] = useState<Set<number>>(new Set());
 
   // URL state for OBS integration (client-side only to avoid hydration mismatch)
-  const [obsUrl, setObsUrl] = useState<string>("localhost:3000/apa-match");
+  const [obsUrl, setObsUrl] = useState<string>("localhost:3000/generic");
 
   // Double-press R for reset tracking
   const lastResetPress = useRef<number>(0);
   const RESET_TIMEOUT = 500; // 500ms window for double-press
 
-  // APA is always 9-ball
-  const ballNumbers = useMemo(() => [1, 2, 3, 4, 5, 6, 7, 8, 9], []);
+  // Determine ball numbers based on game mode
+  const getBallNumbers = (mode: GameMode): number[] => {
+    switch (mode) {
+      case "9-ball":
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      case "10-ball":
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+      case "15-ball":
+        return []; // 15-ball shows nothing
+      default:
+        return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    }
+  };
+
+  const ballNumbers = getBallNumbers(gameMode);
 
   // Get player photo URL (returns null if no photo)
   const getPlayer1Photo = () => {
@@ -154,7 +169,7 @@ const ApaMatchPage = () => {
   useEffect(() => {
     const loadMatchData = async () => {
       try {
-        const matchDocRef = doc(db, "current_match", "apa");
+        const matchDocRef = doc(db, "current_match", "live");
         const matchDoc = await getDoc(matchDocRef);
 
         if (matchDoc.exists()) {
@@ -234,9 +249,18 @@ const ApaMatchPage = () => {
             setCurrentTurn(matchData.currentTurn);
           }
 
-          // Restore isLive
+          // Restore game mode
+          if (
+            matchData.gameMode &&
+            ["9-ball", "10-ball", "15-ball"].includes(matchData.gameMode)
+          ) {
+            setGameMode(matchData.gameMode);
+          }
+
+          // Restore isLive - sync both local state and LiveContext
           if (matchData.isLive !== undefined) {
             setIsLive(matchData.isLive);
+            setLiveMatchIsLive(matchData.isLive);
           }
         }
       } catch (error) {
@@ -247,7 +271,7 @@ const ApaMatchPage = () => {
     };
 
     loadMatchData();
-  }, [players]);
+  }, [players, setGameMode]);
 
   // Update player objects when players array loads
   useEffect(() => {
@@ -280,7 +304,7 @@ const ApaMatchPage = () => {
       return;
     }
     try {
-      const matchDocRef = doc(db, "current_match", "apa");
+      const matchDocRef = doc(db, "current_match", "live");
       await setDoc(
         matchDocRef,
         {
@@ -295,7 +319,8 @@ const ApaMatchPage = () => {
           raceTo,
           currentTurn,
           pocketedBalls: Array.from(pocketedBalls),
-          isLive,
+          gameMode,
+          // Note: isLive is NOT saved here - only handleLiveToggle manages it
           updatedAt: new Date().toISOString(),
         },
         { merge: true }
@@ -310,7 +335,7 @@ const ApaMatchPage = () => {
   const handlePlayer1Select = async (selectedPlayer: Player) => {
     setPlayer1(selectedPlayer);
     try {
-      const matchDocRef = doc(db, "current_match", "apa");
+      const matchDocRef = doc(db, "current_match", "live");
       await setDoc(
         matchDocRef,
         {
@@ -329,7 +354,7 @@ const ApaMatchPage = () => {
   const handlePlayer2Select = async (selectedPlayer: Player) => {
     setPlayer2(selectedPlayer);
     try {
-      const matchDocRef = doc(db, "current_match", "apa");
+      const matchDocRef = doc(db, "current_match", "live");
       await setDoc(
         matchDocRef,
         {
@@ -348,19 +373,33 @@ const ApaMatchPage = () => {
   // Handle live toggle
   const handleLiveToggle = async () => {
     const newIsLive = !isLive;
+    
+    // Always update local state and context immediately for instant UI feedback
+    // This works even without authentication
     setIsLive(newIsLive);
-    try {
-      const matchDocRef = doc(db, "current_match", "apa");
-      await setDoc(
-        matchDocRef,
-        {
-          isLive: newIsLive,
-          updatedAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
-    } catch (error) {
-      console.error("Error saving live status:", error);
+    setLiveMatchIsLive(newIsLive);
+    
+    // Only try to update Firestore if authenticated (for persistence)
+    // If not authenticated, UI still works with local/context state
+    if (isManager) {
+      try {
+        const matchDocRef = doc(db, "current_match", "live");
+        await setDoc(
+          matchDocRef,
+          {
+            isLive: newIsLive,
+            updatedAt: new Date().toISOString(),
+          },
+          { merge: true }
+        );
+        console.log(`✅ Live status saved to Firestore: ${newIsLive}`);
+      } catch (error) {
+        console.error("❌ Error saving live status to Firestore:", error);
+        // Don't revert state - UI already updated and works fine without Firestore
+        // Firestore is just for persistence across refreshes
+      }
+    } else {
+      console.log(`ℹ️ Live status updated locally (not authenticated, not saving to Firestore): ${newIsLive}`);
     }
   };
 
@@ -370,6 +409,7 @@ const ApaMatchPage = () => {
       saveMatchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Note: isLive is NOT in dependencies - only handleLiveToggle manages it
   }, [
     player1Score,
     player2Score,
@@ -379,7 +419,7 @@ const ApaMatchPage = () => {
     player1,
     player2,
     pocketedBalls,
-    isLive,
+    gameMode,
   ]);
 
   // Handle ball click - toggles pocketed state
@@ -548,15 +588,9 @@ const ApaMatchPage = () => {
   const canSelectPlayers = isManager && !isLive;
 
   return (
-    <div
-      className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden"
-      style={{ backgroundImage: "none", border: "none", outline: "none" }}
-    >
+    <div className="w-full h-screen bg-transparent relative flex items-center justify-center overflow-hidden">
       {/* 16:9 Aspect Ratio Container */}
-      <div
-        className="w-full max-w-[1920px] aspect-video bg-transparent relative"
-        style={{ backgroundImage: "none", border: "none", outline: "none" }}
-      >
+      <div className="w-full max-w-[1920px] aspect-video bg-transparent relative">
         {/* Live Button - Centered at Top */}
         <div className="fixed top-[68px] sm:top-[76px] left-0 right-0 z-50 flex justify-center">
           <button
@@ -625,18 +659,12 @@ const ApaMatchPage = () => {
         {/* Score Display - Fixed at Bottom */}
         <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
           <div className="flex justify-center">
-            <div className="bg-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
+            <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
               {/* Mobile Layout */}
               <div className="sm:hidden">
-                <div
-                  className="grid grid-cols-[1fr_auto_1fr] items-center gap-0 px-0.5"
-                  style={{ border: "none", outline: "none", gap: 0 }}
-                >
+                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-0.5 px-0.5">
                   {/* Player 1 Group - Left */}
-                  <div
-                    className="flex items-center gap-0.5 min-w-0"
-                    style={{ border: "none", outline: "none" }}
-                  >
+                  <div className="flex items-center gap-0.5 min-w-0">
                     <button
                       onClick={() =>
                         canSelectPlayers && setShowPlayer1Modal(true)
@@ -673,10 +701,7 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Center Group - Scores and Race */}
-                  <div
-                    className="flex items-center gap-0 justify-center shrink-0"
-                    style={{ border: "none", outline: "none" }}
-                  >
+                  <div className="flex items-center gap-0 justify-center shrink-0">
                     {/* Left Arrow - Turn Indicator for Player 1 */}
                     <svg
                       className={`w-9 h-9 shrink-0 -mr-2 ${
@@ -720,10 +745,7 @@ const ApaMatchPage = () => {
                   </div>
 
                   {/* Player 2 Group - Right */}
-                  <div
-                    className="flex items-center gap-0.5 min-w-0 justify-end"
-                    style={{ border: "none", outline: "none" }}
-                  >
+                  <div className="flex items-center gap-0.5 min-w-0 justify-end">
                     <div className="text-[20px] font-bold text-white uppercase truncate min-w-0 leading-none">
                       {getPlayer2Name()}
                     </div>
@@ -763,17 +785,11 @@ const ApaMatchPage = () => {
 
               {/* Desktop Layout */}
               <div className="hidden sm:block relative">
-                <div className="absolute inset-0 bg-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-r from-yellow-400/10 via-transparent to-yellow-400/10"></div>
                 <div className="relative z-10">
-                  <div
-                    className="grid grid-cols-3 items-center gap-0"
-                    style={{ border: "none", outline: "none", gap: 0 }}
-                  >
+                  <div className="grid grid-cols-3 items-center gap-4">
                     {/* Player 1 Group - Extreme Left */}
-                    <div
-                      className="flex items-center gap-4 justify-start"
-                      style={{ border: "none", outline: "none" }}
-                    >
+                    <div className="flex items-center gap-4 justify-start">
                       <button
                         onClick={() =>
                           canSelectPlayers && setShowPlayer1Modal(true)
@@ -783,7 +799,7 @@ const ApaMatchPage = () => {
                           canSelectPlayers
                             ? "cursor-pointer hover:opacity-80"
                             : "cursor-default"
-                        } transition-opacity`}
+                          } transition-opacity`}
                       >
                         {getPlayer1Photo() ? (
                           <Image
@@ -810,10 +826,7 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Center Group - Scores and Race */}
-                    <div
-                      className="flex items-center gap-2 justify-center"
-                      style={{ border: "none", outline: "none" }}
-                    >
+                    <div className="flex items-center gap-2 justify-center">
                       {/* Left Arrow - Turn Indicator for Player 1 */}
                       <svg
                         className={`w-[72px] h-[72px] shrink-0 -mr-4 ${
@@ -857,10 +870,7 @@ const ApaMatchPage = () => {
                     </div>
 
                     {/* Player 2 Group - Extreme Right */}
-                    <div
-                      className="flex items-center gap-4 justify-end"
-                      style={{ border: "none", outline: "none" }}
-                    >
+                    <div className="flex items-center gap-4 justify-end">
                       <div className="text-3xl sm:text-5xl font-bold text-white shrink-0 uppercase">
                         {getPlayer2Name()}
                       </div>
@@ -873,7 +883,7 @@ const ApaMatchPage = () => {
                           canSelectPlayers
                             ? "cursor-pointer hover:opacity-80"
                             : "cursor-default"
-                        } transition-opacity`}
+                          } transition-opacity`}
                       >
                         {getPlayer2Photo() ? (
                           <Image
@@ -916,90 +926,6 @@ const ApaMatchPage = () => {
           </div>
         </div>
 
-        {/* Barako Logo - Top Right */}
-        <div
-          className="fixed z-50 hidden sm:block"
-          style={{
-            top: "50px",
-            right: "50px",
-          }}
-        >
-          <Image
-            src="/favicon.png"
-            alt="Barako Logo"
-            width={156}
-            height={156}
-            style={{
-              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-              borderRadius: "10px",
-            }}
-          />
-          <Image
-            src="/Sponsor.jpeg"
-            alt="Sponsor"
-            width={156}
-            height={156}
-            className="mt-5"
-            style={{
-              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-              borderRadius: "10px",
-              objectFit: "contain",
-            }}
-          />
-          <Image
-            src="/APA.png"
-            alt="APA Logo"
-            width={156}
-            height={156}
-            className="mt-5"
-            style={{
-              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-              borderRadius: "10px",
-              objectFit: "contain",
-            }}
-          />
-        </div>
-
-        {/* Mobile Logo - Top Right */}
-        <div className="fixed top-32 right-2 z-30 sm:hidden">
-          <Image
-            src="/favicon.png"
-            alt="Barako Logo"
-            width={94}
-            height={94}
-            className="w-[94px] h-[94px]"
-            style={{
-              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-              borderRadius: "10px",
-              objectFit: "contain",
-            }}
-          />
-          <Image
-            src="/Sponsor.jpeg"
-            alt="Sponsor"
-            width={94}
-            height={94}
-            className="w-[94px] h-[94px] mt-5"
-            style={{
-              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-              borderRadius: "10px",
-              objectFit: "contain",
-            }}
-          />
-          <Image
-            src="/APA.png"
-            alt="APA Logo"
-            width={94}
-            height={94}
-            className="w-[94px] h-[94px] mt-5"
-            style={{
-              filter: "drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.3))",
-              borderRadius: "10px",
-              objectFit: "contain",
-            }}
-          />
-        </div>
-
         {/* Player Selection Modals */}
         <PlayerSelectionModal
           isOpen={showPlayer1Modal}
@@ -1024,4 +950,5 @@ const ApaMatchPage = () => {
   );
 };
 
-export default ApaMatchPage;
+export default GenericMatchPage;
+
