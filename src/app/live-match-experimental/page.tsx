@@ -179,7 +179,7 @@ const LiveMatchPage = () => {
   useEffect(() => {
     const loadMatchData = async () => {
       try {
-        const matchDocRef = doc(db, "current_match", "live");
+        const matchDocRef = doc(db, "current_match", "experimental");
         const matchDoc = await getDoc(matchDocRef);
 
         if (matchDoc.exists() && matchDoc.data()) {
@@ -319,7 +319,7 @@ const LiveMatchPage = () => {
       return;
     }
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "experimental");
       await setDoc(
         matchDocRef,
         {
@@ -355,7 +355,7 @@ const LiveMatchPage = () => {
     setPlayer1(selectedPlayer);
     if (!isManager) return; // Only save if manager
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "experimental");
       await setDoc(
         matchDocRef,
         {
@@ -379,7 +379,7 @@ const LiveMatchPage = () => {
     setPlayer2(selectedPlayer);
     if (!isManager) return; // Only save if manager
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "experimental");
       await setDoc(
         matchDocRef,
         {

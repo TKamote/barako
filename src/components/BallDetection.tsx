@@ -171,7 +171,7 @@ export default function BallDetection({
     }
 
     // Check for API key
-    if (ROBOFLOW_API_KEY === "YOUR_API_KEY_HERE") {
+    if (ROBOFLOW_API_KEY === "YOUR_API_KEY_HERE" as string) {
       setError("Missing API Key. Please add it to BallDetection.tsx");
       return new Set();
     }

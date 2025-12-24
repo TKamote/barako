@@ -169,7 +169,7 @@ const GenericMatchPage = () => {
   useEffect(() => {
     const loadMatchData = async () => {
       try {
-        const matchDocRef = doc(db, "current_match", "live");
+        const matchDocRef = doc(db, "current_match", "generic");
         const matchDoc = await getDoc(matchDocRef);
 
         if (matchDoc.exists()) {
@@ -304,7 +304,7 @@ const GenericMatchPage = () => {
       return;
     }
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "generic");
       await setDoc(
         matchDocRef,
         {
@@ -335,7 +335,7 @@ const GenericMatchPage = () => {
   const handlePlayer1Select = async (selectedPlayer: Player) => {
     setPlayer1(selectedPlayer);
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "generic");
       await setDoc(
         matchDocRef,
         {
@@ -354,7 +354,7 @@ const GenericMatchPage = () => {
   const handlePlayer2Select = async (selectedPlayer: Player) => {
     setPlayer2(selectedPlayer);
     try {
-      const matchDocRef = doc(db, "current_match", "live");
+      const matchDocRef = doc(db, "current_match", "generic");
       await setDoc(
         matchDocRef,
         {
