@@ -7,7 +7,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { collection, getDocs, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import PlayerSelectionModal from "@/components/PlayerSelectionModal";
-import BallDetection from "@/components/BallDetection";
 
 interface Player {
   id: string;
@@ -45,7 +44,7 @@ const BilliardsBall = ({
   </div>
 );
 
-const LiveMatchPage = () => {
+const LiveMatchExperimentalPage = () => {
   const { gameMode, setGameMode, setLiveMatchIsLive } = useLive();
   const { isManager } = useAuth();
 
@@ -70,10 +69,6 @@ const LiveMatchPage = () => {
 
   // Ball state
   const [pocketedBalls, setPocketedBalls] = useState<Set<number>>(new Set());
-
-  // Auto-detection state
-  const [autoDetectEnabled, setAutoDetectEnabled] = useState(false);
-  const detectedVisibleBallsRef = useRef<Set<number>>(new Set());
 
   // URL state for OBS integration (client-side only to avoid hydration mismatch)
   const [obsUrl, setObsUrl] = useState<string>("localhost:3000/live-match-experimental");
@@ -617,34 +612,6 @@ const LiveMatchPage = () => {
     }
   }, []);
 
-  // Handle detected balls from BallDetection component
-  const handleBallsDetected = useCallback((visibleBalls: Set<number>) => {
-    // Only update if the detected balls have changed to avoid unnecessary re-renders/writes
-    // Simple set equality check
-    if (detectedVisibleBallsRef.current.size === visibleBalls.size) {
-      const current = Array.from(detectedVisibleBallsRef.current);
-      const isSame = current.every((val) => visibleBalls.has(val));
-      if (isSame) return;
-    }
-
-    detectedVisibleBallsRef.current = visibleBalls;
-    
-    if (!autoDetectEnabled) return;
-
-    // Calculate pocketed balls: all balls - visible balls
-    const allBalls = new Set(ballNumbers);
-    const pocketed = new Set<number>();
-    
-    allBalls.forEach((ballNumber) => {
-      if (!visibleBalls.has(ballNumber)) {
-        pocketed.add(ballNumber);
-      }
-    });
-
-    // Update pocketed balls state
-    setPocketedBalls(pocketed);
-  }, [autoDetectEnabled, ballNumbers]);
-
   // Determine if player selection should be enabled
   const canSelectPlayers = isManager && !isLive;
 
@@ -671,73 +638,50 @@ const LiveMatchPage = () => {
               "GO LIVE"
             )}
           </button>
-
-          {/* Auto-Detect Toggle - Hide when live, show for everyone, but note manager requirement */}
-          {!isLive && (
-            <div className="flex items-center gap-2 bg-black/80 px-3 py-2 rounded-lg">
-              <label className="flex items-center gap-2 cursor-pointer text-white text-xs sm:text-sm">
-                <input
-                  type="checkbox"
-                  checked={autoDetectEnabled}
-                  onChange={(e) => setAutoDetectEnabled(e.target.checked)}
-                  disabled={!isManager}
-                  className="w-4 h-4 rounded disabled:opacity-50"
-                  title={!isManager ? "Manager login required" : "Enable automatic ball detection"}
-                />
-                <span className={!isManager ? "opacity-50" : ""}>
-                  Auto-Detect {!isManager && "(Manager Only)"}
-                </span>
-              </label>
-            </div>
-          )}
         </div>
 
-        {/* Left Side: Balls and Reset Button */}
-        <div className="fixed left-2 sm:left-4 top-16 sm:top-20 z-40 flex flex-col items-start">
-          {/* Billiards Balls - Vertical */}
+        {/* Horizontal Balls Bar - Centered below Live Button */}
+        <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40 flex justify-center pointer-events-none">
           {ballNumbers.length > 0 && (
-            <div className="bg-gray-400 rounded-full px-2 py-1 sm:px-2 sm:py-2">
-              <div className="flex flex-col space-y-1 sm:space-y-2">
-                {ballNumbers.map((ballNumber) => (
-                  <BilliardsBall
-                    key={ballNumber}
-                    number={ballNumber}
-                    isMobile={true}
-                    isPocketed={pocketedBalls.has(ballNumber)}
-                    onClick={() => handleBallClick(ballNumber)}
-                  />
-                ))}
-              </div>
+            <div className="pointer-events-auto flex items-center gap-4 bg-black/40 rounded-full px-4 py-2 backdrop-blur-sm">
+               <div className="flex flex-row space-x-2">
+                  {ballNumbers.map((ballNumber) => (
+                    <BilliardsBall
+                      key={ballNumber}
+                      number={ballNumber}
+                      isMobile={true}
+                      isPocketed={pocketedBalls.has(ballNumber)}
+                      onClick={() => handleBallClick(ballNumber)}
+                    />
+                  ))}
+               </div>
+               
+               <button
+                  onClick={handleResetBalls}
+                  className="text-white hover:text-red-400 transition-colors p-1 border-l border-white/20 pl-4"
+                  title="Reset all balls"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+               </button>
             </div>
-          )}
-
-          {/* Reset Balls Button */}
-          {ballNumbers.length > 0 && (
-            <button
-              onClick={handleResetBalls}
-              className="text-gray-400 hover:text-gray-600 transition-colors opacity-60 hover:opacity-100 mt-1 sm:mt-2 p-2 sm:p-3"
-              title="Reset all balls"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 sm:h-8 sm:w-8"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-            </button>
           )}
         </div>
 
         {/* Score Display - Fixed at Bottom */}
-        <div className="fixed bottom-2 sm:bottom-4 left-0 right-0 z-40">
+        <div className="fixed bottom-16 sm:bottom-22 left-0 right-0 z-40">
           <div className="flex justify-center">
             <div className="bg-linear-to-r from-purple-950 via-purple-900 to-purple-950 py-0 px-px sm:px-3 shadow-2xl w-full sm:max-w-[80%] mx-0.5 sm:mx-4 overflow-hidden">
               {/* Mobile Layout */}
@@ -992,19 +936,6 @@ const LiveMatchPage = () => {
           </div>
         </div>
 
-        {/* OBS Integration Instructions - Bottom */}
-        <div className="fixed bottom-1 left-2 right-2 sm:left-4 sm:right-4 z-30">
-          <div className="bg-black/80 text-white text-xs p-1 sm:p-2 rounded text-center">
-            <div className="hidden sm:block">
-              <strong>OBS Integration:</strong> Use Browser Source with URL:{" "}
-              <code className="bg-gray-700 px-1 rounded">{obsUrl}</code> | Size:
-              1920x1080 | FPS: 60
-            </div>
-            <div className="sm:hidden text-xs">
-              <strong>OBS:</strong> Browser Source | 1920x1080 | 60fps
-            </div>
-          </div>
-        </div>
 
         {/* Barako Logo - Top Right */}
         <div
@@ -1108,17 +1039,10 @@ const LiveMatchPage = () => {
           onSelect={handlePlayer2Select}
           title="Select Player 2"
         />
-
-        {/* Ball Detection Component */}
-        <BallDetection
-          enabled={autoDetectEnabled}
-          onBallsDetected={handleBallsDetected}
-          gameMode={gameMode}
-        />
       </div>
       {/* End 16:9 Aspect Ratio Container */}
     </div>
   );
 };
 
-export default LiveMatchPage;
+export default LiveMatchExperimentalPage;
